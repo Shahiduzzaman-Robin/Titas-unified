@@ -40,3 +40,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# Ignore Photos and Uploads
+/public/assets/uploads/
+/public/assets/hero/
+/public/images/slider/
+/public/images/**/*.jpg
+/public/images/**/*.png
+/public/images/**/*.JPG
+/public/assets/**/*.jpg
+/public/assets/**/*.png
+/public/assets/**/*.JPG
