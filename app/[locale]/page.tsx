@@ -39,12 +39,14 @@ export default function Home() {
                     />
 
                     <div className="container relative z-20 mx-auto px-4 hero-modern-content text-white">
-                        <div className="hero-modern-badge glass-panel-dark inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8">
-                            <MapPin size={16} />
-                            <span>Brahmanbaria to Dhaka University</span>
-                        </div>
+                        <div className="flex flex-col items-start gap-4 mb-8">
+                            <div className="hero-modern-badge glass-panel-dark inline-flex items-center gap-2 px-4 py-2 rounded-full">
+                                <MapPin size={16} />
+                                <span>Brahmanbaria to Dhaka University</span>
+                            </div>
 
-                        <TrainAnimation />
+                            <TrainAnimation />
+                        </div>
 
                         <h1 className="hero-modern-title bn-text text-5xl md:text-7xl font-bold mb-6">
                             <span className="title-line-1 block">তিতাস</span>

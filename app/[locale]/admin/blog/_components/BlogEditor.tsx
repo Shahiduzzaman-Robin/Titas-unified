@@ -31,6 +31,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
+import ImageCropper from "@/components/registration/ImageCropper"
 
 // Dynamically import ReactQuill to avoid SSR issues
 const ReactQuill = dynamic(() => import("react-quill-new"), {
@@ -55,6 +56,7 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
 
     const [loading, setLoading] = useState(false)
     const [title, setTitle] = useState(initialData?.title || "")
+    const [authorName, setAuthorName] = useState(initialData?.authorName || "")
     const [content, setContent] = useState(initialData?.content || "")
     const [excerpt, setExcerpt] = useState(initialData?.excerpt || "")
     const [categoryId, setCategoryId] = useState(initialData?.categoryId?.toString() || "")
@@ -65,6 +67,7 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
     
     const [featuredImage, setFeaturedImage] = useState<File | null>(null)
     const [previewUrl, setPreviewUrl] = useState<string | null>(initialData?.featuredImage || null)
+    const [cropImageStr, setCropImageStr] = useState<string | null>(null)
 
     const modules = useMemo(() => ({
         toolbar: [
@@ -79,8 +82,11 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if (file) {
-            setFeaturedImage(file)
-            setPreviewUrl(URL.createObjectURL(file))
+            const reader = new FileReader()
+            reader.onload = () => {
+                setCropImageStr(reader.result as string)
+            }
+            reader.readAsDataURL(file)
         }
     }
 
@@ -101,6 +107,7 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
         try {
             const formData = new FormData()
             formData.append('title', title)
+            formData.append('authorName', authorName)
             formData.append('content', content)
             formData.append('excerpt', excerpt)
             formData.append('categoryId', categoryId)
@@ -140,32 +147,63 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
 
     return (
         <form onSubmit={handleSubmit} className="space-y-8">
+            {cropImageStr && (
+                <ImageCropper
+                    image={cropImageStr}
+                    aspect={1.91}
+                    onCropComplete={async (croppedBlob) => {
+                        const croppedFile = new File([croppedBlob], "featured-image.jpg", { type: "image/jpeg" })
+                        setFeaturedImage(croppedFile)
+                        setPreviewUrl(URL.createObjectURL(croppedBlob))
+                        setCropImageStr(null)
+                    }}
+                    onCancel={() => {
+                        setCropImageStr(null)
+                        const input = document.getElementById('image-upload') as HTMLInputElement
+                        if (input) input.value = ''
+                    }}
+                />
+            )}
             <div className="flex flex-col lg:flex-row gap-8">
                 {/* Main content */}
                 <div className="flex-1 space-y-6">
-                    <Card className="border-slate-200 shadow-sm overflow-hidden">
-                        <CardHeader className="bg-slate-50/50 border-b">
-                            <CardTitle className="text-lg font-bold flex items-center gap-2">
-                                <Type className="h-4 w-4 text-indigo-500" />
+                    <Card className="border-slate-100 shadow-sm overflow-hidden rounded-2xl bg-white">
+                        <CardHeader className="pt-6 pb-2 px-6">
+                            <CardTitle className="text-base font-bold flex items-center gap-3">
+                                <div className="h-8 w-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600">
+                                    <Type className="h-4 w-4" />
+                                </div>
                                 Content Details
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="p-6 space-y-6">
+                        <CardContent className="p-6 space-y-7">
                             <div className="space-y-2">
-                                <label className="text-sm font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 pl-1 flex items-center gap-2">
                                     Post Title <span className="text-red-500">*</span>
                                 </label>
                                 <Input 
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
                                     placeholder="Enter a compelling title..."
-                                    className="text-lg font-medium h-12 border-slate-200 focus:ring-indigo-500"
+                                    className="text-lg font-medium h-12 bg-slate-50 border-transparent hover:border-slate-200 focus:bg-white focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100/50 transition-all rounded-xl"
                                     required
                                 />
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-sm font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 pl-1 flex items-center gap-2">
+                                    Author Name (Optional)
+                                </label>
+                                <Input 
+                                    value={authorName}
+                                    onChange={(e) => setAuthorName(e.target.value)}
+                                    placeholder="Leave blank to use your admin name..."
+                                    className="text-sm font-medium h-12 bg-slate-50 border-transparent hover:border-slate-200 focus:bg-white focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100/50 transition-all rounded-xl"
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 pl-1 flex items-center gap-2">
                                     Post Content <span className="text-red-500">*</span>
                                 </label>
                                 <div className="prose prose-slate max-w-none">
@@ -180,16 +218,16 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-sm font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 pl-1 flex items-center gap-2">
                                     Excerpt (Short Summary)
                                 </label>
                                 <Textarea 
                                     value={excerpt}
                                     onChange={(e) => setExcerpt(e.target.value)}
                                     placeholder="Brief summary for list views..."
-                                    className="h-24 resize-none border-slate-200 focus:ring-indigo-500"
+                                    className="h-24 resize-none bg-slate-50 border-transparent hover:border-slate-200 focus:bg-white focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100/50 transition-all rounded-xl"
                                 />
-                                <p className="text-[10px] text-slate-400 font-medium">Leave empty to auto-generate from content.</p>
+                                <p className="text-[10px] text-slate-400 font-medium pl-1">Leave empty to auto-generate from content.</p>
                             </div>
                         </CardContent>
                     </Card>
@@ -198,36 +236,38 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
                 {/* Sidebar */}
                 <div className="w-full lg:w-96 space-y-6">
                     {/* Status & Category */}
-                    <Card className="border-slate-200 shadow-sm overflow-hidden">
-                        <CardHeader className="bg-slate-50/50 border-b">
-                            <CardTitle className="text-sm font-bold flex items-center gap-2 uppercase tracking-widest text-slate-500">
-                                <FolderOpen className="h-4 w-4 text-indigo-500" />
+                    <Card className="border-slate-100 shadow-sm overflow-hidden rounded-2xl bg-white">
+                        <CardHeader className="pt-6 pb-2 px-6">
+                            <CardTitle className="text-sm font-bold flex items-center gap-3 uppercase tracking-widest text-slate-700">
+                                <div className="h-8 w-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                                    <FolderOpen className="h-4 w-4" />
+                                </div>
                                 Publishing
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="p-4 space-y-4">
+                        <CardContent className="p-6 space-y-5">
                             <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-500 uppercase">Status</label>
+                                <label className="text-xs font-bold text-slate-500 uppercase pl-1">Status</label>
                                 <Select value={status} onValueChange={setStatus}>
-                                    <SelectTrigger className="border-slate-200">
+                                    <SelectTrigger className="bg-slate-50 border-transparent hover:border-slate-200 focus:ring-2 focus:ring-indigo-100/50 focus:border-indigo-400 transition-all rounded-xl h-11">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="draft">Draft</SelectItem>
-                                        <SelectItem value="published">Published</SelectItem>
+                                        <SelectItem value="draft" className="font-medium rounded-lg">Draft</SelectItem>
+                                        <SelectItem value="published" className="font-medium rounded-lg">Published</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-500 uppercase">Category <span className="text-red-500">*</span></label>
+                                <label className="text-xs font-bold text-slate-500 uppercase pl-1">Category <span className="text-red-500">*</span></label>
                                 <Select value={categoryId} onValueChange={setCategoryId}>
-                                    <SelectTrigger className="border-slate-200">
+                                    <SelectTrigger className="bg-slate-50 border-transparent hover:border-slate-200 focus:ring-2 focus:ring-indigo-100/50 focus:border-indigo-400 transition-all rounded-xl h-11">
                                         <SelectValue placeholder="Select Category" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {categories.map((cat: any) => (
-                                            <SelectItem key={cat.id} value={cat.id.toString()}>{cat.name}</SelectItem>
+                                            <SelectItem key={cat.id} value={cat.id.toString()} className="font-medium rounded-lg">{cat.name}</SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
@@ -236,21 +276,23 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
                     </Card>
 
                     {/* Featured Image */}
-                    <Card className="border-slate-200 shadow-sm overflow-hidden">
-                        <CardHeader className="bg-slate-50/50 border-b">
-                            <CardTitle className="text-sm font-bold flex items-center gap-2 uppercase tracking-widest text-slate-500">
-                                <ImageIcon className="h-4 w-4 text-indigo-500" />
+                    <Card className="border-slate-100 shadow-sm overflow-hidden rounded-2xl bg-white">
+                        <CardHeader className="pt-6 pb-2 px-6">
+                            <CardTitle className="text-sm font-bold flex items-center gap-3 uppercase tracking-widest text-slate-700">
+                                <div className="h-8 w-8 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
+                                    <ImageIcon className="h-4 w-4" />
+                                </div>
                                 Featured Image
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="p-4">
+                        <CardContent className="p-6">
                             {previewUrl ? (
-                                <div className="space-y-3">
-                                    <div className="relative aspect-[16/9] rounded-lg overflow-hidden border border-slate-200 bg-slate-50 group">
-                                        <img src={previewUrl} alt="Preview" className="h-full w-full object-cover" />
+                                <div className="space-y-4">
+                                    <div className="relative aspect-[16/9] rounded-xl overflow-hidden border border-slate-100 shadow-sm group">
+                                        <img src={previewUrl} alt="Preview" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                                         <button 
                                             type="button"
-                                            className="absolute top-2 right-2 h-7 w-7 rounded-full bg-slate-900/60 text-white flex items-center justify-center hover:bg-red-500 transition-colors backdrop-blur-sm"
+                                            className="absolute top-3 right-3 h-8 w-8 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-red-500 transition-colors backdrop-blur-md opacity-0 group-hover:opacity-100"
                                             onClick={() => {
                                                 setFeaturedImage(null)
                                                 setPreviewUrl(null)
@@ -262,8 +304,7 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
                                     <Button 
                                         type="button" 
                                         variant="outline" 
-                                        size="sm" 
-                                        className="w-full text-[10px] font-bold uppercase tracking-wider"
+                                        className="w-full text-xs font-bold uppercase tracking-wider rounded-xl h-10 border-slate-200 hover:bg-slate-50"
                                         onClick={() => document.getElementById('image-upload')?.click()}
                                     >
                                         Change Image
@@ -271,14 +312,14 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
                                 </div>
                             ) : (
                                 <div 
-                                    className="aspect-[16/9] rounded-lg border-2 border-dashed border-slate-200 flex flex-col items-center justify-center bg-slate-50 hover:bg-slate-100 transition-all cursor-pointer group"
+                                    className="aspect-[16/9] rounded-xl border-2 border-dashed border-indigo-200/60 flex flex-col items-center justify-center bg-indigo-50/30 hover:bg-indigo-50 hover:border-indigo-300 transition-all cursor-pointer group"
                                     onClick={() => document.getElementById('image-upload')?.click()}
                                 >
-                                    <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center mb-2 group-hover:bg-indigo-50 transition-colors">
-                                        <Upload className="h-5 w-5 text-slate-400 group-hover:text-indigo-400" />
+                                    <div className="h-12 w-12 rounded-full bg-white shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                                        <Upload className="h-5 w-5 text-indigo-500" />
                                     </div>
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Upload Header Image</p>
-                                    <p className="text-[8px] text-slate-300 mt-1">Recommended: 1200x630 (1.91:1)</p>
+                                    <p className="text-xs font-bold text-indigo-900/60 uppercase tracking-widest">Upload Header Image</p>
+                                    <p className="text-[10px] text-slate-400 mt-2 font-medium">Recommended: 1200x630 (1.91:1)</p>
                                 </div>
                             )}
                             <Input 
@@ -292,17 +333,19 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
                     </Card>
 
                     {/* Tags */}
-                    <Card className="border-slate-200 shadow-sm overflow-hidden">
-                        <CardHeader className="bg-slate-50/50 border-b">
-                            <CardTitle className="text-sm font-bold flex items-center gap-2 uppercase tracking-widest text-slate-500">
-                                <Tag className="h-4 w-4 text-indigo-500" />
+                    <Card className="border-slate-100 shadow-sm overflow-hidden rounded-2xl bg-white">
+                        <CardHeader className="pt-6 pb-2 px-6">
+                            <CardTitle className="text-sm font-bold flex items-center gap-3 uppercase tracking-widest text-slate-700">
+                                <div className="h-8 w-8 rounded-full bg-green-50 flex items-center justify-center text-green-600">
+                                    <Tag className="h-4 w-4" />
+                                </div>
                                 Tags
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="p-4">
+                        <CardContent className="p-6">
                             <div className="flex flex-wrap gap-2">
                                 {tags.length === 0 ? (
-                                    <p className="text-[10px] text-slate-400 italic">No tags available</p>
+                                    <p className="text-xs text-slate-400 italic">No tags available</p>
                                 ) : (
                                     tags.map((tag: any) => (
                                         <button
@@ -310,13 +353,13 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
                                             type="button"
                                             onClick={() => toggleTag(tag.id)}
                                             className={cn(
-                                                "px-2 py-1 rounded-md text-[10px] font-bold uppercase transition-all flex items-center gap-1 border",
+                                                "px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 border",
                                                 selectedTagIds.includes(tag.id)
-                                                    ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
-                                                    : "bg-white text-slate-500 border-slate-200 hover:border-indigo-300"
+                                                    ? "bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-200"
+                                                    : "bg-slate-50 text-slate-500 border-transparent hover:bg-slate-100"
                                             )}
                                         >
-                                            {selectedTagIds.includes(tag.id) && <Check className="w-2.5 h-2.5" />}
+                                            {selectedTagIds.includes(tag.id) && <Check className="w-3 h-3" />}
                                             {tag.name}
                                         </button>
                                     ))
@@ -326,19 +369,19 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
                     </Card>
 
                     {/* Actions */}
-                    <div className="flex flex-col gap-3 sticky bottom-4">
+                    <div className="flex flex-col gap-3 sticky bottom-6 bg-slate-50/50 p-4 -mx-4 rounded-2xl backdrop-blur border border-slate-100 lg:bg-transparent lg:p-0 lg:mx-0 lg:border-none lg:backdrop-filter-none">
                         <Button 
                             type="submit" 
-                            className="bg-indigo-600 hover:bg-indigo-700 h-12 text-sm font-bold uppercase tracking-wider shadow-lg shadow-indigo-200"
+                            className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 h-14 text-sm font-bold uppercase tracking-wider shadow-xl shadow-indigo-500/20 transition-all hover:scale-[1.02] rounded-xl"
                             disabled={loading}
                         >
-                            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                            {loading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Save className="mr-2 h-5 w-5" />}
                             {isEditing ? "Update Post" : "Publish Post"}
                         </Button>
                         <Button 
                             type="button" 
                             variant="outline" 
-                            className="h-10 text-[10px] font-bold uppercase tracking-wider border-slate-200"
+                            className="h-12 text-xs font-bold uppercase tracking-wider border-slate-200 hover:bg-slate-50 rounded-xl"
                             onClick={() => router.back()}
                             disabled={loading}
                         >

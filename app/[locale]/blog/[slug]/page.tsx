@@ -54,7 +54,7 @@ export async function generateMetadata(
             siteName: 'TITAS - Dhaka University Students\' Welfare Association of Brahmanbaria',
             type: 'article',
             publishedTime: post.publishedAt?.toISOString(),
-            authors: post.author?.name ? [post.author.name] : ['TITAS Admin'],
+            authors: post.authorName ? [post.authorName] : (post.author?.name ? [post.author.name] : ['TITAS Admin']),
             locale: locale === 'bn' ? 'bn_BD' : 'en_US',
             images: [
                 {
@@ -145,11 +145,11 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                                 <div className="flex flex-wrap items-center gap-6 py-8 border-t border-b border-slate-100">
                                     <div className="flex items-center gap-3">
                                         <div className="h-10 w-10 flex items-center justify-center bg-slate-100 text-slate-900 font-black rounded-full border border-slate-200">
-                                            {(post.author?.name || 'A')[0]}
+                                            {(post.authorName || post.author?.name || 'A')[0]}
                                         </div>
                                         <div>
-                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Written By</p>
-                                            <p className="text-sm font-bold text-slate-900 leading-none">{post.author?.name || 'Titas Admin'}</p>
+                                            <p className="text-sm font-bold text-slate-900 leading-none">{post.authorName || post.author?.name || 'Titas Admin'}</p>
+                                            <p className="text-[10px] text-slate-400 font-medium uppercase tracking-widest mt-1">Author</p>
                                         </div>
                                     </div>
 

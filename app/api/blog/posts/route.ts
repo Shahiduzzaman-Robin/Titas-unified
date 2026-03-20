@@ -88,6 +88,7 @@ export async function POST(request: NextRequest) {
         const status = (formData.get('status') as string) || 'draft'
         const excerpt = (formData.get('excerpt') as string) || ''
         const tagIds = JSON.parse((formData.get('tagIds') as string) || '[]')
+        const authorName = (formData.get('authorName') as string) || null
         const featuredImage = formData.get('featuredImage') as File | null
 
         if (!title || !content || !categoryId) {
@@ -114,6 +115,7 @@ export async function POST(request: NextRequest) {
                 readingTime: calculateReadingTime(content),
                 categoryId,
                 authorId: adminId,
+                authorName,
                 tags: {
                     connect: tagIds.map((id: number) => ({ id }))
                 }

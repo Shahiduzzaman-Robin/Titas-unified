@@ -1,18 +1,26 @@
-.train-graphic-container {
+.train-pill-container {
     position: relative;
-    height: 60px;
+    height: 70px;
+    width: 320px;
+    max-width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    width: 100%;
-    min-width: 200px;
-    background-color: transparent;
+    background-color: rgba(255, 255, 255, 0.05);
+    /* subtle glass background */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 9999px;
+    /* full pill shape */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
 }
 
 .train-track-area {
     position: relative;
     width: 100%;
+    /* Touches the rounded ends */
     height: 100%;
     display: flex;
     align-items: center;
@@ -21,21 +29,21 @@
 
 .moving-train {
     position: absolute;
-    height: 32px;
-    bottom: 20px;
+    height: 42px; /* Increased from 28px to make the train larger */
+    bottom: 14px;
     left: 0;
     z-index: 10;
-    animation: slideTrain 12s linear infinite;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    animation: slideTrain 6s linear infinite;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 @keyframes slideTrain {
     0% {
-        transform: translateX(-100%);
+        transform: translateX(-40px);
     }
 
     100% {
-        transform: translateX(320px);
+        transform: translateX(300px);
     }
 }
 
@@ -43,20 +51,23 @@
     position: absolute;
     width: 100%;
     height: 2px;
-    background-color: #cbd5e1;
-    bottom: 18px;
+    background-color: rgba(255, 255, 255, 0.4);
+    bottom: 12px;
+    border-radius: 2px;
 }
 
 .track-sleepers {
     position: absolute;
     display: flex;
     width: 100%;
-    justify-content: space-around;
-    bottom: 14px;
+    justify-content: space-between;
+    bottom: 8px;
+    padding: 0 4px;
 }
 
 .sleeper {
     width: 2px;
     height: 6px;
-    background-color: #cbd5e1;
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 1px;
 }

@@ -247,6 +247,7 @@ model blog_posts {
   excerpt       String?         @db.Text
   featuredImage String?         @db.VarChar(1000)
   authorId      Int?
+  authorName    String?         @db.VarChar(100)
   categoryId    Int
   views         Int             @default(0)
   status        String          @default("draft")

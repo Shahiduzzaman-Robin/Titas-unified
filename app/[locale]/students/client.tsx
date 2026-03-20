@@ -10,6 +10,7 @@ import { Combobox } from '@/components/ui/combobox'
 import { StudentCard } from '@/components/students/StudentCard'
 import { StudentSkeleton } from '@/components/students/StudentSkeleton'
 import { PublicNav } from "@/components/PublicNav"
+import Footer from "@/components/home/Footer"
 import "@/styles/Students.css"
 
 interface Student {
@@ -393,6 +394,8 @@ export default function StudentDirectoryClient({
                     </div>
                 </div>
             )}
+
+            <Footer />
         </div>
     )
 }

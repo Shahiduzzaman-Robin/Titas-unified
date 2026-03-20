@@ -260,9 +260,9 @@ export function StudentForm({ initialData, mode = 'create', onSubmit, isSubmitti
             return
         }
 
-        // Mobile number length verification (must be exactly 11 digits)
+        // Mobile number length verification (must be exactly 11 digits and start with 01)
         const normalizedMobile = toEnglishDigits(formData.mobile)
-        if (normalizedMobile.length !== 11) {
+        if (normalizedMobile.length !== 11 || !normalizedMobile.startsWith('01')) {
             toast.error(t('mobileLengthError'))
             return
         }
@@ -423,8 +423,15 @@ export function StudentForm({ initialData, mode = 'create', onSubmit, isSubmitti
                                     <Input
                                         placeholder={t('mobilePlaceholder')}
                                         value={formData.mobile}
-                                        onChange={(e) => handleChange('mobile', e.target.value)}
+                                        onChange={(e) => {
+                                            let val = toEnglishDigits(e.target.value).replace(/\D/g, '');
+                                            if (val.length > 11) val = val.substring(0, 11);
+                                            if (val.length >= 1 && val[0] !== '0') val = '';
+                                            if (val.length >= 2 && val[1] !== '1') val = '0';
+                                            handleChange('mobile', val);
+                                        }}
                                         required
+                                        type="tel"
                                         className="h-11 rounded-xl border-slate-200"
                                     />
                                 </div>

@@ -67,9 +67,9 @@ export function PublicNav({ session: serverSession }: PublicNavProps) {
                 <div className="flex justify-between items-center h-20">
                     {/* Logo & Title */}
                     <Link href="/" className="flex items-center gap-3 md:gap-4 hover:opacity-80 transition-opacity">
-                        <img src="/logo.png" alt="Logo" className="h-10 w-10 md:h-12 md:w-12 object-contain" />
+                        <img src="/logo.png" alt="Logo" className="h-12 w-12 md:h-14 md:w-14 object-contain" />
                         <div>
-                            <h1 className="text-lg md:text-xl font-bold text-primary leading-tight">{tPublic('title')}</h1>
+                            <h1 className="text-xl md:text-2xl font-normal text-primary leading-tight">{tPublic('title')}</h1>
                             <p className="text-[10px] md:text-xs text-gray-500 uppercase tracking-wider font-semibold">{tPublic('subtitle')}</p>
                         </div>
                     </Link>

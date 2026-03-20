@@ -91,6 +91,7 @@ export async function PUT(
         const status = formData.get('status') as string
         const excerpt = formData.get('excerpt') as string
         const tagIds = JSON.parse((formData.get('tagIds') as string) || '[]')
+        const authorName = formData.has('authorName') ? (formData.get('authorName') as string) : undefined
         const featuredImage = formData.get('featuredImage') as File | string | null
 
         const data: any = {}
@@ -113,6 +114,9 @@ export async function PUT(
                 data.publishedAt = null
             }
             data.status = status
+        }
+        if (authorName !== undefined) {
+            data.authorName = authorName === '' ? null : authorName
         }
 
         if (featuredImage instanceof File) {
