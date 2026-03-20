@@ -1,0 +1,62 @@
+.train-graphic-container {
+    position: relative;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    width: 100%;
+    min-width: 200px;
+    background-color: transparent;
+}
+
+.train-track-area {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.moving-train {
+    position: absolute;
+    height: 32px;
+    bottom: 20px;
+    left: 0;
+    z-index: 10;
+    animation: slideTrain 12s linear infinite;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+@keyframes slideTrain {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(320px);
+    }
+}
+
+.track-rail {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: #cbd5e1;
+    bottom: 18px;
+}
+
+.track-sleepers {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    bottom: 14px;
+}
+
+.sleeper {
+    width: 2px;
+    height: 6px;
+    background-color: #cbd5e1;
+}

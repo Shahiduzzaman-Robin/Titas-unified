@@ -1,0 +1,387 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model students {
+  id                Int                   @id @default(autoincrement())
+  student_session   String?               @db.VarChar(50)
+  du_reg_number     String?               @db.VarChar(50)
+  name_en           String?               @db.VarChar(100)
+  name_bn           String?               @db.VarChar(100)
+  address_en        String?               @db.VarChar(255)
+  address_bn        String?               @db.VarChar(255)
+  upazila           String?               @db.VarChar(100)
+  department        String?               @db.VarChar(100)
+  mobile            String?               @db.VarChar(15)
+  email             String?               @db.VarChar(100)
+  blood_group       String?               @db.VarChar(20)
+  hall              String?               @db.VarChar(100)
+  gender            String                @db.VarChar(30)
+  image_path        String?               @db.VarChar(1000)
+  image_show        Int?                  @default(0)
+  approval          Int?                  @default(0)
+  approvedBy        Int?
+  deny_reason       String?               @db.VarChar(255)
+  job_position      String?               @db.VarChar(255)
+  job_designation   String?               @db.VarChar(255)
+  show_job_position String?               @db.VarChar(10)
+  prefix            String                @default("TITAS") @db.VarChar(255)
+  password          String?               @db.VarChar(255)
+  district          String?               @db.VarChar(100)
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @default(now()) @updatedAt
+  activity_logs     admin_activity_logs[]
+  sms_logs          sms_logs[]
+  edits             student_edits[]
+  approver          admins?               @relation("StudentApprover", fields: [approvedBy], references: [id])
+  department_rel    departments?          @relation(fields: [department], references: [name])
+  hall_rel          halls?                @relation(fields: [hall], references: [name])
+  session_rel       sessions?             @relation(fields: [student_session], references: [name])
+  upazila_rel       upazilas?             @relation(fields: [upazila], references: [name])
+
+  @@index([student_session])
+  @@index([department])
+  @@index([hall])
+  @@index([upazila])
+  @@index([approvedBy])
+  @@map("students")
+}
+
+model admins {
+  id                Int                   @id @default(autoincrement())
+  email             String                @unique @db.VarChar(100)
+  password          String                @db.VarChar(255)
+  name              String                @db.VarChar(100)
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+  isSystemAdmin     Boolean               @default(false)
+  activity_logs     admin_activity_logs[]
+  blog_posts        blog_posts[]
+  gallery_images    gallery_images[]
+  edits             student_edits[]
+  approved_students students[]            @relation("StudentApprover")
+
+  @@map("admins")
+}
+
+model sessions {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique @db.VarChar(50)
+  name_bn   String?    @db.VarChar(100)
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  students  students[]
+
+  @@map("sessions")
+}
+
+model departments {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique @db.VarChar(100)
+  name_bn   String?    @db.VarChar(100)
+  code      String?    @db.VarChar(20)
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  students  students[]
+
+  @@map("departments")
+}
+
+model halls {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique @db.VarChar(100)
+  name_bn   String?    @db.VarChar(100)
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  students  students[]
+
+  @@map("halls")
+}
+
+model upazilas {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique @db.VarChar(100)
+  name_bn   String?    @db.VarChar(100)
+  district  String     @default("ব্রাহ্মণবাড়িয়া") @db.VarChar(100)
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  students  students[]
+
+  @@map("upazilas")
+}
+
+model sms_templates {
+  id        Int      @id @default(autoincrement())
+  type      String   @unique @db.VarChar(50)
+  template  String   @db.Text
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("sms_templates")
+}
+
+model sms_logs {
+  id          Int       @id @default(autoincrement())
+  studentId   Int?
+  phone       String    @db.VarChar(15)
+  message     String    @db.Text
+  smsId       String?   @db.VarChar(100)
+  status      String    @db.VarChar(20)
+  sentAt      DateTime  @default(now())
+  deliveredAt DateTime?
+  student     students? @relation(fields: [studentId], references: [id])
+
+  @@index([studentId], map: "sms_logs_studentId_fkey")
+  @@map("sms_logs")
+}
+
+model student_edits {
+  id         Int       @id @default(autoincrement())
+  studentId  Int
+  changes    String    @db.LongText
+  status     String    @default("pending")
+  adminId    Int?
+  reviewNote String?   @db.Text
+  createdAt  DateTime  @default(now())
+  reviewedAt DateTime?
+  admin      admins?   @relation(fields: [adminId], references: [id])
+  student    students  @relation(fields: [studentId], references: [id])
+
+  @@index([studentId])
+  @@index([status])
+  @@index([adminId], map: "student_edits_adminId_fkey")
+  @@map("student_edits")
+}
+
+model password_resets {
+  id        Int      @id @default(autoincrement())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@map("password_resets")
+}
+
+model otp_verifications {
+  id        Int      @id @default(autoincrement())
+  mobile    String
+  otp       String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([mobile])
+}
+
+model admin_activity_logs {
+  id          Int       @id @default(autoincrement())
+  adminId     Int?
+  studentId   Int?
+  action      String    @db.VarChar(100)
+  description String?   @db.Text
+  metadata    String?   @db.LongText
+  ipAddress   String?   @db.VarChar(45)
+  userAgent   String?   @db.Text
+  createdAt   DateTime  @default(now())
+  admin       admins?   @relation(fields: [adminId], references: [id])
+  student     students? @relation(fields: [studentId], references: [id])
+
+  @@index([adminId])
+  @@index([studentId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("admin_activity_logs")
+}
+
+model email_templates {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique @db.VarChar(100)
+  name      String   @db.VarChar(100)
+  subject   String   @db.VarChar(255)
+  content   String   @db.Text
+  variables String?  @db.LongText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("email_templates")
+}
+
+model blog_categories {
+  id          Int          @id @default(autoincrement())
+  name        String       @db.VarChar(100)
+  slug        String       @unique @db.VarChar(100)
+  description String?      @db.Text
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  posts       blog_posts[]
+
+  @@map("blog_categories")
+}
+
+model blog_tags {
+  id        Int          @id @default(autoincrement())
+  name      String       @db.VarChar(50)
+  slug      String       @unique @db.VarChar(50)
+  createdAt DateTime     @default(now())
+  posts     blog_posts[] @relation("BlogPostsToTags")
+
+  @@map("blog_tags")
+}
+
+model blog_posts {
+  id            Int             @id @default(autoincrement())
+  title         String          @db.VarChar(255)
+  slug          String          @unique @db.VarChar(255)
+  content       String          @db.LongText
+  excerpt       String?         @db.Text
+  featuredImage String?         @db.VarChar(1000)
+  authorId      Int?
+  categoryId    Int
+  views         Int             @default(0)
+  status        String          @default("draft")
+  readingTime   Int             @default(1)
+  publishedAt   DateTime?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  comments      blog_comments[]
+  author        admins?         @relation(fields: [authorId], references: [id])
+  category      blog_categories @relation(fields: [categoryId], references: [id])
+  tags          blog_tags[]     @relation("BlogPostsToTags")
+
+  @@index([categoryId])
+  @@index([authorId])
+  @@index([status])
+  @@map("blog_posts")
+}
+
+model blog_comments {
+  id         Int        @id @default(autoincrement())
+  postId     Int
+  name       String     @db.VarChar(100)
+  email      String?    @db.VarChar(100)
+  text       String     @db.Text
+  likes      Int        @default(0)
+  approved   Boolean    @default(true)
+  flagged    Boolean    @default(false)
+  flagReason String?    @db.Text
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  post       blog_posts @relation(fields: [postId], references: [id])
+
+  @@index([postId])
+  @@map("blog_comments")
+}
+
+model gallery_images {
+  id         Int      @id @default(autoincrement())
+  url        String   @db.VarChar(1000)
+  publicId   String?  @db.VarChar(255)
+  title      String?  @db.VarChar(255)
+  category   String   @default("General") @db.VarChar(50)
+  adminId    Int?
+  createdAt  DateTime @default(now())
+  uploadedBy admins?  @relation(fields: [adminId], references: [id])
+
+  @@index([adminId], map: "gallery_images_adminId_fkey")
+  @@map("gallery_images")
+}
+
+model notices {
+  id        Int      @id @default(autoincrement())
+  text      String   @db.Text
+  link      String?  @db.VarChar(255)
+  priority  String   @default("normal")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("notices")
+}
+
+model events {
+  id          Int           @id @default(autoincrement())
+  title       String        @db.VarChar(255)
+  date        DateTime
+  location    String        @db.VarChar(255)
+  description String?       @db.Text
+  link        String?       @db.VarChar(255)
+  rsvpEnabled Boolean       @default(true)
+  capacity    Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  rsvps       event_rsvps[]
+
+  @@map("events")
+}
+
+model event_rsvps {
+  id               Int       @id @default(autoincrement())
+  eventId          Int
+  fullName         String    @db.VarChar(120)
+  email            String?   @db.VarChar(120)
+  phone            String?   @db.VarChar(30)
+  department       String?   @db.VarChar(120)
+  session          String?   @db.VarChar(30)
+  response         String    @default("going")
+  attendanceStatus String    @default("pending")
+  checkedInAt      DateTime?
+  createdAt        DateTime  @default(now())
+  event            events    @relation(fields: [eventId], references: [id])
+
+  @@index([eventId], map: "event_rsvps_eventId_fkey")
+  @@map("event_rsvps")
+}
+
+model contact_messages {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  email     String   @db.VarChar(255)
+  subject   String   @db.VarChar(255)
+  message   String   @db.Text
+  status    String   @default("unread")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("contact_messages")
+}
+
+model email_logs {
+  id             Int      @id @default(autoincrement())
+  category       String   @db.VarChar(50)
+  status         String   @db.VarChar(20)
+  recipientEmail String   @db.VarChar(255)
+  subject        String   @db.VarChar(500)
+  sentAt         DateTime @default(now())
+  failureReason  String?  @db.Text
+
+  @@index([category])
+  @@index([status])
+  @@index([sentAt])
+  @@map("email_logs")
+}
+
+model notification_settings {
+  id                  Int      @id @default(autoincrement())
+  registrationStatus  Boolean  @default(true)
+  profileEdit         Boolean  @default(true)
+  noticePublished     Boolean  @default(true)
+  eventReminders      Boolean  @default(true)
+  passwordReset       Boolean  @default(true)
+  loginAlerts         Boolean  @default(true)
+  updatedBy           String?  @db.VarChar(255)
+  updatedAt           DateTime @updatedAt
+  createdAt           DateTime @default(now())
+
+  @@map("notification_settings")
+}

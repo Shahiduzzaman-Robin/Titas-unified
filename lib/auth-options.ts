@@ -1,0 +1,197 @@
+import { NextAuthOptions } from "next-auth"
+import CredentialsProvider from "next-auth/providers/credentials"
+import { prisma } from "@/lib/prisma"
+import { verifyPassword } from "@/lib/auth"
+
+export const authOptions: NextAuthOptions = {
+    providers: [
+        CredentialsProvider({
+            name: "Credentials",
+            credentials: {
+                username: { label: "Email or Mobile", type: "text" },
+                password: { label: "Password", type: "password" }
+            },
+            async authorize(credentials) {
+                if (!credentials?.username || !credentials?.password) {
+                    return null
+                }
+
+                const username = credentials.username
+                const password = credentials.password
+
+                // 1. Check Admin (Hardcoded) - REMOVED per user request
+                // if (
+                //     username === process.env.ADMIN_EMAIL &&
+                //     password === process.env.ADMIN_PASSWORD
+                // ) {
+                //     return {
+                //         id: "admin-static",
+                //         email: username,
+                //         name: "Admin",
+                //         role: "admin"
+                //     }
+                // }
+
+                // 2. Check Admin (Database)
+                try {
+                    const admin = await prisma.admins.findUnique({
+                        where: { email: username },
+                    })
+
+                    if (admin) {
+                        const isValid = await verifyPassword(password, admin.password)
+                        if (isValid) {
+                            return {
+                                id: admin.id.toString(),
+                                email: admin.email,
+                                name: admin.name,
+                                role: "admin",
+                                isSystemAdmin: admin.isSystemAdmin
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.log("Admin check error", error)
+                }
+
+                // 3. Check Student (Database)
+                try {
+                    // Check by email OR mobile
+                    const student = await prisma.students.findFirst({
+                        where: {
+                            AND: [
+                                {
+                                    OR: [
+                                        { email: username },
+                                        { mobile: username }
+                                    ]
+                                },
+                                {
+                                    NOT: { approval: 2 }
+                                }
+                            ]
+                        }
+                    })
+
+                    if (student) {
+                        // If no password set, they can't login via this method
+                        if (!student.password) {
+                            return null
+                        }
+
+                        const isValid = await verifyPassword(password, student.password)
+                        if (isValid) {
+                            return {
+                                id: student.id.toString(),
+                                email: student.email || student.mobile, // Fallback to mobile if no email
+                                name: student.name_en || student.name_bn || "Student",
+                                role: "student",
+                                image: student.image_path, // Add image for profile avatar
+                                approval: student.approval // Add approval status
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.log("Student check error", error)
+                }
+
+                return null
+            }
+        })
+    ],
+    pages: {
+        signIn: "/login", // We might want separate login pages or a unified one. For now keeping /login
+    },
+    session: {
+        strategy: "jwt",
+    },
+    callbacks: {
+        async jwt({ token, user, trigger, session }) {
+            if (user) {
+                token.id = user.id
+                token.role = user.role
+                token.picture = user.image
+                token.isSystemAdmin = user.isSystemAdmin
+                token.approval = user.approval
+            }
+
+            // Handle session update
+            if (trigger === "update" && session) {
+                if (session.name) token.name = session.name
+                if (session.email) token.email = session.email
+            }
+
+            return token
+        },
+        async session({ session, token }) {
+            if (session.user) {
+                session.user.id = token.id as string
+                session.user.role = token.role as string
+                session.user.image = token.picture as string | null
+                session.user.isSystemAdmin = token.isSystemAdmin as boolean | undefined
+                session.user.approval = token.approval as number | undefined
+            }
+            return session
+        },
+    },
+    events: {
+        async signIn({ user }) {
+            if (user.role === 'admin') {
+                try {
+                    const { logAdminActivity } = await import('@/lib/admin-activity')
+                    // Capture as much context as possible
+                    // Note: next/headers might not always be available in this context depending on the provider flow,
+                    // but for Credentials provider it usually is. 
+                    let ip = undefined
+                    let ua = undefined
+                    try {
+                        const { headers } = await import('next/headers')
+                        const headerList = headers()
+                        ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || undefined
+                        ua = headerList.get('user-agent') || undefined
+                    } catch (hError) {
+                        // headers() might fail if not in a request context
+                    }
+
+                    await logAdminActivity({
+                        adminId: parseInt(user.id),
+                        action: 'admin_login',
+                        description: `Admin logged in: ${user.name || user.email}`,
+                        metadata: { email: user.email },
+                        ipAddress: ip,
+                        userAgent: ua
+                    })
+                } catch (e) {
+                    console.error('Failed to log admin login:', e)
+                }
+            }
+        },
+        async signOut({ token }) {
+            if (token?.role === 'admin') {
+                try {
+                    const { logAdminActivity } = await import('@/lib/admin-activity')
+                    let ip = undefined
+                    let ua = undefined
+                    try {
+                        const { headers } = await import('next/headers')
+                        const headerList = headers()
+                        ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || undefined
+                        ua = headerList.get('user-agent') || undefined
+                    } catch (hError) { }
+
+                    await logAdminActivity({
+                        adminId: parseInt(token.id as string),
+                        action: 'admin_logout',
+                        description: `Admin logged out: ${token.name || token.email}`,
+                        metadata: { email: token.email },
+                        ipAddress: ip,
+                        userAgent: ua
+                    })
+                } catch (e) {
+                    console.error('Failed to log admin logout:', e)
+                }
+            }
+        }
+    },
+    secret: process.env.NEXTAUTH_SECRET,
+}

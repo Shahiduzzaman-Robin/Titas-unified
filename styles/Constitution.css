@@ -1,0 +1,279 @@
+/* Constitution Page */
+.constitution-page {
+  padding: 2.5rem 0 4rem;
+  background: #f7f8fb;
+  min-height: 100vh;
+}
+
+.constitution-hero {
+  text-align: center;
+  padding: 2.5rem 1rem 1.5rem;
+  position: relative;
+}
+
+.constitution-hero h1 {
+  font-family: var(--font-bangla);
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  color: #0f172a;
+  margin: 0 0 0.5rem;
+}
+
+.constitution-hero p {
+  color: #5b677a;
+  font-size: 1.05rem;
+  max-width: 640px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.constitution-hero-sub {
+  font-size: 0.92rem !important;
+  color: #7c8a9e !important;
+  margin-top: 0.3rem !important;
+}
+
+.constitution-actions {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.constitution-download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-bangla);
+  transition: all 0.2s ease;
+}
+
+.constitution-download-btn.primary {
+  background: #1e3a5f;
+  color: #fff;
+  border: 1px solid #1e3a5f;
+}
+
+.constitution-download-btn.primary:hover {
+  background: #15304f;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.25);
+}
+
+.constitution-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Table of Contents Sidebar */
+.constitution-toc {
+  position: sticky;
+  top: 100px;
+  background: #fff;
+  border: 1px solid #e9edf5;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+  padding: 1.2rem;
+  z-index: 100;
+  height: fit-content !important;
+  transition: top 0.3s ease;
+}
+
+.constitution-toc h3 {
+  font-family: var(--font-bangla);
+  font-size: 1rem;
+  color: #0f172a;
+  margin: 0 0 0.8rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid #edf2f8;
+}
+
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  max-height: 65vh;
+  overflow-y: auto;
+}
+
+.toc-list li a {
+  display: block;
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  color: #475569;
+  transition: all 0.15s ease;
+  line-height: 1.4;
+}
+
+.toc-list li a:hover,
+.toc-list li a.active {
+  background: #eef3ff;
+  color: #1e3a5f;
+}
+
+/* Constitution Content */
+.constitution-content {
+  background: #fff;
+  border: 1px solid #e9edf5;
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+  padding: clamp(1.5rem, 3vw, 3rem);
+  font-family: var(--font-li-subha-stack);
+}
+
+.constitution-section {
+  margin-bottom: 2.5rem;
+  scroll-margin-top: 6rem;
+}
+
+.constitution-section:last-child {
+  margin-bottom: 0;
+}
+
+.constitution-section h2 {
+  font-size: 1.5rem;
+  color: #0f172a;
+  margin: 0 0 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid #eef3ff;
+}
+
+.constitution-section h3 {
+  font-size: 1.15rem;
+  color: #1e293b;
+  margin: 1.2rem 0 0.6rem;
+}
+
+.constitution-section h4 {
+  font-size: 1.02rem;
+  color: #334155;
+  margin: 1rem 0 0.5rem;
+}
+
+.constitution-section ol.bn-list {
+  list-style: none;
+  padding-left: 0.5rem;
+}
+
+.constitution-logo-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 1.2rem 0 0.5rem;
+}
+
+.constitution-logo {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #f8fafc;
+  padding: 0.6rem;
+  border: 1px solid #e9edf5;
+}
+
+.constitution-section p {
+  color: #334155;
+  line-height: 1.85;
+  margin: 0 0 0.8rem;
+  font-size: 1.05rem;
+}
+
+.constitution-section ul,
+.constitution-section ol {
+  color: #334155;
+  line-height: 1.85;
+  padding-left: 1.5rem;
+  margin: 0 0 1rem;
+}
+
+.constitution-section li {
+  margin-bottom: 0.4rem;
+}
+
+.constitution-section .article-number {
+  display: inline-block;
+  background: #eef3ff;
+  color: #1e3a5f;
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  margin-bottom: 0.4rem;
+}
+
+/* Placeholder state when content not yet provided */
+.constitution-placeholder {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #64748b;
+}
+
+.constitution-placeholder svg {
+  color: #cbd5e1;
+  margin-bottom: 1rem;
+}
+
+.constitution-placeholder h2 {
+  font-family: var(--font-bangla);
+  font-size: 1.4rem;
+  color: #334155;
+  margin: 0 0 0.6rem;
+  border: none;
+  padding: 0;
+}
+
+.constitution-placeholder p {
+  font-family: var(--font-bangla);
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .constitution-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 2rem;
+  }
+
+  .constitution-actions {
+    position: static;
+    margin-bottom: 0.5rem;
+  }
+
+  .constitution-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .constitution-toc {
+    position: static;
+    order: -1;
+  }
+
+  .toc-list {
+    max-height: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .toc-list {
+    grid-template-columns: 1fr;
+  }
+
+  .constitution-content {
+    padding: 1.2rem;
+  }
+}

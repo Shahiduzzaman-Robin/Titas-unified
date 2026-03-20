@@ -1,0 +1,137 @@
+/* ==========================================================================
+   GLASSMORPHIC CONTACT FORM WRAPPER
+   ========================================================================== */
+.contact-form-glass {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.1);
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.contact-form-header {
+    background: #0f172a;
+    color: white;
+    padding: 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-form-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.contact-form-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.contact-form-body {
+    padding: 2.5rem;
+}
+
+/* Form Groups & Inputs */
+.form-group-modern {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.form-group-modern label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    color: #334155;
+    font-size: 0.95rem;
+}
+
+.input-modern {
+    width: 100%;
+    padding: 0.8rem 1.2rem;
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    color: #0f172a;
+    transition: all 0.3s ease;
+}
+
+.input-modern:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    background: #fff;
+}
+
+.input-modern:disabled {
+    background: #f1f5f9;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+textarea.input-modern {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Submit Button */
+.btn-modern-submit {
+    width: 100%;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    background: #1e293b;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-modern-submit:hover:not(:disabled) {
+    background: #0f172a;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
+}
+
+.btn-modern-submit:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+/* Success & Error States */
+.contact-form-success {
+    padding: 4rem 2.5rem;
+    text-align: center;
+    background: #f0fdf4;
+}
+
+.success-icon {
+    margin-bottom: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .contact-form-body {
+        padding: 1.5rem;
+    }
+}

@@ -1,0 +1,89 @@
+import React from 'react';
+
+const FAQSection = () => {
+    return (
+        <section className="faq-modern section-bg-light" id="faq">
+            <div className="container">
+                <div className="section-header-center">
+                    <div className="section-label">Questions?</div>
+                    <h2 className="section-title bn-text">সাধারণ জিজ্ঞাসা</h2>
+                    <p className="section-subtitle">নবীন শিক্ষার্থীদের মনে সাধারণত যেসব প্রশ্ন জাগে</p>
+                </div>
+
+                <div className="faq-list">
+                    <details className="faq-item">
+                        <summary className="bn-text">আমি কিভাবে তিতাসের সদস্য হতে পারি?</summary>
+                        <div className="faq-content bn-text">
+                            তিতাসের সদস্য হতে হলে আপনাকে অবশ্যই ঢাকা বিশ্ববিদ্যালয়ের রানিং শিক্ষার্থী হতে হবে এবং আপনার স্থায়ী ঠিকানা ব্রাহ্মণবাড়িয়া জেলায় হতে হবে। এই ওয়েবসাইটের 'কমিউনিটিতে যোগ দিন' বাটনে ক্লিক করে অনলাইনে আপনার তথ্য প্রদান করলেই যাচাই-বাছাই শেষে আপনি সদস্য পদ লাভ করবেন।
+                        </div>
+                    </details>
+                    
+                    <details className="faq-item">
+                        <summary className="bn-text">সংগঠনের সাধারণ সভা কখন হয়?</summary>
+                        <div className="faq-content bn-text">
+                            আমাদের একটি বাৎসরিক ক্যালেন্ডার রয়েছে। সাধারণত প্রতি মাসের প্রথম শুক্রবার টিএসসিতে আমাদের মিলিত আড্ডা বা সাধারণ সভার আয়োজন করা হয়ে থাকে। এছাড়া বিশেষ প্রয়োজন বা ইভেন্টের আগে জরুরি সভা আহ্বান করা হয়, যার নোটিশ ওয়েবসাইটে এবং ফেসবুক গ্রুপে জানানো হয়।
+                        </div>
+                    </details>
+
+                    <details className="faq-item">
+                        <summary className="bn-text">ক্যাম্পাসে কোনো বিপদে পড়লে কার সাথে যোগাযোগ করবো?</summary>
+                        <div className="faq-content bn-text">
+                            যেকোনো জরুরি দরকারে আমাদের হেল্পলাইন নম্বর অথবা বর্তমান সভাপতি/সাধারণ সম্পাদকের সাথে সরাসরি যোগাযোগ করতে পারেন। তাঁদের নাম্বার ওয়েবসাইটের যোগাযোগ পৃষ্ঠায় দেয়া আছে। আমরা সবসময় বারিয়ার ভাই-বোনদের পাশে আছি।
+                        </div>
+                    </details>
+
+                    <details className="faq-item">
+                        <summary className="bn-text">এখানে কি স্কলারশিপ বা বৃত্তির কোনো ব্যবস্থা আছে?</summary>
+                        <div className="faq-content bn-text">
+                            তিতাসের সরাসরি নিজস্ব কোনো স্কলারশিপ নেই, তবে আমাদের অ্যালামনাই এসোসিয়েশনের পক্ষ থেকে অস্বচ্ছল ও মেধাবী শিক্ষার্থীদের জন্য বিভিন্ন সময় এককালীন অনুদান এবং বৃত্তির ব্যবস্থা করা হয়ে থাকে।
+                        </div>
+                    </details>
+
+                    <details className="faq-item">
+                        <summary className="bn-text">রেজিস্ট্রেশন দেওয়ার পর অনুমোদন পেতে কত সময় লাগে?</summary>
+                        <div className="faq-content bn-text">
+                            সাধারণত ২৪-৭২ ঘণ্টার মধ্যে আবেদন যাচাই করা হয়। প্রয়োজনীয় তথ্য (রেজিস্ট্রেশন নম্বর, বিভাগ, সেশন, যোগাযোগ নম্বর) সঠিক থাকলে দ্রুত অনুমোদন দেওয়া সম্ভব হয়। বিশেষ ব্যস্ত সময়ে একটু বেশি সময় লাগতে পারে।
+                        </div>
+                    </details>
+
+                    <details className="faq-item">
+                        <summary className="bn-text">স্টুডেন্ট প্রোফাইলের ছবি বা তথ্য কি পরে আপডেট করা যাবে?</summary>
+                        <div className="faq-content bn-text">
+                            অবশ্যই। প্রোফাইলের তথ্য আপডেটের প্রয়োজন হলে অ্যাডমিন প্যানেল বা যোগাযোগ ফর্মের মাধ্যমে অনুরোধ করতে পারবেন। যাচাই শেষে আপনার তথ্য আপডেট করে দেওয়া হবে।
+                        </div>
+                    </details>
+
+                    <details className="faq-item">
+                        <summary className="bn-text">আমি অ্যালামনাই, তবুও কি তিতাসের কার্যক্রমে যুক্ত হতে পারবো?</summary>
+                        <div className="faq-content bn-text">
+                            হ্যাঁ, অবশ্যই। অ্যালামনাই সদস্যরা মেন্টরিং, ক্যারিয়ার গাইডলাইন, সেমিনার এবং শিক্ষার্থীদের সহায়তা কার্যক্রমে সক্রিয়ভাবে অংশ নিতে পারেন। আমাদের সাথে যোগাযোগ করলে সংশ্লিষ্ট টিম আপনাকে যুক্ত করে নেবে।
+                        </div>
+                    </details>
+
+                    <details className="faq-item">
+                        <summary className="bn-text">ওয়েবসাইটে দেওয়া আমার ব্যক্তিগত তথ্য কতটা নিরাপদ?</summary>
+                        <div className="faq-content bn-text">
+                            আমরা ব্যক্তিগত তথ্য সুরক্ষায় সর্বোচ্চ গুরুত্ব দিই। সংবেদনশীল তথ্য সীমিতভাবে প্রদর্শন করা হয় এবং অনুমোদিত অ্যাডমিন ছাড়া তা সম্পাদনার সুযোগ থাকে না। নিরাপত্তা ঝুঁকি মনে হলে দ্রুত আমাদের জানাতে পারবেন।
+                        </div>
+                    </details>
+
+                    <details className="faq-item">
+                        <summary className="bn-text">ইভেন্টের আপডেট বা নোটিশ সবচেয়ে দ্রুত কোথায় পাওয়া যাবে?</summary>
+                        <div className="faq-content bn-text">
+                            সবশেষ আপডেট পেতে ওয়েবসাইটের নোটিশ বোর্ড, ইভেন্ট সেকশন এবং অফিসিয়াল ফেসবুক গ্রুপ নিয়মিত অনুসরণ করুন। জরুরি আপডেটগুলো সাধারণত সবার আগে নোটিশ টিকারে প্রকাশ করা হয়।
+                        </div>
+                    </details>
+
+                    <details className="faq-item">
+                        <summary className="bn-text">ঢাকায় নতুন এলে থাকার ব্যবস্থা বা গাইডলাইন পাওয়া যাবে কি?</summary>
+                        <div className="faq-content bn-text">
+                            নতুনদের জন্য সিনিয়র ভাই-বোনেরা সাধ্যের মধ্যে থাকা, রুট, এবং প্রয়োজনীয় কাগজপত্র বিষয়ে দিকনির্দেশনা দিয়ে থাকেন। আপনি যোগাযোগ ফর্মে বার্তা দিলে বা হেল্পলাইনে জানালে দ্রুত রেসপন্স পাবেন।
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export default FAQSection;

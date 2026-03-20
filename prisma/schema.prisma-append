@@ -1,0 +1,42 @@
+
+model sessions {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(50)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("sessions")
+}
+
+model departments {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(100)
+  code      String?  @db.VarChar(20)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("departments")
+}
+
+model halls {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(100)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("halls")
+}
+
+model upazilas {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(100)
+  district  String   @default("ব্রাহ্মণবাড়িয়া") @db.VarChar(100)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("upazilas")
+}

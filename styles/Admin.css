@@ -1,0 +1,203 @@
+/* ===== ADMIN PANEL STYLES ===== */
+
+/* Root wrapper */
+.admin-root {
+    min-height: 100vh;
+    background: #f1f5f9;
+    font-family: var(--font-bangla), 'Inter', sans-serif;
+}
+
+/* Bengali text rendering */
+.bn-text {
+    font-family: var(--font-bangla), 'Inter', sans-serif;
+}
+
+/* Admin Layout */
+.admin-layout {
+    min-height: 100vh;
+    background: #f1f5f9;
+    font-family: var(--font-bangla), 'Inter', sans-serif;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Admin main content */
+.admin-main {
+    padding: 1.5rem 1.15rem 2rem;
+    max-width: 1320px;
+    margin: 0 auto;
+}
+
+/* Page Header */
+.admin-page-header {
+    margin-bottom: 1.25rem;
+}
+
+.admin-page-header h1 {
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    line-height: 1.15;
+}
+
+.admin-page-header p {
+    color: #64748b;
+    font-size: 0.84rem;
+    margin-top: 0.25rem;
+}
+
+/* ===== STUDENT LIST TABLE ===== */
+.admin-table-wrapper {
+    overflow-x: auto;
+}
+
+/* ===== SHARED ADMIN COMPONENTS ===== */
+
+/* Tables */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.admin-table th {
+    background: #f8fafc;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #64748b;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+.admin-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+    color: #1a1a2e;
+}
+
+.admin-table tr:hover td {
+    background: #f8fafc;
+}
+
+/* Actions */
+.action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #64748b;
+    padding: 0.4rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-btn:hover {
+    color: #1a1a2e;
+    background: #f1f5f9;
+}
+
+.action-btn.reject:hover {
+    color: #ef4444;
+    background: #fef2f2;
+}
+
+/* Common form elements (used in simple admins) */
+.admin-search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.admin-search-wrapper .search-icon {
+    position: absolute;
+    left: 0.75rem;
+    color: #94a3b8;
+}
+
+.admin-search-input {
+    width: 100%;
+    padding: 0.5rem 1rem 0.5rem 2.25rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.admin-search-input:focus {
+    border-color: #3b82f6;
+}
+
+.btn-primary {
+    background: #1a1a2e;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.25rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover {
+    background: #2d2d4d;
+}
+
+.btn-outline {
+    background: white;
+    color: #1a1a2e;
+    border: 1px solid #e2e8f0;
+    padding: 0.6rem 1.25rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
+
+.btn-outline:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.btn-outline.active {
+    background: #1a1a2e;
+    color: white;
+    border-color: #1a1a2e;
+}
+
+/* Quill Styling */
+.ql-container.ql-snow {
+    min-height: 420px;
+    font-family: var(--font-bangla), 'Inter', sans-serif !important;
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+    border-color: #e2e8f0 !important;
+}
+
+.ql-toolbar.ql-snow {
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+    background: #f8fafc;
+    border-color: #e2e8f0 !important;
+    padding: 0.75rem !important;
+}
+
+.ql-editor {
+    min-height: 420px;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #1e293b;
+    padding: 1.25rem !important;
+}
