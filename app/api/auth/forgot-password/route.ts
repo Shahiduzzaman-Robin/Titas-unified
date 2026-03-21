@@ -57,7 +57,7 @@ export async function POST(req: Request) {
             // Send email
             const result = await sendPasswordResetEmail(identifier, token)
 
-            if (!result.success) {
+            if (!result.sent) {
                 return NextResponse.json(
                     { message: "Failed to send email" },
                     { status: 500 }
@@ -108,7 +108,7 @@ export async function POST(req: Request) {
                 // Send email
                 const result = await sendPasswordResetEmail(student.email, token)
 
-                if (!result.success) {
+                if (!result.sent) {
                     return NextResponse.json(
                         { message: "Failed to send email" },
                         { status: 500 }
