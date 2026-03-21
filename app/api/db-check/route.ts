@@ -8,17 +8,23 @@ export async function GET() {
         const studentCount = await prisma.students.count();
 
         // Optional check for Database URL
-        const dbUrlStart = process.env.DATABASE_URL?.substring(0, 30) || "MISSING";
+        const dbUrl = process.env.DATABASE_URL;
+
+        const debugObject = {
+            totalAdmins: adminCount,
+            admins: admins,
+            totalStudents: studentCount,
+            databasePrefix: dbUrl ? `${dbUrl.substring(0, 30)}...` : 'Not Set',
+            cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME || 'Missing',
+            cloudinaryApiKey: process.env.CLOUDINARY_API_KEY || 'Missing',
+            cloudinarySecretSet: !!process.env.CLOUDINARY_API_SECRET,
+            cloudinarySecretLength: process.env.CLOUDINARY_API_SECRET ? process.env.CLOUDINARY_API_SECRET.length : 0
+        };
 
         return NextResponse.json({
             status: "success",
             message: "Database connection is completely healthy!",
-            debug: {
-                totalAdmins: adminCount,
-                admins: admins,
-                totalStudents: studentCount,
-                databasePrefix: dbUrlStart + "..."
-            }
+            debug: debugObject
         });
     } catch (error: any) {
         console.error("Vercel DB Check Error:", error);
