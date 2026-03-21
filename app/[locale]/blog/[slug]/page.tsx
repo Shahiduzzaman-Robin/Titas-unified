@@ -180,12 +180,12 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
 
                             {/* Content */}
                             <div 
-                                className="blog-content bn-text prose prose-slate prose-xl max-w-none prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tight prose-p:leading-relaxed prose-p:text-slate-600 prose-a:text-slate-900 prose-img:rounded-[2rem] prose-img:shadow-xl"
+                                className="blog-content bn-text mx-auto prose prose-slate prose-lg md:prose-xl prose-headings:font-bold prose-headings:text-slate-900 prose-p:leading-relaxed prose-p:text-slate-700 prose-a:text-indigo-600 prose-img:rounded-3xl prose-img:shadow-xl text-justify"
                                 dangerouslySetInnerHTML={{ __html: post.content }}
                             />
 
                             {/* Tags & Footer */}
-                            <footer className="pt-12 border-t border-slate-100 space-y-10">
+                            <footer className="pt-12 border-t border-slate-100 space-y-10 max-w-[65ch] mx-auto">
                                 <div className="flex flex-wrap gap-2">
                                     {post.tags.map((tag: any) => (
                                         <Link key={tag.id} href={`/${locale}/blog?tag=${tag.slug}`}>
