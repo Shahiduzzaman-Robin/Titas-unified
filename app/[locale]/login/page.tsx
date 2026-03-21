@@ -20,6 +20,7 @@ export default function LoginPage() {
     const router = useRouter()
     const { data: session, status } = useSession()
     const [loading, setLoading] = useState(false)
+    const [errorMessage, setErrorMessage] = useState("");
     const [formData, setFormData] = useState({
         username: "",
         password: "",
@@ -39,6 +40,7 @@ export default function LoginPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
+        setErrorMessage("")
 
         try {
             const result = await signIn("credentials", {
@@ -50,7 +52,9 @@ export default function LoginPage() {
             console.log("Login Result:", result);
 
             if (result?.error) {
-                toast.error(t('invalidCredentials') || "Invalid username or password")
+                const message = t('invalidCredentials') || "Invalid username or password"
+                setErrorMessage(message)
+                toast.error(message)
             } else {
                 toast.success(t('success') || "Login successful")
                 // Hard redirect to route handler which will use session to direct them to /admin/dashboard or /student/profile
@@ -59,7 +63,9 @@ export default function LoginPage() {
             }
         } catch (error) {
             console.error("Login Exception:", error);
-            toast.error(t('error') || "An unexpected error occurred")
+            const message = t('error') || "An unexpected error occurred"
+            setErrorMessage(message)
+            toast.error(message)
         } finally {
             setLoading(false)
         }
@@ -152,6 +158,12 @@ export default function LoginPage() {
                                         <Lock className="auth-input-icon h-5 w-5" />
                                     </div>
                                 </div>
+
+                                {errorMessage && (
+                                    <div className="bg-red-50 text-red-600 border border-red-200 p-3 rounded-lg text-sm text-center font-medium">
+                                        {errorMessage}
+                                    </div>
+                                )}
 
                                 <Button
                                     type="submit"
