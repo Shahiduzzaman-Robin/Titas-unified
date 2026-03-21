@@ -93,14 +93,29 @@ export function StudentCard({
             
             {/* Profile Header */}
             <div className="card-header-profile">
-                <div className="avatar-container cursor-pointer overflow-hidden rounded-full">
-                    <Image
-                        src={getStudentImageUrl(student.image_path)}
-                        alt={name || 'Student'}
-                        fill
-                        className="avatar-image hover:scale-110 transition-transform duration-700"
-                    />
-                </div>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <div className="avatar-container cursor-zoom-in">
+                            <Image
+                                src={getStudentImageUrl(student.image_path)}
+                                alt={name || 'Student'}
+                                fill
+                                className="avatar-image group-hover:scale-110 transition-transform duration-700"
+                            />
+                        </div>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md p-0 overflow-hidden border-none bg-transparent shadow-none [&>button]:text-white [&>button]:bg-black/20 [&>button]:hover:bg-black/40">
+                        <div className="relative w-full aspect-square md:aspect-[4/3] rounded-3xl overflow-hidden bg-white/5 backdrop-blur-xl">
+                            <Image
+                                src={getStudentImageUrl(student.image_path)}
+                                alt={name || 'Student'}
+                                fill
+                                className="object-contain"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            />
+                        </div>
+                    </DialogContent>
+                </Dialog>
                 
                 <div className="profile-name-id">
                     <h3 className="bn-text" title={name || ''}>
