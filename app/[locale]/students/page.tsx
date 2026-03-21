@@ -155,7 +155,20 @@ export default async function StudentsPage({ params, searchParams }: StudentsPag
             />
         );
     } catch (error) {
-        console.error('Error loading students:', error);
-        notFound();
+        console.error('Error loading students from DB:', error);
+        
+        return (
+            <div className="pt-32 pb-32 min-h-screen bg-slate-50 flex items-center justify-center">
+                <div className="bg-white p-8 rounded-xl shadow-sm border border-red-100 text-center max-w-md">
+                    <h2 className="text-2xl font-bold text-red-600 mb-4">Database Connection Error</h2>
+                    <p className="text-gray-600 mb-6">
+                        We could not retrieve student data. The live database connection appears to be failing or unreachable from the server.
+                    </p>
+                    <p className="text-sm text-gray-400">
+                        Check your Vercel Environment Variables: Ensure DATABASE_URL is correct and append ?pgbouncer=true or ?connection_limit=1 if using Neon PostgreSQL.
+                    </p>
+                </div>
+            </div>
+        );
     }
 }
