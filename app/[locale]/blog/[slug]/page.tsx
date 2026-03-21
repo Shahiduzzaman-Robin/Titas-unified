@@ -54,7 +54,7 @@ export async function generateMetadata(
             siteName: 'TITAS - Dhaka University Students\' Welfare Association of Brahmanbaria',
             type: 'article',
             publishedTime: post.publishedAt?.toISOString(),
-            authors: post.authorName ? [post.authorName] : (post.author?.name ? [post.author.name] : ['TITAS Admin']),
+            authors: post.authorName ? [post.authorName] : ['Titas Editorial Team'],
             locale: locale === 'bn' ? 'bn_BD' : 'en_US',
             images: [
                 {
@@ -148,7 +148,7 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                                             {(post.authorName || post.author?.name || 'A')[0]}
                                         </div>
                                         <div>
-                                            <p className="text-sm font-bold text-slate-900 leading-none">{post.authorName || post.author?.name || 'Titas Admin'}</p>
+                                            <p className="text-sm font-bold text-slate-900 leading-none">{post.authorName || 'Titas Editorial Team'}</p>
                                             <p className="text-[10px] text-slate-400 font-medium uppercase tracking-widest mt-1">Author</p>
                                         </div>
                                     </div>
@@ -170,15 +170,13 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                             </header>
 
                             {/* Featured Image */}
-                            {post.featuredImage && (
-                                <div className="relative aspect-[21/9] rounded-[2rem] overflow-hidden shadow-2xl shadow-slate-100 border-8 border-white">
-                                    <img 
-                                        src={post.featuredImage} 
-                                        alt={post.title} 
-                                        className="h-full w-full object-cover" 
-                                    />
-                                </div>
-                            )}
+                            <div className="relative aspect-[21/9] rounded-[2rem] overflow-hidden shadow-2xl shadow-slate-100 border-8 border-white">
+                                <img 
+                                    src={post.featuredImage || '/blog-placeholder.jpg'} 
+                                    alt={post.title} 
+                                    className="h-full w-full object-cover" 
+                                />
+                            </div>
 
                             {/* Content */}
                             <div 

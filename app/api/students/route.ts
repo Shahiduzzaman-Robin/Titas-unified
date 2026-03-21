@@ -147,11 +147,12 @@ export async function GET(request: NextRequest) {
         // Default to approved only for public, unless specifically requested otherwise (e.g. admin)
         // But for this route, if no status is provided, we usually want all for admin or approved for public.
         // Let's check if the caller is asking for a specific status.
-        if (statuses.length > 0) {
+        if (statuses.length > 0 && !statuses.includes('all')) {
             where.approval = { in: statuses.map(s => parseInt(s)) }
+        } else if (statuses.includes('all')) {
+            // No approval filter needed for 'all'
         } else {
-            // If no status provided, default to approved (1) for safety in public context
-            // Admin panel usually sends explicit status filters.
+            // Default to approved only for public, unless specifically requested otherwise
             where.approval = 1 
         }
 
@@ -189,8 +190,9 @@ export async function GET(request: NextRequest) {
         const [students, total] = await Promise.all([
             prisma.students.findMany({
                 where,
-                ...(isExport ? {} : { skip, take: limit }),
-                orderBy: { id: 'desc' },
+                skip: isExport ? 0 : skip,
+                take: limit,
+                orderBy: { id: 'asc' },
             }),
             prisma.students.count({ where }),
         ])

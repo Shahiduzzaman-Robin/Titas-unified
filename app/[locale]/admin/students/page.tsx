@@ -38,10 +38,9 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs"
 import { Label } from "@/components/ui/label"
-import { Search, Eye, Check, X, Download, Trash2, Loader2, Filter, Settings, Columns, CheckCircle2, Globe } from "lucide-react"
+import { Search, Eye, Check, X, Download, Trash2, Loader2, Filter, Settings, Columns, CheckCircle2, Globe, AlertCircle, ArrowRight, Users, LayoutGrid, FileSpreadsheet } from "lucide-react"
 import { useTranslations } from 'next-intl'
 import Link from "next/link"
-import ExcelJS from 'exceljs'
 import { useLocale } from 'next-intl'
 import { getStudentImageUrl } from "@/lib/utils"
 import { useSearchParams } from 'next/navigation'
@@ -91,19 +90,19 @@ export default function StudentsPage() {
 
     const exportFields = [
         { id: 'titasId', label: 'Titas ID' },
-        { id: 'name', label: 'Student Name' },
+        { id: 'name', label: 'Name' },
         { id: 'session', label: 'Session' },
         { id: 'department', label: 'Department' },
         { id: 'hall', label: 'Hall' },
         { id: 'upazila', label: 'Upazila' },
-        { id: 'mobile', label: 'Mobile Number' },
-        { id: 'email', label: 'Email Address' },
+        { id: 'mobile', label: 'Mobile' },
+        { id: 'email', label: 'Email' },
         { id: 'blood_group', label: 'Blood Group' },
         { id: 'gender', label: 'Gender' },
-        { id: 'du_reg_number', label: 'DU Reg. Number' },
+        { id: 'du_reg_number', label: 'DU Reg Number' },
         { id: 'address', label: 'Address' },
         { id: 'status', label: 'Status' },
-        { id: 'photo', label: 'Photo Link' }
+        { id: 'photo', label: 'Photo' },
     ]
 
     // Filter States
@@ -372,224 +371,51 @@ export default function StudentsPage() {
         setIsExporting(true)
         try {
             const params = new URLSearchParams()
-            params.append('export', 'true')
-
-            // Apply Filters - ONLY use filters selected inside the modal
-            if (selectedExportSessions.length > 0) {
-                selectedExportSessions.forEach(s => params.append('session', s))
-            }
-
-            if (selectedExportDepts.length > 0) {
-                selectedExportDepts.forEach(d => params.append('department', d))
-            }
-
-            if (selectedExportUpazilas.length > 0) {
-                selectedExportUpazilas.forEach(u => params.append('upazila', u))
-            }
-
+            
+            // Apply Status Filter (IDs 0, 1, 2)
             if (selectedExportStatus.length > 0) {
                 selectedExportStatus.forEach(s => params.append('status', s))
             }
 
-            const res = await fetch(`/api/students?${params.toString()}`)
-            if (!res.ok) throw new Error("Export failed")
-            const data = await res.json()
-            const allStudents = data.students || []
-
-            // Client-side filter for Hall if needed (API doesn't support it yet)
-            const finalData = allStudents
-
-            // Sort data: Lower to Higher (ID ascending)
-            const sortedData = finalData.sort((a: any, b: any) => a.id - b.id)
-
-            // Create Workbook and Worksheet
-            const workbook = new ExcelJS.Workbook();
-            const worksheet = workbook.addWorksheet('Students');
-
-            // Define Dynamic Columns
-            const columns: any[] = [{ header: 'SL', key: 'sl', width: 5 }];
-
-            const addLangColumns = (baseId: string, baseHeader: string, enKey: string, bnKey: string, width: number) => {
-                if (selectedExportFields.includes(baseId)) {
-                    if (exportLanguage === 'both') {
-                        columns.push({ header: `${baseHeader} (EN)`, key: enKey, width });
-                        columns.push({ header: `${baseHeader} (BN)`, key: bnKey, width });
-                    } else if (exportLanguage === 'bn') {
-                        columns.push({ header: baseHeader, key: bnKey, width });
-                    } else {
-                        columns.push({ header: baseHeader, key: enKey, width });
-                    }
-                }
+            // Apply Field Selection
+            if (selectedExportFields.length > 0) {
+                params.append('fields', selectedExportFields.join(','))
             }
 
-            if (selectedExportFields.includes('titasId')) columns.push({ header: 'Titas ID', key: 'titasId', width: 15 });
-
-            addLangColumns('name', 'Name', 'name_en', 'name_bn', 30);
-            addLangColumns('session', 'Session', 'session_en', 'session_bn', 15);
-            addLangColumns('department', 'Department', 'dept_en', 'dept_bn', 25);
-            addLangColumns('hall', 'Hall', 'hall_en', 'hall_bn', 20);
-            addLangColumns('upazila', 'Upazila', 'upazila_en', 'upazila_bn', 15);
-            addLangColumns('address', 'Address', 'address_en', 'address_bn', 30);
-
-            if (selectedExportFields.includes('mobile')) columns.push({ header: 'Phone Number', key: 'phone', width: 15 });
-            if (selectedExportFields.includes('email')) columns.push({ header: 'Email', key: 'email', width: 25 });
-            if (selectedExportFields.includes('blood_group')) columns.push({ header: 'Blood Group', key: 'blood', width: 12 });
-            if (selectedExportFields.includes('gender')) columns.push({ header: 'Gender', key: 'gender', width: 10 });
-            if (selectedExportFields.includes('du_reg_number')) columns.push({ header: 'DU Reg.', key: 'duReg', width: 15 });
-            if (selectedExportFields.includes('status')) columns.push({ header: 'Status', key: 'status', width: 12 });
-            if (selectedExportFields.includes('photo')) columns.push({ header: 'Photo', key: 'photo', width: 15 });
-
-            worksheet.columns = columns;
-
-            // Helper to get raw data for both languages
-            const getRawLangData = (type: 'sessions' | 'departments' | 'halls' | 'upazilas', value: string) => {
-                if (!value) return { en: "", bn: "" }
-                const found = options[type].find((opt: any) => opt.name?.toLowerCase().trim() === value.toLowerCase().trim())
-                return {
-                    en: found ? found.name : value,
-                    bn: found ? (found.name_bn || found.name) : value
-                }
+            // Apply Filters (Sessions, Depts, Upazilas)
+            if (selectedExportSessions.length > 0) {
+                selectedExportSessions.forEach(s => params.append('session', s))
+            }
+            if (selectedExportDepts.length > 0) {
+                selectedExportDepts.forEach(d => params.append('department', d))
+            }
+            if (selectedExportUpazilas.length > 0) {
+                selectedExportUpazilas.forEach(u => params.append('upazila', u))
             }
 
-            // Add Data
-            sortedData.forEach((s: any, index: number) => {
-                const rowData: any = {
-                    sl: index + 1
-                };
+            // Call the server-side export API
+            const res = await fetch(`/api/admin/students/export/approved?${params.toString()}`)
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({ msg: 'Export failed' }))
+                throw new Error(err.msg || 'Export failed')
+            }
 
-                if (selectedExportFields.includes('titasId')) rowData.titasId = `${s.prefix}-${String(s.id).padStart(4, '0')}`;
+            // Download file
+            const blob = await res.blob()
+            const url = window.URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = `titas-students-${new Date().toISOString().slice(0, 10)}.xlsx`
+            document.body.appendChild(a)
+            a.click()
+            a.remove()
+            window.URL.revokeObjectURL(url)
 
-                if (selectedExportFields.includes('name')) {
-                    rowData.name_en = s.name_en || s.name_bn || "";
-                    rowData.name_bn = s.name_bn || s.name_en || "";
-                }
-
-                if (selectedExportFields.includes('address')) {
-                    rowData.address_en = s.address_en || s.address_bn || "";
-                    rowData.address_bn = s.address_bn || s.address_en || "";
-                }
-
-                if (selectedExportFields.includes('session')) {
-                    const data = getRawLangData('sessions', s.student_session);
-                    rowData.session_en = data.en;
-                    rowData.session_bn = data.bn;
-                }
-
-                if (selectedExportFields.includes('department')) {
-                    const data = getRawLangData('departments', s.department);
-                    rowData.dept_en = data.en;
-                    rowData.dept_bn = data.bn;
-                }
-
-                if (selectedExportFields.includes('hall')) {
-                    const data = getRawLangData('halls', s.hall);
-                    rowData.hall_en = data.en;
-                    rowData.hall_bn = data.bn;
-                }
-
-                if (selectedExportFields.includes('upazila')) {
-                    const data = getRawLangData('upazilas', s.upazila);
-                    rowData.upazila_en = data.en;
-                    rowData.upazila_bn = data.bn;
-                }
-
-                if (selectedExportFields.includes('mobile')) rowData.phone = s.mobile || '';
-                if (selectedExportFields.includes('email')) rowData.email = s.email || '';
-                if (selectedExportFields.includes('blood_group')) rowData.blood = s.blood_group || '';
-                if (selectedExportFields.includes('gender')) rowData.gender = s.gender || '';
-                if (selectedExportFields.includes('du_reg_number')) rowData.duReg = s.du_reg_number || '';
-                if (selectedExportFields.includes('status')) rowData.status = s.approval === 1 ? 'Approved' : s.approval === 2 ? 'Rejected' : 'Pending';
-
-                const row = worksheet.addRow(rowData);
-
-                // Add Hyperlink to Photo if selected
-                if (selectedExportFields.includes('photo')) {
-                    const imagePath = getStudentImageUrl(s.image_path)
-                    const fullImageUrl = imagePath.startsWith('http')
-                        ? imagePath
-                        : `${window.location.origin}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`
-
-                    const photoCell = row.getCell(columns.findIndex(c => c.key === 'photo') + 1);
-                    photoCell.value = {
-                        text: 'View Photo',
-                        hyperlink: fullImageUrl,
-                        tooltip: 'Click to view photo'
-                    };
-                    photoCell.font = {
-                        color: { argb: 'FF0000FF' },
-                        underline: true
-                    };
-                }
-            });
-
-            // Styling Header
-            const headerRow = worksheet.getRow(1);
-            headerRow.eachCell((cell) => {
-                cell.fill = {
-                    type: 'pattern',
-                    pattern: 'solid',
-                    fgColor: { argb: 'FF008B8B' } // Teal color from image
-                };
-                cell.font = {
-                    bold: true,
-                    color: { argb: 'FFFFFFFF' }, // White text
-                    size: 11
-                };
-                cell.alignment = { vertical: 'middle', horizontal: 'center' };
-                cell.border = {
-                    top: { style: 'thin', color: { argb: 'FF000000' } },
-                    left: { style: 'thin', color: { argb: 'FF000000' } },
-                    bottom: { style: 'thin', color: { argb: 'FF000000' } },
-                    right: { style: 'thin', color: { argb: 'FF000000' } }
-                };
-            });
-
-            // Styling All Data Cells (Borders & Alignment)
-            worksheet.eachRow((row, rowNumber) => {
-                if (rowNumber > 1) { // Skip header
-                    row.eachCell((cell) => {
-                        cell.border = {
-                            top: { style: 'thin', color: { argb: 'FF000000' } },
-                            left: { style: 'thin', color: { argb: 'FF000000' } },
-                            bottom: { style: 'thin', color: { argb: 'FF000000' } },
-                            right: { style: 'thin', color: { argb: 'FF000000' } }
-                        };
-                        cell.alignment = { vertical: 'middle', horizontal: 'left', wrapText: false };
-                        // Center SL, ID, Status, Photo columns if they exist
-                        const centerKeys = ['sl', 'titasId', 'status', 'photo', 'blood', 'gender'];
-                        const colKey = columns[(cell as any).col - 1]?.key;
-                        if (centerKeys.includes(colKey)) {
-                            cell.alignment = { horizontal: 'center', vertical: 'middle' };
-                        }
-                    });
-                }
-            });
-
-            // Auto-fit column widths (basic implementation)
-            worksheet.columns.forEach(column => {
-                let maxLen = 0;
-                column.eachCell!({ includeEmpty: true }, (cell) => {
-                    const cellLen = cell.value ? cell.value.toString().length : 0;
-                    if (cellLen > maxLen) maxLen = cellLen;
-                });
-                column.width = Math.min(Math.max(maxLen + 2, 8), 100); // Min 8, Max 100
-            });
-
-            // Generate Buffer and Download
-            const buffer = await workbook.xlsx.writeBuffer();
-            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            const url = window.URL.createObjectURL(blob);
-            const anchor = document.createElement('a');
-            anchor.href = url;
-            anchor.download = `students_export_${new Date().toISOString().split('T')[0]}.xlsx`;
-            anchor.click();
-            window.URL.revokeObjectURL(url);
-
-            toast.success(`Exported ${finalData.length} students`)
+            toast.success('Export successful!')
             setIsExportModalOpen(false)
-        } catch (error) {
+        } catch (error: any) {
             console.error(error)
-            toast.error("Failed to export students")
+            toast.error(error.message || 'Failed to export students')
         } finally {
             setIsExporting(false)
         }
@@ -1184,409 +1010,258 @@ export default function StudentsPage() {
             </Dialog>
 
             <Dialog open={isExportModalOpen} onOpenChange={setIsExportModalOpen}>
-                <DialogContent className="max-w-3xl max-h-[95vh] flex flex-col p-0 overflow-hidden bg-white/95 backdrop-blur-sm border-gray-200/50 shadow-2xl">
-                    <DialogHeader className="p-6 pb-2 border-b bg-gray-50/50">
-                        <div className="flex items-center gap-2 mb-1">
-                            <div className="p-2 bg-indigo-100 rounded-lg">
-                                <Download className="w-5 h-5 text-indigo-600" />
+                <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col p-0 overflow-hidden bg-white border-0 shadow-2xl rounded-[1.5rem]">
+                    <DialogHeader className="p-8 pb-6 bg-slate-50 border-b border-slate-200">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-5">
+                                <div className="p-3.5 bg-slate-900 rounded-2xl shadow-lg">
+                                    <Download className="w-7 h-7 text-white" />
+                                </div>
+                                <div>
+                                    <DialogTitle className="text-2xl font-black text-slate-900 tracking-tight">{t('export.modalTitle')}</DialogTitle>
+                                    <DialogDescription className="text-slate-500 font-bold text-base mt-2">
+                                        Configure your student data report for export.
+                                    </DialogDescription>
+                                </div>
                             </div>
-                            <DialogTitle className="text-xl font-bold text-gray-900 leading-none">{t('export.modalTitle')}</DialogTitle>
+                            <div className="hidden sm:flex items-center gap-3 px-5 py-2.5 bg-white rounded-full border border-slate-200 shadow-sm">
+                                <Users className="w-5 h-5 text-slate-600" />
+                                <span className="text-sm font-black text-slate-700 tracking-tight">629 Students Available</span>
+                            </div>
                         </div>
-                        <DialogDescription className="text-gray-500">
-                            {t('export.modalDescription')}
-                        </DialogDescription>
                     </DialogHeader>
 
-                    <Tabs value={activeExportTab} onValueChange={setActiveExportTab} className="flex-1 flex flex-col overflow-hidden">
-                        <div className="px-6 pt-4 bg-gray-50/30 border-b">
-                            <TabsList className="bg-gray-100/80 p-1 rounded-xl mb-4">
-                                <TabsTrigger value="format" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm px-6 py-2 flex items-center gap-2 transition-all">
-                                    <Settings className="w-4 h-4" />
-                                    <span>{t('export.tabs.format')}</span>
-                                </TabsTrigger>
-                                <TabsTrigger value="filters" disabled={activeExportTab === 'format'} className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm px-6 py-2 flex items-center gap-2 transition-all">
-                                    <Filter className="w-4 h-4" />
-                                    <span>{t('export.tabs.filters')}</span>
-                                </TabsTrigger>
-                                <TabsTrigger value="columns" disabled={activeExportTab !== 'columns'} className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm px-6 py-2 flex items-center gap-2 transition-all">
-                                    <Columns className="w-4 h-4" />
-                                    <span>{t('export.tabs.columns')}</span>
-                                </TabsTrigger>
-                            </TabsList>
-                        </div>
-
-                        <div className="flex-1 overflow-y-auto px-6 py-4">
-                            <TabsContent value="format" className="mt-0 outline-none space-y-8">
-                                <div className="space-y-4">
-                                    <div>
-                                        <h4 className="text-sm font-semibold text-gray-900 leading-none">{t('export.languageTitle')}</h4>
-                                        <p className="text-[11px] text-gray-500 mt-1">{t('export.languageDesc')}</p>
-                                    </div>
-                                    <div className="p-1 bg-gray-100/80 rounded-xl inline-flex w-full">
-                                        {[
-                                            { id: 'en', label: t('export.langEn'), icon: Globe },
-                                            { id: 'bn', label: t('export.langBn'), icon: Globe },
-                                            { id: 'both', label: t('export.langBoth'), icon: Globe }
-                                        ].map((opt) => (
+                    <div className="flex-1 overflow-y-auto px-8 py-8 space-y-12 custom-scrollbar">
+                        {/* Status & Language Section */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                             {/* Application Status */}
+                             <div className="space-y-5">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-2 h-7 bg-slate-900 rounded-full" />
+                                    <h4 className="text-base font-black text-slate-900 uppercase tracking-widest">{t('export.statusTitle')}</h4>
+                                </div>
+                                <div className="flex flex-wrap gap-3">
+                                    {[
+                                        { id: '1', label: t('approved'), color: 'bg-slate-500' },
+                                        { id: '0', label: t('pending'), color: 'bg-slate-300' },
+                                        { id: '2', label: t('rejected'), color: 'bg-slate-200' }
+                                    ].map((s) => {
+                                        const isSelected = selectedExportStatus.includes(s.id);
+                                        return (
                                             <button
-                                                key={opt.id}
-                                                onClick={() => setExportLanguage(opt.id as any)}
+                                                key={s.id}
+                                                onClick={() => {
+                                                    if (isSelected) setSelectedExportStatus(prev => prev.filter(v => v !== s.id))
+                                                    else setSelectedExportStatus(prev => [...prev, s.id])
+                                                }}
                                                 className={`
-                                                    flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm transition-all
-                                                    ${exportLanguage === opt.id
-                                                        ? 'bg-white text-indigo-700 shadow-sm font-semibold border-indigo-100'
-                                                        : 'text-gray-500 hover:text-gray-800'}
+                                                    group flex items-center gap-4 px-6 py-4 rounded-2xl border-2 transition-all active:scale-95
+                                                    ${isSelected 
+                                                        ? 'bg-slate-900 border-slate-900 text-white shadow-xl shadow-slate-200' 
+                                                        : 'bg-white border-slate-200 text-slate-600 hover:border-slate-400'}
                                                 `}
                                             >
-                                                <opt.icon className={`w-3.5 h-3.5 ${exportLanguage === opt.id ? 'text-indigo-600' : 'text-gray-400'}`} />
-                                                <span>{opt.label}</span>
+                                                <div className={`w-3 h-3 rounded-full ${isSelected ? 'bg-white' : s.color}`} />
+                                                <span className="text-base font-black">{s.label}</span>
+                                                {isSelected && <Check className="w-5 h-5 stroke-[4]" />}
                                             </button>
-                                        ))}
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            {/* Export Columns Header */}
+                            <div className="space-y-5">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-2 h-7 bg-slate-900 rounded-full" />
+                                        <h4 className="text-base font-black text-slate-900 uppercase tracking-widest">Language</h4>
                                     </div>
                                 </div>
-
-                                <div className="space-y-3">
-                                    <div className="flex items-center gap-1.5">
-                                        <Label className="text-[11px] font-bold uppercase text-gray-500 tracking-wider">{t('export.statusTitle')}</Label>
-                                        <span className="text-red-500 text-xs font-bold shrink-0">*</span>
-                                    </div>
-                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-3 bg-gray-50/50 border border-gray-100 rounded-xl">
-                                        {[
-                                            { id: '0', label: t('pending') },
-                                            { id: '1', label: t('approved') },
-                                            { id: '2', label: t('rejected') }
-                                        ].map((s) => {
-                                            const isSelected = selectedExportStatus.includes(s.id);
-                                            return (
-                                                <div
-                                                    key={s.id}
-                                                    onClick={() => {
-                                                        if (isSelected) setSelectedExportStatus(prev => prev.filter(v => v !== s.id))
-                                                        else setSelectedExportStatus(prev => [...prev, s.id])
-                                                    }}
-                                                    className={`flex items-center px-3 py-2 rounded-lg cursor-pointer border transition-all ${isSelected ? 'bg-white border-indigo-500 text-indigo-700 shadow-sm font-semibold' : 'bg-transparent border-gray-200 hover:border-gray-300 text-gray-600'}`}
-                                                >
-                                                    <div className={`w-3 h-3 rounded-full mr-2 transition-colors ${isSelected ? 'bg-indigo-600' : 'bg-gray-300'}`} />
-                                                    <span className="text-[11px]">{s.label}</span>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                    <p className="text-[10px] text-red-500 font-medium mt-1">{t('export.statusNote')}</p>
-                                </div>
-                            </TabsContent>
-
-                            <TabsContent value="filters" className="mt-0 outline-none">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {/* Sessions Filter */}
-                                    <div className="space-y-3">
-                                        <div className="flex items-center justify-between border-b pb-1">
-                                            <Label className="text-[11px] font-bold uppercase text-gray-500 tracking-wider">{t('export.sessions')}</Label>
-                                            <Button variant="link" size="sm" className="h-4 p-0 text-[10px] text-indigo-600 hover:text-indigo-800" onClick={() => setSelectedExportSessions(selectedExportSessions.length === options.sessions.length ? [] : options.sessions.map((s: any) => s.name))}>
-                                                {selectedExportSessions.length === options.sessions.length ? t('export.clear') : t('export.selectAll')}
-                                            </Button>
-                                        </div>
-                                        <div className="border border-gray-100 rounded-xl max-h-48 overflow-y-auto p-1.5 space-y-1 bg-gray-50/50">
-                                            {options.sessions.map((s: any) => {
-                                                const isSelected = selectedExportSessions.includes(s.name);
-                                                return (
-                                                    <div
-                                                        key={s.id}
-                                                        onClick={() => {
-                                                            if (isSelected) setSelectedExportSessions(prev => prev.filter(v => v !== s.name))
-                                                            else setSelectedExportSessions(prev => [...prev, s.name])
-                                                        }}
-                                                        className={`flex items-center px-3 py-2 rounded-lg cursor-pointer transition-colors ${isSelected ? 'bg-indigo-600/10 text-indigo-700 font-medium' : 'hover:bg-gray-200/50'}`}
-                                                    >
-                                                        <div className={`w-3.5 h-3.5 rounded border mr-2 flex items-center justify-center transition-colors ${isSelected ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-gray-300 bg-white'}`}>
-                                                            {isSelected && <Check className="w-2.5 h-2.5" />}
-                                                        </div>
-                                                        <span className="text-xs">{getLocalizedOptionName(s)}</span>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-
-                                    {/* Departments Filter */}
-                                    <div className="space-y-3">
-                                        <div className="flex items-center justify-between border-b pb-1">
-                                            <Label className="text-[11px] font-bold uppercase text-gray-500 tracking-wider">{t('export.departments')}</Label>
-                                            <Button variant="link" size="sm" className="h-4 p-0 text-[10px] text-indigo-600 hover:text-indigo-800" onClick={() => setSelectedExportDepts(selectedExportDepts.length === options.departments.length ? [] : options.departments.map((d: any) => d.name))}>
-                                                {selectedExportDepts.length === options.departments.length ? t('export.clear') : t('export.selectAll')}
-                                            </Button>
-                                        </div>
-
-                                        <div className="relative group">
-                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
-                                            <Input
-                                                placeholder={t('export.searchDepts')}
-                                                value={exportDeptSearch}
-                                                onChange={(e) => setExportDeptSearch(e.target.value)}
-                                                className="h-9 pl-9 text-xs bg-gray-50/50 border-gray-100 focus:bg-white focus:border-indigo-300 transition-all rounded-lg"
-                                            />
-                                            {exportDeptSearch && (
-                                                <button
-                                                    onClick={() => setExportDeptSearch("")}
-                                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                                                >
-                                                    <X className="w-3 h-3" />
-                                                </button>
-                                            )}
-                                        </div>
-
-                                        <div className="border border-gray-100 rounded-xl h-48 overflow-y-auto p-1.5 space-y-1 bg-gray-50/50">
-                                            {options.departments
-                                                .filter((d: any) => {
-                                                    const search = exportDeptSearch.toLowerCase();
-                                                    return getLocalizedOptionName(d).toLowerCase().includes(search) || d.name.toLowerCase().includes(search);
-                                                })
-                                                .map((d: any) => {
-                                                    const isSelected = selectedExportDepts.includes(d.name);
-                                                    return (
-                                                        <div
-                                                            key={d.id}
-                                                            onClick={() => {
-                                                                if (isSelected) setSelectedExportDepts(prev => prev.filter(v => v !== d.name))
-                                                                else setSelectedExportDepts(prev => [...prev, d.name])
-                                                            }}
-                                                            className={`flex items-center px-3 py-2 rounded-lg cursor-pointer transition-colors ${isSelected ? 'bg-indigo-600/10 text-indigo-700 font-medium' : 'hover:bg-gray-200/50'}`}
-                                                        >
-                                                            <div className={`w-3.5 h-3.5 rounded border mr-2 flex items-center justify-center transition-colors ${isSelected ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-gray-300 bg-white'}`}>
-                                                                {isSelected && <Check className="w-2.5 h-2.5" />}
-                                                            </div>
-                                                            <span className="text-xs">{getLocalizedOptionName(d)}</span>
-                                                        </div>
-                                                    );
-                                                })}
-                                            {options.departments.filter((d: any) => {
-                                                const search = exportDeptSearch.toLowerCase();
-                                                return getLocalizedOptionName(d).toLowerCase().includes(search) || d.name.toLowerCase().includes(search);
-                                            }).length === 0 && (
-                                                    <div className="h-full flex flex-col items-center justify-center text-gray-400 space-y-2 py-8">
-                                                        <Search className="w-6 h-6 opacity-20" />
-                                                        <p className="text-[10px]">{t('export.noDepts')}</p>
-                                                    </div>
-                                                )}
-                                        </div>
-                                    </div>
-
-                                    {/* Upazilas Filter */}
-                                    <div className="space-y-3">
-                                        <div className="flex items-center justify-between border-b pb-1">
-                                            <Label className="text-[11px] font-bold uppercase text-gray-500 tracking-wider">{t('export.upazilas')}</Label>
-                                            <Button variant="link" size="sm" className="h-4 p-0 text-[10px] text-indigo-600 hover:text-indigo-800" onClick={() => setSelectedExportUpazilas(selectedExportUpazilas.length === options.upazilas.length ? [] : options.upazilas.map((u: any) => u.name))}>
-                                                {selectedExportUpazilas.length === options.upazilas.length ? t('export.clear') : t('export.selectAll')}
-                                            </Button>
-                                        </div>
-
-                                        <div className="relative group">
-                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
-                                            <Input
-                                                placeholder={t('export.searchUpazilas')}
-                                                value={exportUpazilaSearch}
-                                                onChange={(e) => setExportUpazilaSearch(e.target.value)}
-                                                className="h-9 pl-9 text-xs bg-gray-50/50 border-gray-100 focus:bg-white focus:border-indigo-300 transition-all rounded-lg"
-                                            />
-                                            {exportUpazilaSearch && (
-                                                <button
-                                                    onClick={() => setExportUpazilaSearch("")}
-                                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                                                >
-                                                    <X className="w-3 h-3" />
-                                                </button>
-                                            )}
-                                        </div>
-
-                                        <div className="border border-gray-100 rounded-xl h-48 overflow-y-auto p-1.5 space-y-1 bg-gray-50/50">
-                                            {options.upazilas
-                                                .filter((u: any) => {
-                                                    const search = exportUpazilaSearch.toLowerCase();
-                                                    return getLocalizedOptionName(u).toLowerCase().includes(search) || u.name.toLowerCase().includes(search);
-                                                })
-                                                .map((u: any) => {
-                                                    const isSelected = selectedExportUpazilas.includes(u.name);
-                                                    return (
-                                                        <div
-                                                            key={u.id}
-                                                            onClick={() => {
-                                                                if (isSelected) setSelectedExportUpazilas(prev => prev.filter(v => v !== u.name))
-                                                                else setSelectedExportUpazilas(prev => [...prev, u.name])
-                                                            }}
-                                                            className={`flex items-center px-3 py-2 rounded-lg cursor-pointer transition-colors ${isSelected ? 'bg-indigo-600/10 text-indigo-700 font-medium' : 'hover:bg-gray-200/50'}`}
-                                                        >
-                                                            <div className={`w-3.5 h-3.5 rounded border mr-2 flex items-center justify-center transition-colors ${isSelected ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-gray-300 bg-white'}`}>
-                                                                {isSelected && <Check className="w-2.5 h-2.5" />}
-                                                            </div>
-                                                            <span className="text-xs">{getLocalizedOptionName(u)}</span>
-                                                        </div>
-                                                    );
-                                                })}
-                                            {options.upazilas.filter((u: any) => {
-                                                const search = exportUpazilaSearch.toLowerCase();
-                                                return getLocalizedOptionName(u).toLowerCase().includes(search) || u.name.toLowerCase().includes(search);
-                                            }).length === 0 && (
-                                                    <div className="h-full flex flex-col items-center justify-center text-gray-400 space-y-2 py-8">
-                                                        <Search className="w-6 h-6 opacity-20" />
-                                                        <p className="text-[10px]">{t('export.noUpazilas')}</p>
-                                                    </div>
-                                                )}
-                                        </div>
-                                    </div>
-                                    <div className="p-4 rounded-xl bg-blue-50/50 border border-blue-100 flex items-start gap-4">
-                                        <div className="p-2 bg-blue-100 rounded-lg shrink-0">
-                                            <Filter className="w-5 h-5 text-blue-600" />
-                                        </div>
-                                        <div className="space-y-1">
-                                            <h5 className="text-xs font-semibold text-blue-900">{t('export.optionalFilters')}</h5>
-                                            <p className="text-[11px] text-blue-700 leading-relaxed">
-                                                {t('export.optionalFiltersDesc')}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </TabsContent>
-
-                            <TabsContent value="columns" className="mt-0 space-y-4 outline-none">
-                                <div className="flex justify-between items-center mb-2">
-                                    <div>
-                                        <h4 className="text-sm font-semibold text-gray-900 leading-none">{t('export.columnsTitle')}</h4>
-                                        <p className="text-[11px] text-gray-500 mt-1">{t('export.columnsDesc')}</p>
-                                    </div>
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        className="h-8 text-xs font-medium hover:bg-gray-100 transition-colors"
-                                        onClick={() => {
-                                            if (selectedExportFields.length === exportFields.length) {
-                                                setSelectedExportFields([])
-                                            } else {
-                                                setSelectedExportFields(exportFields.map(f => f.id))
-                                            }
-                                        }}
-                                    >
-                                        {selectedExportFields.length === exportFields.length ? t('export.deselectAll') : t('export.selectAll')}
-                                    </Button>
-                                </div>
-
-                                <div className="relative group">
-                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
-                                    <Input
-                                        placeholder={common('searchPlaceholder')}
-                                        value={exportColumnSearch}
-                                        onChange={(e) => setExportColumnSearch(e.target.value)}
-                                        className="h-9 pl-9 text-xs bg-gray-50/50 border-gray-100 focus:bg-white focus:border-indigo-300 transition-all rounded-lg"
-                                    />
-                                    {exportColumnSearch && (
+                                <div className="flex gap-2.5 p-2 bg-slate-100 border border-slate-200 rounded-[1.25rem]">
+                                    {[
+                                        { id: 'en', label: 'English' },
+                                        { id: 'bn', label: 'Bengali' },
+                                        { id: 'both', label: 'Bilingual' }
+                                    ].map((lang) => (
                                         <button
-                                            onClick={() => setExportColumnSearch("")}
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                            key={lang.id}
+                                            onClick={() => setExportLanguage(lang.id as any)}
+                                            className={`
+                                                flex-1 py-3.5 rounded-xl text-sm font-black transition-all
+                                                ${exportLanguage === lang.id 
+                                                    ? 'bg-white text-slate-900 shadow-lg ring-1 ring-slate-200' 
+                                                    : 'text-slate-500 hover:text-slate-900'}
+                                            `}
                                         >
-                                            <X className="w-3 h-3" />
+                                            {lang.label}
                                         </button>
-                                    )}
+                                    ))}
                                 </div>
-
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-64 overflow-y-auto pr-1">
-                                    {exportFields
-                                        .filter(field => {
-                                            const localizedLabel = t(`export.fields.${field.id}`);
-                                            return localizedLabel.toLowerCase().includes(exportColumnSearch.toLowerCase()) || field.id.toLowerCase().includes(exportColumnSearch.toLowerCase());
-                                        })
-                                        .map((field) => {
-                                            const isSelected = selectedExportFields.includes(field.id);
-                                            return (
-                                                <div
-                                                    key={field.id}
-                                                    onClick={() => {
-                                                        if (isSelected) setSelectedExportFields(prev => prev.filter(id => id !== field.id))
-                                                        else setSelectedExportFields(prev => [...prev, field.id])
-                                                    }}
-                                                    className={`
-                                                        group relative flex items-center px-3 py-2.5 rounded-xl border transition-all cursor-pointer hover:shadow-md
-                                                        ${isSelected
-                                                            ? 'bg-indigo-50/80 border-indigo-200 text-indigo-700 font-semibold ring-2 ring-indigo-500/10'
-                                                            : 'bg-white border-gray-100 text-gray-600 hover:border-gray-300'}
-                                                    `}
-                                                >
-                                                    <div className={`
-                                                        shrink-0 w-5 h-5 rounded-full border mr-3 flex items-center justify-center transition-colors
-                                                        ${isSelected ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-gray-200 bg-white group-hover:border-gray-400'}
-                                                    `}>
-                                                        {isSelected && <CheckCircle2 className="w-3.5 h-3.5" />}
-                                                    </div>
-                                                    <span className="text-xs truncate">{t(`export.fields.${field.id}`)}</span>
-                                                </div>
-                                            );
-                                        })}
-                                    {exportFields.filter(field => {
-                                        const localizedLabel = t(`export.fields.${field.id}`);
-                                        return localizedLabel.toLowerCase().includes(exportColumnSearch.toLowerCase()) || field.id.toLowerCase().includes(exportColumnSearch.toLowerCase());
-                                    }).length === 0 && (
-                                            <div className="col-span-full py-12 flex flex-col items-center justify-center text-gray-400 space-y-2">
-                                                <Search className="w-8 h-8 opacity-20" />
-                                                <p className="text-xs">{common('noOptions')}</p>
-                                            </div>
-                                        )}
-                                </div>
-                            </TabsContent>
+                            </div>
                         </div>
-                    </Tabs>
 
-                    <div className="p-6 border-t bg-gray-50/50">
-                        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-                            <div className="flex items-center gap-6">
-                                <div className="space-y-0.5">
-                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t('export.step')}</p>
-                                    <p className="text-sm font-bold text-gray-900 capitalize">
-                                        {activeExportTab === 'format' ? '1 / 3' : activeExportTab === 'filters' ? '2 / 3' : '3 / 3'}
-                                    </p>
+                        {/* Filters Section */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                             {/* Sessions Multi-select */}
+                             <div className="space-y-5">
+                                <div className="flex items-center justify-between px-1">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-1.5 h-6 bg-slate-300 rounded-full" />
+                                        <h4 className="text-sm font-black text-slate-700 uppercase tracking-widest">{t('export.sessions')}</h4>
+                                    </div>
+                                    <button onClick={() => setSelectedExportSessions(selectedExportSessions.length === options.sessions.length ? [] : options.sessions.map((s: any) => s.name))} className="text-xs font-black text-slate-400 hover:text-slate-900 uppercase tracking-tighter transition-colors">
+                                        {selectedExportSessions.length === options.sessions.length ? 'Clear' : 'Select All'}
+                                    </button>
                                 </div>
-                                <div className="h-6 w-px bg-gray-200" />
-                                <div className="space-y-0.5">
-                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t('export.phase')}</p>
-                                    <p className="text-sm font-bold text-gray-900 capitalize">{t(`export.tabs.${activeExportTab}`).split('. ')[1]}</p>
+                                <div className="bg-slate-50 border border-slate-200 rounded-[1.5rem] p-2.5 grid grid-cols-2 gap-2 max-h-[180px] overflow-y-auto custom-scrollbar">
+                                    {options.sessions.map((s: any) => {
+                                        const isSelected = selectedExportSessions.includes(s.name);
+                                        return (
+                                            <button
+                                                key={s.id}
+                                                onClick={() => {
+                                                    if (isSelected) setSelectedExportSessions(prev => prev.filter(v => v !== s.name))
+                                                    else setSelectedExportSessions(prev => [...prev, s.name])
+                                                }}
+                                                className={`
+                                                    flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all
+                                                    ${isSelected ? 'bg-white text-slate-900 shadow border border-slate-200' : 'text-slate-500 hover:bg-white hover:border-slate-100'}
+                                                `}
+                                            >
+                                                <div className={`w-4 h-4 border-2 rounded-md flex items-center justify-center transition-all ${isSelected ? 'bg-slate-900 border-slate-900 text-white' : 'bg-white border-slate-300'}`}>
+                                                    {isSelected && <Check className="w-3 h-3 stroke-[4]" />}
+                                                </div>
+                                                {s.name}
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3 w-full sm:w-auto">
-                                {activeExportTab !== 'format' && (
-                                    <Button
-                                        variant="outline"
-                                        className="h-11 px-6 font-medium rounded-xl hover:bg-gray-100 transition-all"
-                                        onClick={() => setActiveExportTab(activeExportTab === 'columns' ? 'filters' : 'format')}
-                                    >
-                                        {t('export.back')}
-                                    </Button>
-                                )}
 
-                                {activeExportTab !== 'columns' ? (
-                                    <Button
-                                        className="flex-1 sm:flex-none h-11 px-8 font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-lg shadow-indigo-600/20 active:scale-95 transition-all disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed"
-                                        onClick={() => setActiveExportTab(activeExportTab === 'format' ? 'filters' : 'columns')}
-                                        disabled={activeExportTab === 'format' && selectedExportStatus.length === 0}
-                                    >
-                                        {t('export.next')}
-                                    </Button>
+                            {/* Upazilas Multi-select */}
+                            <div className="space-y-5">
+                                <div className="flex items-center justify-between px-1">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-1.5 h-6 bg-slate-300 rounded-full" />
+                                        <h4 className="text-sm font-black text-slate-700 uppercase tracking-widest">{t('export.upazilas')}</h4>
+                                    </div>
+                                    <button onClick={() => setSelectedExportUpazilas(selectedExportUpazilas.length === options.upazilas.length ? [] : options.upazilas.map((u: any) => u.name))} className="text-xs font-black text-slate-400 hover:text-slate-900 uppercase tracking-tighter transition-colors">
+                                        {selectedExportUpazilas.length === options.upazilas.length ? 'Clear' : 'Select All'}
+                                    </button>
+                                </div>
+                                <div className="bg-slate-50 border border-slate-200 rounded-[1.5rem] p-2.5 grid grid-cols-2 gap-2 max-h-[180px] overflow-y-auto custom-scrollbar">
+                                    {options.upazilas.map((u: any) => {
+                                        const isSelected = selectedExportUpazilas.includes(u.name);
+                                        return (
+                                            <button
+                                                key={u.id}
+                                                onClick={() => {
+                                                    if (isSelected) setSelectedExportUpazilas(prev => prev.filter(v => v !== u.name))
+                                                    else setSelectedExportUpazilas(prev => [...prev, u.name])
+                                                }}
+                                                className={`
+                                                    flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all
+                                                    ${isSelected ? 'bg-white text-slate-900 shadow border border-slate-200' : 'text-slate-500 hover:bg-white hover:border-slate-100'}
+                                                `}
+                                            >
+                                                <div className={`w-4 h-4 border-2 rounded-md flex items-center justify-center transition-all ${isSelected ? 'bg-slate-900 border-slate-900 text-white' : 'bg-white border-slate-300'}`}>
+                                                    {isSelected && <Check className="w-3 h-3 stroke-[4]" />}
+                                                </div>
+                                                {u.name}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Columns Selection */}
+                        <div className="space-y-6">
+                            <div className="flex items-center justify-between bg-slate-100 px-8 py-6 rounded-[2rem] border border-slate-200">
+                                <div className="flex items-center gap-4">
+                                    <div className="p-2.5 bg-white rounded-xl shadow-sm border border-slate-200">
+                                        <LayoutGrid className="w-6 h-6 text-slate-900" />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-base font-black text-slate-900 leading-none">Export Columns Selection</h4>
+                                        <p className="text-xs text-slate-500 mt-2 font-bold uppercase tracking-wider">Selected {selectedExportFields.length} / {exportFields.length} Fields</p>
+                                    </div>
+                                </div>
+                                <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    onClick={() => setSelectedExportFields(selectedExportFields.length === exportFields.length ? [] : exportFields.map(f => f.id))}
+                                    className="bg-white border-slate-300 text-slate-900 hover:bg-slate-900 hover:text-white h-11 rounded-xl font-black px-6 transition-all"
+                                >
+                                    {selectedExportFields.length === exportFields.length ? 'Reset All' : 'Select All'}
+                                </Button>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-4">
+                                {exportFields.map((field) => {
+                                    const isSelected = selectedExportFields.includes(field.id);
+                                    return (
+                                        <div
+                                            key={field.id}
+                                            onClick={() => {
+                                                if (isSelected) setSelectedExportFields(prev => prev.filter(id => id !== field.id))
+                                                else setSelectedExportFields(prev => [...prev, field.id])
+                                            }}
+                                            className={`
+                                                group relative flex flex-col p-5 rounded-2xl border-2 transition-all cursor-pointer select-none
+                                                ${isSelected 
+                                                    ? 'bg-slate-900 border-slate-900 shadow-md transform -translate-y-0.5' 
+                                                    : 'bg-white border-slate-100 hover:border-slate-300 hover:shadow-lg'}
+                                            `}
+                                        >
+                                            <div className="flex items-center justify-between mb-4">
+                                                <div className={`w-3 h-3 rounded-full ${isSelected ? 'bg-white/50' : 'bg-slate-200'}`} />
+                                                {isSelected && <div className="p-1 bg-white rounded-full text-slate-900 shadow-sm"><Check className="w-3 h-3 stroke-[4]" /></div>}
+                                            </div>
+                                            <span className={`text-xs font-black leading-tight uppercase tracking-tight ${isSelected ? 'text-white' : 'text-slate-600'}`}>{t(`export.fields.${field.id}`)}</span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="p-10 border-t bg-slate-50 flex items-center justify-between gap-8">
+                        <div className="hidden sm:block space-y-2">
+                            <p className="text-sm font-black text-slate-400 uppercase tracking-widest">Format: Microsoft Excel (.xlsx)</p>
+                            <p className="text-xs text-slate-500 font-bold">Includes professional styling and automatic auto-branding.</p>
+                        </div>
+                        <div className="flex items-center gap-5 w-full sm:w-auto">
+                            <Button
+                                variant="ghost"
+                                className="h-16 px-10 font-bold text-slate-500 hover:text-slate-900 rounded-3xl"
+                                onClick={() => setIsExportModalOpen(false)}
+                            >
+                                {common('cancel')}
+                            </Button>
+                            <Button
+                                onClick={exportToExcel}
+                                disabled={isExporting || (selectedExportFields.length === 0 && selectedExportStatus.length === 0)}
+                                className={`
+                                    flex-1 sm:flex-none h-16 px-14 font-black text-lg rounded-[2.5rem] shadow-2xl transition-all active:scale-95 border-none
+                                    ${isExporting || (selectedExportFields.length === 0 && selectedExportStatus.length === 0)
+                                        ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                                        : 'bg-slate-900 hover:bg-black text-white shadow-slate-300'}
+                                `}
+                            >
+                                {isExporting ? (
+                                    <>
+                                        <Loader2 className="mr-3 h-7 w-7 animate-spin" />
+                                        Processing...
+                                    </>
                                 ) : (
-                                    <Button
-                                        onClick={exportToExcel}
-                                        disabled={isExporting || selectedExportFields.length === 0}
-                                        className="flex-1 sm:flex-none h-11 px-8 font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-lg shadow-indigo-600/20 active:scale-95 transition-all"
-                                    >
-                                        {isExporting ? (
-                                            <>
-                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                                {t('export.exporting')}
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Download className="mr-2 h-4 w-4" />
-                                                {t('export.startExport')}
-                                            </>
-                                        )}
-                                    </Button>
+                                    <>
+                                        <FileSpreadsheet className="mr-3 h-7 w-7" />
+                                        Generate Report
+                                    </>
                                 )}
-                            </div>
+                            </Button>
                         </div>
                     </div>
                 </DialogContent>

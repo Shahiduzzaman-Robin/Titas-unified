@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
 import { useTranslations, useLocale } from "next-intl"
 import { useRouter } from "next/navigation"
 import dynamic from "next/dynamic"
@@ -34,12 +34,31 @@ import { cn } from "@/lib/utils"
 import ImageCropper from "@/components/registration/ImageCropper"
 
 // Dynamically import ReactQuill to avoid SSR issues
-const ReactQuill = dynamic(() => import("react-quill-new"), {
+const ReactQuill = dynamic(async () => {
+    const { default: RQ } = await import("react-quill-new")
+    return ({ forwardedRef, ...props }: any) => <RQ ref={forwardedRef} {...props} />
+}, {
     ssr: false,
     loading: () => <div className="h-64 bg-slate-50 flex items-center justify-center border rounded-md"><Loader2 className="animate-spin text-slate-300" /></div>
 })
 
 import "react-quill-new/dist/quill.snow.css"
+import { useRef } from "react"
+
+// Add custom styles for blog content images
+const editorStyles = `
+  .blog-content img {
+    width: 30% !important;
+    height: auto !important;
+    border-radius: 1rem;
+    margin: 1rem 0;
+  }
+  .ql-editor img {
+    max-width: 30%;
+    height: auto;
+    cursor: default;
+  }
+`
 
 interface BlogEditorProps {
     initialData?: any
@@ -68,16 +87,57 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
     const [featuredImage, setFeaturedImage] = useState<File | null>(null)
     const [previewUrl, setPreviewUrl] = useState<string | null>(initialData?.featuredImage || null)
     const [cropImageStr, setCropImageStr] = useState<string | null>(null)
+    const quillRef = useRef<any>(null)
+
+    const imageHandler = useCallback(() => {
+        const input = document.createElement('input')
+        input.setAttribute('type', 'file')
+        input.setAttribute('accept', 'image/*')
+        input.click()
+
+        input.onchange = async () => {
+            const file = input.files?.[0]
+            if (file) {
+                const formData = new FormData()
+                formData.append('file', file)
+
+                const loadingToast = toast.loading("Uploading image...")
+                try {
+                    const res = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    const data = await res.json()
+
+                    if (res.ok) {
+                        const quill = quillRef.current.getEditor()
+                        const range = quill.getSelection()
+                        quill.insertEmbed(range.index, 'image', data.imagePath)
+                        toast.success("Image uploaded", { id: loadingToast })
+                    } else {
+                        toast.error(data.error || "Upload failed", { id: loadingToast })
+                    }
+                } catch (error) {
+                    toast.error("Upload failed", { id: loadingToast })
+                }
+            }
+        }
+    }, [])
 
     const modules = useMemo(() => ({
-        toolbar: [
-            [{ 'header': [1, 2, 3, false] }],
-            ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
-            ['link', 'image'],
-            ['clean']
-        ],
-    }), [])
+        toolbar: {
+            container: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+                ['link', 'image'],
+                ['clean']
+            ],
+            handlers: {
+                image: imageHandler
+            }
+        }
+    }), [imageHandler])
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
@@ -197,7 +257,7 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
                                 <Input 
                                     value={authorName}
                                     onChange={(e) => setAuthorName(e.target.value)}
-                                    placeholder="Leave blank to use your admin name..."
+                                    placeholder="Leave blank to display as Titas Editorial Team..."
                                     className="text-sm font-medium h-12 bg-slate-50 border-transparent hover:border-slate-200 focus:bg-white focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100/50 transition-all rounded-xl"
                                 />
                             </div>
@@ -206,13 +266,15 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
                                 <label className="text-xs font-bold uppercase tracking-wider text-slate-500 pl-1 flex items-center gap-2">
                                     Post Content <span className="text-red-500">*</span>
                                 </label>
-                                <div className="prose prose-slate max-w-none">
+                                <div className="prose prose-slate max-w-none pb-12">
+                                    <style>{editorStyles}</style>
                                     <ReactQuill 
+                                        forwardedRef={quillRef}
                                         theme="snow"
                                         value={content}
                                         onChange={setContent}
                                         modules={modules}
-                                        className="h-96 mb-12"
+                                        className="h-[400px] mb-12"
                                     />
                                 </div>
                             </div>

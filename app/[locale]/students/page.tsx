@@ -67,7 +67,7 @@ export default async function StudentsPage({ params, searchParams }: StudentsPag
                 where: filters,
                 skip,
                 take: limit,
-                orderBy: { id: 'desc' },
+                orderBy: { id: 'asc' },
                 select: {
                     id: true,
                     prefix: true,
