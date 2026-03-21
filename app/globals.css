@@ -102,3 +102,7 @@
 .en-text {
   font-family: var(--font-inter), sans-serif !important;
 }
+.blog-content * {
+  word-break: break-word;
+  max-width: 100%;
+}

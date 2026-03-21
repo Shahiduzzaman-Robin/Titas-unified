@@ -179,9 +179,9 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                             </div>
 
                             {/* Content */}
-                            <div className="bg-slate-50 rounded-[2.5rem] p-8 md:p-12 shadow-sm border border-slate-100/60 max-w-[75ch] mx-auto">
+                            <div className="bg-slate-50/80 rounded-[2.5rem] p-6 sm:p-10 md:p-16 shadow-sm border border-slate-100 max-w-4xl mx-auto w-full overflow-hidden">
                                 <div 
-                                    className="blog-content bn-text mx-auto prose prose-slate prose-lg md:prose-xl prose-headings:font-bold prose-headings:text-slate-900 prose-p:leading-relaxed prose-p:text-slate-700 prose-a:text-indigo-600 prose-img:rounded-3xl prose-img:shadow-xl text-left"
+                                    className="blog-content bn-text w-full mx-auto prose prose-slate md:prose-lg max-w-[65ch] break-words prose-headings:font-bold prose-headings:text-slate-900 prose-p:leading-relaxed prose-p:text-slate-700 prose-a:text-indigo-600 prose-img:rounded-2xl prose-img:shadow-lg text-left"
                                     dangerouslySetInnerHTML={{ __html: post.content }}
                                 />
                             </div>
