@@ -47,14 +47,19 @@ export default function LoginPage() {
                 redirect: false,
             })
 
+            console.log("Login Result:", result);
+
             if (result?.error) {
-                toast.error(t('invalidCredentials'))
+                toast.error(t('invalidCredentials') || "Invalid username or password")
             } else {
-                toast.success(t('success'))
-                router.refresh()
+                toast.success(t('success') || "Login successful")
+                // Hard redirect to route handler which will use session to direct them to /admin/dashboard or /student/profile
+                // Or simply redirect them to home to allow layout wrapper to bounce them appropriately
+                window.location.href = "/bn"
             }
         } catch (error) {
-            toast.error(t('error'))
+            console.error("Login Exception:", error);
+            toast.error(t('error') || "An unexpected error occurred")
         } finally {
             setLoading(false)
         }
