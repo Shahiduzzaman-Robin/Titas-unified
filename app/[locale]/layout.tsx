@@ -88,8 +88,8 @@ export default async function LocaleLayout({
     const messages = await getMessages();
 
     return (
-        <html lang={locale} className="notranslate" translate="no">
-            <body className={`${bnFont.variable} ${inter.variable} ${inter.className} ${locale === 'bn' ? 'bn-text' : ''}`}>
+        <html lang={locale} className="notranslate" translate="no" suppressHydrationWarning>
+            <body className={`${bnFont.variable} ${inter.variable} ${inter.className} ${locale === 'bn' ? 'bn-text' : ''}`} suppressHydrationWarning>
                 <NextIntlClientProvider messages={messages}>
                     <SessionProviderWrapper>
                         {children}

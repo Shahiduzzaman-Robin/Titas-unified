@@ -71,24 +71,6 @@ export default function StudentDirectoryClient({
     maps,
     currentFilters
 }: StudentDirectoryClientProps) {
-    const [mounted, setMounted] = React.useState(false)
-
-    React.useEffect(() => {
-        setMounted(true)
-    }, [])
-
-    if (!mounted) {
-        return (
-            <div className="students-directory-modern min-h-screen bg-white">
-                <PublicNav />
-                <div className="container mx-auto px-4 py-32 text-center">
-                    <Loader2 className="w-10 h-10 animate-spin mx-auto text-primary" />
-                </div>
-                <Footer />
-            </div>
-        )
-    }
-
     const t = useTranslations('public.students')
     const locale = useLocale()
     const isBengali = locale === 'bn'
