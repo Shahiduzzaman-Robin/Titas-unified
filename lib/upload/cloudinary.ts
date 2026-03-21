@@ -1,15 +1,32 @@
 import { v2 as cloudinary } from 'cloudinary'
 
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-})
+function configureCloudinary() {
+    cloudinary.config({
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET,
+    })
+}
 
 export async function uploadToCloudinary(file: File): Promise<string> {
+    configureCloudinary()
     try {
-        const bytes = await file.arrayBuffer()
-        const buffer = Buffer.from(bytes)
+        let buffer: Buffer;
+        try {
+            const bytes = await file.arrayBuffer()
+            buffer = Buffer.from(bytes)
+        } catch (bufError: any) {
+            const reader = (file as any).stream?.();
+            if (reader) {
+                const chunks = [];
+                for await (const chunk of reader) {
+                    chunks.push(chunk);
+                }
+                buffer = Buffer.concat(chunks);
+            } else {
+                throw new Error('Failed to extract bits from file object');
+            }
+        }
 
         return new Promise((resolve, reject) => {
             const uploadStream = cloudinary.uploader.upload_stream(
@@ -19,19 +36,16 @@ export async function uploadToCloudinary(file: File): Promise<string> {
                 },
                 (error, result) => {
                     if (error) {
-                        console.error('Cloudinary upload error:', error)
-                        reject(new Error('Failed to upload image to Cloudinary'))
+                        reject(new Error(`Cloudinary error: ${error.message}`))
                     } else if (result) {
-                        // Return the secure URL
                         resolve(result.secure_url)
                     }
                 }
             )
             uploadStream.end(buffer)
         })
-    } catch (error) {
-        console.error('Cloudinary upload error:', error)
-        throw new Error('Failed to upload image to Cloudinary')
+    } catch (error: any) {
+        throw new Error(`Failed to upload image to Cloudinary: ${error.message}`)
     }
 }
 

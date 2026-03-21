@@ -95,6 +95,8 @@ export async function PUT(
         const featuredImage = formData.get('featuredImage') as File | string | null
 
         const data: any = {}
+        console.log('--- Post Update Debug ---')
+        console.log('Slug:', currentSlug)
         if (title && title !== post.title) {
             data.title = title
             data.slug = await generateUniqueSlug('blog_posts', title, post.id)
@@ -119,16 +121,33 @@ export async function PUT(
             data.authorName = authorName === '' ? null : authorName
         }
 
-        if (featuredImage instanceof File) {
+        // More robust check for File/Blob object
+        // formData.get() returns either a string or a File/Blob
+        const isFile = featuredImage && typeof featuredImage !== 'string';
+
+        if (isFile) {
+            console.log('Detected File/Blob for featuredImage, uploading...')
             // Delete old image if it exists
             if (post.featuredImage) {
                 try {
+                    console.log('Deleting old image:', post.featuredImage)
                     await deleteImage(post.featuredImage)
                 } catch (err) {
                     console.error('Failed to delete old image:', err)
                 }
             }
-            data.featuredImage = await uploadImage(featuredImage)
+            data.featuredImage = await uploadImage(featuredImage as File)
+        } else if (featuredImage === 'null') {
+             // Handle explicit delete only if string 'null' is passed
+             console.log('Clearing image for post')
+             if (post.featuredImage) {
+                try {
+                    await deleteImage(post.featuredImage)
+                } catch (err) {
+                    console.error('Failed to delete image:', err)
+                }
+             }
+             data.featuredImage = null;
         }
 
         if (tagIds.length > 0) {
@@ -136,6 +155,7 @@ export async function PUT(
                 set: tagIds.map((id: number) => ({ id }))
             }
         }
+
 
         const updated = await prisma.blog_posts.update({
             where: { id: post.id },
@@ -145,6 +165,7 @@ export async function PUT(
                 tags: true
             }
         })
+        console.log('Post updated in DB. New featuredImage:', updated.featuredImage)
 
         // Log admin activity
         await logAdminActivity({

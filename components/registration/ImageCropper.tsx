@@ -74,10 +74,10 @@ const ImageCropper = ({ image, onCropComplete, onCancel, aspect = 1 }: ImageCrop
                     </div>
                     
                     <div className="flex gap-3 pt-2">
-                        <Button variant="outline" className="flex-1 h-11" onClick={onCancel}>
+                        <Button type="button" variant="outline" className="flex-1 h-11" onClick={onCancel}>
                             Cancel
                         </Button>
-                        <Button className="flex-1 h-11 bg-primary" onClick={handleConfirm}>
+                        <Button type="button" className="flex-1 h-11 bg-primary" onClick={handleConfirm}>
                             <Check className="h-4 w-4 mr-2" /> Confirm Crop
                         </Button>
                     </div>

@@ -3,16 +3,14 @@ import { uploadToCloudflare, deleteFromCloudflare } from './cloudflare'
 import { uploadToCloudinary, deleteFromCloudinary } from './cloudinary'
 
 export async function uploadImage(file: File): Promise<string> {
-    const provider = process.env.NEXT_PUBLIC_STORAGE_PROVIDER || 'local'
+    const provider = process.env.NEXT_PUBLIC_STORAGE_PROVIDER || process.env.STORAGE_PROVIDER || 'local';
 
     if (provider === 'cloudinary') {
         return uploadToCloudinary(file)
-    }
-
-    if (provider === 'cloudflare') {
+    } else if (provider === 'cloudflare') {
         return uploadToCloudflare(file)
     }
-
+    
     return uploadToLocal(file)
 }
 

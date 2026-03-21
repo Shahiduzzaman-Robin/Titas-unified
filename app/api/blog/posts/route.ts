@@ -89,15 +89,17 @@ export async function POST(request: NextRequest) {
         const excerpt = (formData.get('excerpt') as string) || ''
         const tagIds = JSON.parse((formData.get('tagIds') as string) || '[]')
         const authorName = (formData.get('authorName') as string) || null
+
         const featuredImage = formData.get('featuredImage') as File | null
 
         if (!title || !content || !categoryId) {
             return NextResponse.json({ error: 'Title, content and category are required' }, { status: 400 })
         }
 
+        const isFile = featuredImage && typeof featuredImage !== 'string';
         let featuredImageUrl = ''
-        if (featuredImage) {
-            featuredImageUrl = await uploadImage(featuredImage)
+        if (isFile) {
+            featuredImageUrl = await uploadImage(featuredImage as File)
         }
 
         const slug = await generateUniqueSlug('blog_posts', title)

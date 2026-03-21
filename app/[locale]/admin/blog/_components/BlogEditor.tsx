@@ -163,8 +163,9 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
             return
         }
 
-        setLoading(true)
         try {
+            setLoading(true)
+            
             const formData = new FormData()
             formData.append('title', title)
             formData.append('authorName', authorName)
@@ -176,6 +177,8 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
             
             if (featuredImage) {
                 formData.append('featuredImage', featuredImage)
+            } else if (isEditing && !previewUrl) {
+                formData.append('featuredImage', 'null')
             }
 
             const url = isEditing 
@@ -206,7 +209,7 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <>
             {cropImageStr && (
                 <ImageCropper
                     image={cropImageStr}
@@ -224,6 +227,7 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
                     }}
                 />
             )}
+            <form onSubmit={handleSubmit} className="space-y-8">
             <div className="flex flex-col lg:flex-row gap-8">
                 {/* Main content */}
                 <div className="flex-1 space-y-6">
@@ -453,5 +457,6 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
                 </div>
             </div>
         </form>
+        </>
     )
 }
