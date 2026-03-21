@@ -7,11 +7,11 @@ const fs = require('fs');
 
 const prisma = new PrismaClient();
 
-// Configure Cloudinary
+// Configure Cloudinary (Load from environment variables)
 cloudinary.config({
-    cloud_name: 'dwybib7hh',
-    api_key: '139531868771259',
-    api_secret: 'v5M_yxjx3HRHKSi0JDjL-Cu4sQI',
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 async function uploadToCloudinary(url) {
