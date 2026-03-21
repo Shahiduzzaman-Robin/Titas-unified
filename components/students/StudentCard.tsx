@@ -173,7 +173,7 @@ export function StudentCard({
                         <MapPin size={14} className="detail-icon" />
                         <span className="bn-text truncate">
                             {[
-                                address?.replace(/[,\s]*(Brahmanbaria|ব্রাহ্মণবাড়িয়া)/gi, '').trim(),
+                                address?.replace(/[,\s]*(Brahmanbaria|ব্রাহ্মণবাড়িয়া)/gi, '')?.trim(),
                                 upazilaName?.trim()
                             ].filter(Boolean).filter((val, i, array) => array.findIndex(v => v === val) === i).join(', ')}
                         </span>

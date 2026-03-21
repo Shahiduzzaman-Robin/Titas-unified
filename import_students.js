@@ -23,7 +23,7 @@ async function uploadToCloudinary(url) {
         return new Promise((resolve, reject) => {
             const uploadStream = cloudinary.uploader.upload_stream(
                 {
-                    folder: 'titas_students',
+                    folder: 'titas_unified_live',
                     resource_type: 'image',
                     transformation: [
                         { quality: 'auto', fetch_format: 'auto' }
@@ -53,10 +53,22 @@ async function importStudents() {
 
     for (let i = 0; i < data.length; i++) {
         const row = data[i];
+        const studentName = row['Name (EN)'] || row['Name (BN)'] || 'Unknown';
+        const mobile = row['Phone Number']?.toString() || null;
         
-        // Extract Hyperlink for Photo (Column T or U depending on zero-index)
-        // In the screenshot Photo was column T or U. Based on my previous debug test, it was column 'U'.
-        const cellAddress = 'U' + (i + 2); // Excel is 1-indexed, headers are at 1, so data starts at 2
+        // CHECK FOR DUPLICATES
+        if (mobile) {
+            const existing = await prisma.students.findFirst({
+                where: { mobile: mobile }
+            });
+            if (existing) {
+                console.log(`[${i+1}/${data.length}] Skipping existing: ${studentName}`);
+                continue;
+            }
+        }
+
+        // Extract Hyperlink for Photo
+        const cellAddress = 'U' + (i + 2);
         const cell = sheet[cellAddress];
         const photoLink = cell?.l?.Target || cell?.v || null;
 
@@ -71,7 +83,7 @@ async function importStudents() {
             upazila: row['Upazila (BN)'] || null,
             address_bn: row['Address (BN)'] || null,
             address_en: row['Address (EN)'] || null,
-            mobile: row['Phone Number']?.toString() || null,
+            mobile: mobile,
             email: row['Email'] || null,
             blood_group: row['Blood Group'] || null,
             gender: (row['Gender'] || 'male').toLowerCase(),
@@ -88,9 +100,8 @@ async function importStudents() {
 
         studentData.image_path = cloudinaryUrl;
 
-
         try {
-            // 1. Ensure relations exist (Session, Dept, Hall, Upazila)
+            // 1. Ensure relations exist
             if (studentData.student_session) {
                 await prisma.sessions.upsert({
                     where: { name: studentData.student_session },
