@@ -133,12 +133,12 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                     <div className="flex-1 max-w-4xl">
                         <article className="space-y-12">
                             {/* Header */}
-                            <header className="space-y-8">
+                            <header className="space-y-8 max-w-[65ch] mx-auto w-full">
                                 <Badge className="bg-slate-900 text-white font-black uppercase tracking-[0.2em] text-[10px] px-6 py-2 border-none">
                                     {post.category?.name}
                                 </Badge>
                                 
-                                <h1 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight leading-[1.1] uppercase bn-text">
+                                <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15] uppercase bn-text">
                                     {post.title}
                                 </h1>
 
@@ -155,7 +155,7 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
 
                                     <div className="h-8 w-[1px] bg-slate-100 hidden sm:block" />
 
-                                    <div className="flex items-center gap-6 text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">
+                                    <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">
                                         <div className="flex items-center gap-2">
                                             <Calendar className="h-4 w-4 text-slate-900" />
                                             {new Date(post.publishedAt!).toLocaleDateString(locale === 'bn' ? 'bn-BD' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
@@ -180,7 +180,7 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
 
                             {/* Content */}
                             <div 
-                                className="blog-content bn-text mx-auto prose prose-slate prose-lg md:prose-xl prose-headings:font-bold prose-headings:text-slate-900 prose-p:leading-relaxed prose-p:text-slate-700 prose-a:text-indigo-600 prose-img:rounded-3xl prose-img:shadow-xl text-justify"
+                                className="blog-content bn-text mx-auto prose prose-slate prose-lg md:prose-xl prose-headings:font-bold prose-headings:text-slate-900 prose-p:leading-relaxed prose-p:text-slate-700 prose-a:text-indigo-600 prose-img:rounded-3xl prose-img:shadow-xl text-left"
                                 dangerouslySetInnerHTML={{ __html: post.content }}
                             />
 
