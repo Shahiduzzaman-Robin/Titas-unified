@@ -128,12 +128,12 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                     </Link>
                 </div>
 
-                <div className="flex flex-col lg:flex-row gap-16">
+                <div className="flex flex-col gap-16 max-w-4xl mx-auto">
                     {/* Main Content */}
-                    <div className="flex-1 max-w-4xl">
+                    <div className="w-full">
                         <article className="space-y-12">
                             {/* Header */}
-                            <header className="space-y-8 max-w-[65ch] mx-auto w-full">
+                            <header className="space-y-8 max-w-[65ch] mx-auto w-full text-center">
                                 <Badge className="bg-slate-900 text-white font-black uppercase tracking-[0.2em] text-[10px] px-6 py-2 border-none">
                                     {post.category?.name}
                                 </Badge>
@@ -142,12 +142,12 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                                     {post.title}
                                 </h1>
 
-                                <div className="flex flex-wrap items-center gap-6 py-8 border-t border-b border-slate-100">
+                                <div className="flex flex-wrap items-center justify-center gap-6 py-8 border-t border-b border-slate-100">
                                     <div className="flex items-center gap-3">
                                         <div className="h-10 w-10 flex items-center justify-center bg-slate-100 text-slate-900 font-black rounded-full border border-slate-200">
                                             {(post.authorName || post.author?.name || 'A')[0]}
                                         </div>
-                                        <div>
+                                        <div className="text-left">
                                             <p className="text-sm font-bold text-slate-900 leading-none">{post.authorName || 'Titas Editorial Team'}</p>
                                             <p className="text-[10px] text-slate-400 font-medium uppercase tracking-widest mt-1">Author</p>
                                         </div>
@@ -179,10 +179,12 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                             </div>
 
                             {/* Content */}
-                            <div 
-                                className="blog-content bn-text mx-auto prose prose-slate prose-lg md:prose-xl prose-headings:font-bold prose-headings:text-slate-900 prose-p:leading-relaxed prose-p:text-slate-700 prose-a:text-indigo-600 prose-img:rounded-3xl prose-img:shadow-xl text-left"
-                                dangerouslySetInnerHTML={{ __html: post.content }}
-                            />
+                            <div className="bg-slate-50 rounded-[2.5rem] p-8 md:p-12 shadow-sm border border-slate-100/60 max-w-[75ch] mx-auto">
+                                <div 
+                                    className="blog-content bn-text mx-auto prose prose-slate prose-lg md:prose-xl prose-headings:font-bold prose-headings:text-slate-900 prose-p:leading-relaxed prose-p:text-slate-700 prose-a:text-indigo-600 prose-img:rounded-3xl prose-img:shadow-xl text-left"
+                                    dangerouslySetInnerHTML={{ __html: post.content }}
+                                />
+                            </div>
 
                             {/* Tags & Footer */}
                             <footer className="pt-12 border-t border-slate-100 space-y-10 max-w-[65ch] mx-auto">
@@ -207,16 +209,19 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                         </article>
                     </div>
 
-                    {/* Sidebar */}
-                    <aside className="w-full lg:w-96 space-y-16">
+                    {/* Bottom Section (Formerly Sidebar) */}
+                    <aside className="w-full space-y-16 pt-16 border-t border-slate-100">
                         {/* Related Stories */}
                         {related.length > 0 && (
                             <div className="space-y-8">
-                                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 border-b border-slate-100 pb-4 flex items-center gap-2">
-                                    <FolderOpen className="h-4 w-4 text-slate-900" />
-                                    Related Stories
-                                </h3>
-                                <div className="space-y-10">
+                                <div className="text-center space-y-2">
+                                    <h3 className="text-sm font-black uppercase tracking-[0.2em] text-slate-400 flex items-center justify-center gap-2">
+                                        <FolderOpen className="h-4 w-4 text-slate-900" />
+                                        Keep Reading
+                                    </h3>
+                                    <h2 className="text-2xl font-black text-slate-900 uppercase">Related Stories</h2>
+                                </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                                     {related.map((rel: any) => (
                                         <Link key={rel.id} href={`/${locale}/blog/${rel.slug}`} className="group block space-y-4">
                                             <div className="aspect-[16/9] rounded-2xl overflow-hidden bg-slate-100 shadow-md group-hover:shadow-xl transition-all duration-500">
@@ -242,14 +247,16 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                         )}
 
                         {/* Newsletter/Action */}
-                        <div className="bg-slate-50 border border-slate-200 rounded-[2rem] p-8 space-y-6 relative overflow-hidden group">
-                            <div className="relative z-10 space-y-4 text-center">
-                                <div className="h-16 w-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 border border-slate-200 shadow-sm group-hover:border-slate-300 transition-colors">
-                                    <Share2 className="h-8 w-8 text-slate-900" />
+                        <div className="bg-slate-50 border border-slate-200 rounded-[2.5rem] p-10 md:p-16 space-y-6 relative overflow-hidden group max-w-2xl mx-auto shadow-sm">
+                            <div className="relative z-10 space-y-6 text-center">
+                                <div className="h-20 w-20 bg-white rounded-3xl flex items-center justify-center mx-auto mb-4 border border-slate-200 shadow-sm group-hover:border-slate-300 transition-colors">
+                                    <Share2 className="h-10 w-10 text-slate-900" />
                                 </div>
-                                <h4 className="text-xl font-black text-slate-900 uppercase tracking-tight leading-none">Stay Connected</h4>
-                                <p className="text-slate-500 text-sm font-medium">Join our community for regular updates and exclusive stories.</p>
-                                <Button className="w-full bg-slate-900 text-white hover:bg-slate-800 transition-colors font-bold uppercase tracking-widest text-[10px] h-12 rounded-xl">
+                                <div>
+                                    <h4 className="text-3xl font-black text-slate-900 uppercase tracking-tight leading-none mb-3">Stay Connected</h4>
+                                    <p className="text-slate-500 text-base font-medium max-w-sm mx-auto">Join our community for regular updates and exclusive stories straight to your inbox.</p>
+                                </div>
+                                <Button className="w-full sm:w-auto px-12 bg-slate-900 text-white hover:bg-slate-800 transition-colors font-bold uppercase tracking-widest text-xs h-14 rounded-xl">
                                     Support Titas
                                 </Button>
                             </div>
