@@ -118,20 +118,22 @@ export function StudentCard({
                 </div>
             </div>
 
-            {/* Organization Info Box (Blue Section) - Always show */}
-            <div className="org-info-box">
-                <div className="org-icon-wrapper">
-                    <Briefcase size={16} />
+            {/* Organization Info Box (Blue Section) - Only show if student has job info */}
+            {(displayDesignation || displayPosition) && (
+                <div className="org-info-box">
+                    <div className="org-icon-wrapper">
+                        <Briefcase size={16} />
+                    </div>
+                    <div className="org-text-content">
+                        {displayDesignation && (
+                            <span className="org-designation bn-text">{displayDesignation}</span>
+                        )}
+                        <span className="org-name-bn bn-text">
+                            {displayPosition || (isBengali ? 'তিতাস-ঢাকা বিশ্ববিদ্যালয়স্থ ব্রাহ্মণবাড়িয়া জেলা ছাত্রকল্যাণ পরিষদ' : 'Dhaka University Students\' Welfare Association of Brahmanbaria (TITAS)')}
+                        </span>
+                    </div>
                 </div>
-                <div className="org-text-content">
-                    <span className="org-designation bn-text">
-                        {displayDesignation || (isBengali ? 'সাধারণ সদস্য' : 'General Member')}
-                    </span>
-                    <span className="org-name-bn bn-text">
-                        {displayPosition || (isBengali ? 'তিতাস-ঢাকা বিশ্ববিদ্যালয়স্থ ব্রাহ্মণবাড়িয়া জেলা ছাত্রকল্যাণ পরিষদ' : 'Dhaka University Students\' Welfare Association of Brahmanbaria (TITAS)')}
-                    </span>
-                </div>
-            </div>
+            )}
 
             {/* Details List */}
             <div className="card-details-list">
