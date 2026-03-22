@@ -29,11 +29,12 @@ export default function Home() {
                 <section className="hero-modern relative min-h-[90vh] flex items-center overflow-hidden" id="home">
                     <div className="hero-modern-overlay absolute inset-0 bg-slate-900/60 z-10"></div>
                     <Image
-                        src="https://res.cloudinary.com/dwybib7hh/image/upload/f_auto,q_auto,w_1200/v1774170410/titas/hero/Fruit_Fest.jpg"
+                        src="https://res.cloudinary.com/dwybib7hh/image/upload/v1774170410/titas/hero/Fruit_Fest.jpg"
                         alt="Titas Community"
                         className="hero-modern-bg object-cover"
                         fill
                         priority
+                        sizes="100vw"
                     />
 
                     <div className="container relative z-20 mx-auto px-4 hero-modern-content text-white">
@@ -111,10 +112,11 @@ export default function Home() {
                                 <div className="image-frame-glass bg-slate-100 p-4 rounded-3xl shadow-xl">
                                     <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden">
                                         <Image 
-                                            src="https://res.cloudinary.com/dwybib7hh/image/upload/f_auto,q_auto,w_800/v1774170361/titas/about/aboutus.jpg" 
+                                            src="https://res.cloudinary.com/dwybib7hh/image/upload/v1774170361/titas/about/aboutus.jpg" 
                                             alt="About Titas" 
                                             fill
                                             className="object-cover"
+                                            sizes="(max-width: 768px) 100vw, 50vw"
                                         />
                                     </div>
                                 </div>

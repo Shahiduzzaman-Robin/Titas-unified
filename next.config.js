@@ -11,9 +11,9 @@ const nextConfig = {
                 hostname: '**',
             },
         ],
-        // Disable image optimization to avoid Vercel free tier limits
-        // Images are already optimized and served from Cloudflare R2
-        unoptimized: true,
+        unoptimized: false,
+        loader: 'custom',
+        loaderFile: './lib/cloudinary-loader.ts',
     },
 };
 

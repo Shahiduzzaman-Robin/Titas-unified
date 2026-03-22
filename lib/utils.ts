@@ -65,15 +65,12 @@ export function optimizeImage(url: string | null | undefined, width: number = 12
     if (!url) return "/assets/placeholder.jpg"
     
     // Only optimize Cloudinary URLs
-    if (url.includes('res.cloudinary.com')) {
-        // If it already has transformations, return as is or consider merging
-        if (url.includes('/image/upload/')) {
-            // Check if it already contains optimization flags
-            if (url.includes('f_auto') || url.includes('w_')) return url;
-            
-            // Inject f_auto, q_auto, and width
-            return url.replace('/image/upload/', `/image/upload/f_auto,q_auto,w_${width}/`);
-        }
+    if (url.includes('res.cloudinary.com') && url.includes('/image/upload/')) {
+        // If it already has transformations, don't double up
+        if (url.includes('f_auto') || url.includes('w_')) return url;
+        
+        // Return a basic optimized URL for non-Next.js components
+        return url.replace('/image/upload/', `/image/upload/f_auto,q_auto,w_${width},c_limit/`);
     }
     
     return url
