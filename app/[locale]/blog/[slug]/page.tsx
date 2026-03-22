@@ -24,6 +24,7 @@ import Footer from "@/components/home/Footer"
 import { optimizeImage } from "@/lib/utils"
 import ViewCounter from "./ViewCounter"
 import CommentSection from "@/components/blog/CommentSection"
+import SidebarTabs from "@/components/blog/SidebarTabs"
 
 
 export async function generateMetadata(
@@ -325,33 +326,7 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                             </div>
 
                             {/* Latest & Trending Mini List */}
-                            <div className="bg-white p-1 rounded border border-slate-100 shadow-sm">
-                                <div className="grid grid-cols-2 text-center text-[10px] font-black uppercase tracking-widest">
-                                    <div className="bg-slate-900 text-white py-3 cursor-pointer">ট্রেন্ডিং</div>
-                                    <div className="hover:bg-slate-50 text-slate-500 py-3 cursor-pointer border-l border-slate-100">সর্বশেষ</div>
-                                </div>
-                                <div className="p-4 space-y-6">
-                                    {trending.map((rel: any) => (
-                                        <Link key={rel.id} href={`/${locale}/blog/${rel.slug}`} className="flex gap-4 group">
-                                            <div className="h-16 w-24 shrink-0 bg-slate-100 rounded-sm overflow-hidden relative">
-                                                <Image 
-                                                    src={optimizeImage(rel.featuredImage, 300)} 
-                                                    className="object-cover group-hover:scale-110 transition-transform" 
-                                                    alt="" 
-                                                    fill
-                                                />
-                                            </div>
-                                            <div className="space-y-1 flex-1">
-                                                <div className="text-[10px] font-bold text-[#00827f] uppercase">{rel.category?.name}</div>
-                                                <h4 className="text-xs font-bold text-slate-900 leading-snug line-clamp-2 group-hover:text-[#00827f] transition-colors">{rel.title}</h4>
-                                                <div className="text-[10px] text-slate-400 font-medium uppercase">
-                                                    {new Date(rel.publishedAt).toLocaleDateString('bn-BD', { month: 'short', day: 'numeric', year: 'numeric' })}
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
+                            <SidebarTabs trending={trending as any} latest={latest as any} />
 
                             {/* Featured Action */}
                             <div className="bg-[#00827f] p-8 rounded text-white space-y-4 relative overflow-hidden group shadow-lg">
