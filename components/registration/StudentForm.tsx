@@ -388,7 +388,10 @@ export function StudentForm({ initialData, mode = 'create', onSubmit, isSubmitti
                                     <Input
                                         placeholder={t('duRegNumberPlaceholder')}
                                         value={formData.du_reg_number}
-                                        onChange={(e) => handleChange('du_reg_number', e.target.value)}
+                                        onChange={(e) => {
+                                            let val = e.target.value.replace(/\D/g, '');
+                                            handleChange('du_reg_number', val);
+                                        }}
                                         required
                                         className="h-11 rounded-xl border-slate-200"
                                     />
