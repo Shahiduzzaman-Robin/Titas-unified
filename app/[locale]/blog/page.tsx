@@ -33,17 +33,17 @@ const BlogSkeleton = ({ locale }: { locale: string }) => (
     <div className="space-y-16 animate-in fade-in duration-700">
         {/* Hero Skeleton - Improved with internal elements */}
         <div className="aspect-[16/9] md:aspect-[21/9] lg:aspect-[2.5/1] w-full bg-slate-100 relative overflow-hidden group">
-            <Skeleton className="h-full w-full rounded-none opacity-50" />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-200/80 to-transparent" />
+            <Skeleton className="h-full w-full rounded-none opacity-50 shimmer-premium animate-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-200/80 to-transparent pointer-events-none" />
             <div className="absolute bottom-0 left-0 p-6 md:p-12 w-full md:w-5/6 lg:w-3/4 space-y-6">
-                <Skeleton className="h-7 w-28 bg-slate-300 rounded-none" />
+                <Skeleton className="h-7 w-28 rounded-none shimmer-premium animate-none" />
                 <div className="space-y-3">
-                    <Skeleton className="h-10 md:h-14 w-full bg-slate-300 rounded-none" />
-                    <Skeleton className="h-10 md:h-14 w-3/4 bg-slate-300 rounded-none" />
+                    <Skeleton className="h-10 md:h-14 w-full rounded-none shimmer-premium animate-none" />
+                    <Skeleton className="h-10 md:h-14 w-3/4 rounded-none shimmer-premium animate-none" />
                 </div>
                 <div className="flex items-center gap-3">
-                    <Skeleton className="h-5 w-24 bg-slate-300 rounded-none" />
-                    <Skeleton className="h-5 w-32 bg-slate-300 rounded-none" />
+                    <Skeleton className="h-5 w-24 rounded-none shimmer-premium animate-none" />
+                    <Skeleton className="h-5 w-32 rounded-none shimmer-premium animate-none" />
                 </div>
             </div>
         </div>
@@ -52,12 +52,12 @@ const BlogSkeleton = ({ locale }: { locale: string }) => (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[1, 2, 3].map((i) => (
                 <div key={i} className="space-y-5">
-                    <Skeleton className="aspect-[16/10] w-full rounded-none" />
+                    <Skeleton className="aspect-[16/10] w-full rounded-none shimmer-premium animate-none" />
                     <div className="space-y-3">
-                        <Skeleton className="h-8 w-full rounded-none" />
-                        <Skeleton className="h-8 w-2/3 rounded-none" />
+                        <Skeleton className="h-8 w-full rounded-none shimmer-premium animate-none" />
+                        <Skeleton className="h-8 w-2/3 rounded-none shimmer-premium animate-none" />
                     </div>
-                    <Skeleton className="h-4 w-1/3 rounded-none" />
+                    <Skeleton className="h-4 w-1/3 rounded-none shimmer-premium animate-none" />
                 </div>
             ))}
         </div>
@@ -65,16 +65,16 @@ const BlogSkeleton = ({ locale }: { locale: string }) => (
         {/* Latest & Sidebar Skeleton */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 pt-16 border-t border-slate-200">
             <div className="lg:col-span-2 space-y-8">
-                <Skeleton className="h-10 w-48 rounded-none mb-10" />
+                <Skeleton className="h-10 w-48 rounded-none mb-10 shimmer-premium animate-none" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
                     {[1, 2, 3, 4, 5, 6].map((i) => (
                         <div key={i} className="grid grid-cols-1 gap-5">
-                            <Skeleton className="aspect-[16/10] w-full rounded-none" />
+                            <Skeleton className="aspect-[16/10] w-full rounded-none shimmer-premium animate-none" />
                             <div className="space-y-3">
-                                <Skeleton className="h-6 w-full rounded-none" />
-                                <Skeleton className="h-6 w-4/5 rounded-none" />
+                                <Skeleton className="h-6 w-full rounded-none shimmer-premium animate-none" />
+                                <Skeleton className="h-6 w-4/5 rounded-none shimmer-premium animate-none" />
                             </div>
-                            <Skeleton className="h-4 w-1/4 rounded-none" />
+                            <Skeleton className="h-4 w-1/4 rounded-none shimmer-premium animate-none" />
                         </div>
                     ))}
                 </div>
@@ -83,15 +83,15 @@ const BlogSkeleton = ({ locale }: { locale: string }) => (
                 {/* Sidebar Tab Skeleton */}
                 <div className="border border-slate-200 p-6 space-y-8">
                     <div className="flex border-b border-slate-200">
-                        <Skeleton className="h-12 w-1/2 rounded-none" />
-                        <Skeleton className="h-12 w-1/2 rounded-none" />
+                        <Skeleton className="h-12 w-1/2 rounded-none shimmer-premium animate-none" />
+                        <Skeleton className="h-12 w-1/2 rounded-none shimmer-premium animate-none" />
                     </div>
                     {[1, 2, 3, 4].map((i) => (
                         <div key={i} className="flex gap-4">
-                            <Skeleton className="h-16 w-16 flex-shrink-0 rounded-none" />
+                            <Skeleton className="h-16 w-16 flex-shrink-0 rounded-none shimmer-premium animate-none" />
                             <div className="space-y-2 flex-1">
-                                <Skeleton className="h-4 w-full rounded-none" />
-                                <Skeleton className="h-4 w-2/3 rounded-none" />
+                                <Skeleton className="h-4 w-full rounded-none shimmer-premium animate-none" />
+                                <Skeleton className="h-4 w-2/3 rounded-none shimmer-premium animate-none" />
                             </div>
                         </div>
                     ))}

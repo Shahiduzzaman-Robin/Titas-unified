@@ -14,22 +14,22 @@ export default function StudentsLoading() {
                 <div className="container mx-auto px-4">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                         <div className="space-y-4">
-                            <Skeleton className="h-10 w-64 rounded-xl" />
-                            <Skeleton className="h-5 w-48 rounded-lg" />
+                            <Skeleton className="h-10 w-64 rounded-xl animate-none shimmer-premium" />
+                            <Skeleton className="h-5 w-48 rounded-lg animate-none shimmer-premium" />
                         </div>
                         
-                        <Skeleton className="h-14 w-full max-w-xl rounded-2xl" />
+                        <Skeleton className="h-14 w-full max-w-xl rounded-2xl animate-none shimmer-premium" />
                         
                         <div className="flex items-center gap-2">
-                            <Skeleton className="h-12 w-12 rounded-xl" />
-                            <Skeleton className="h-10 w-24 rounded-lg" />
-                            <Skeleton className="h-12 w-12 rounded-xl" />
+                            <Skeleton className="h-12 w-12 rounded-xl animate-none shimmer-premium" />
+                            <Skeleton className="h-10 w-24 rounded-lg animate-none shimmer-premium" />
+                            <Skeleton className="h-12 w-12 rounded-xl animate-none shimmer-premium" />
                         </div>
                     </div>
                     
                     <div className="flex flex-wrap items-center gap-3 mt-8">
                         {[1, 2, 3, 4, 5].map((i) => (
-                            <Skeleton key={i} className="h-10 w-44 rounded-xl" />
+                            <Skeleton key={i} className="h-10 w-44 rounded-xl animate-none shimmer-premium" />
                         ))}
                     </div>
                 </div>
