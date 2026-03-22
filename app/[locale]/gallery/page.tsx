@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
@@ -108,9 +109,12 @@ export default function PublicGalleryPage() {
                 </div>
 
                 {loading ? (
-                    <div className="flex flex-col items-center justify-center min-h-[400px]">
-                        <Loader2 className="h-12 w-12 animate-spin text-green-400 mb-4" />
-                        <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">{tCommon('loading')}</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        {Array.from({ length: 8 }).map((_, i) => (
+                            <Card key={i} className="overflow-hidden border-none shadow-sm rounded-2xl bg-white aspect-[4/3]">
+                                <Skeleton className="w-full h-full min-h-[180px]" style={{ animationDelay: `${i * 0.1}s` }} />
+                            </Card>
+                        ))}
                     </div>
                 ) : images.length === 0 ? (
                     <div className="text-center py-24 bg-white rounded-3xl border border-slate-100 shadow-sm">
