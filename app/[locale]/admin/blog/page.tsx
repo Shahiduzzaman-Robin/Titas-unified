@@ -19,7 +19,9 @@ import {
     CheckCircle2,
     Clock,
     MoreVertical,
-    Layers
+    Layers,
+    ChevronLeft,
+    ChevronRight,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -72,14 +74,20 @@ export default function AdminBlogPage() {
     const [statusFilter, setStatusFilter] = useState("all")
     const [categoryFilter, setCategoryFilter] = useState("all")
     const [categories, setCategories] = useState([])
+    const [page, setPage] = useState(1)
+    const [totalPages, setTotalPages] = useState(1)
     
     const [deleteId, setDeleteId] = useState<string | null>(null)
     const [deleteLoading, setDeleteLoading] = useState(false)
 
     useEffect(() => {
+        setPage(1)
+    }, [statusFilter, categoryFilter, search])
+
+    useEffect(() => {
         fetchPosts()
         fetchCategories()
-    }, [statusFilter, categoryFilter, search])
+    }, [statusFilter, categoryFilter, search, page])
 
     const fetchPosts = async () => {
         setLoading(true)
@@ -88,12 +96,15 @@ export default function AdminBlogPage() {
                 search,
                 status: statusFilter === 'all' ? '' : statusFilter,
                 category: categoryFilter === 'all' ? '' : categoryFilter,
+                page: page.toString(),
+                limit: '50', // Fetch more at once in admin
                 admin: 'true'
             })
             const res = await fetch(`/api/blog/posts?${params.toString()}`)
             if (res.ok) {
                 const data = await res.json()
                 setPosts(data.posts)
+                setTotalPages(data.pagination.totalPages)
             }
         } catch (error) {
             console.error("Failed to fetch posts", error)
@@ -331,6 +342,37 @@ export default function AdminBlogPage() {
                                     </TableBody>
                                 </Table>
                             </div>
+
+                            {/* Pagination */}
+                            {totalPages > 1 && (
+                                <div className="p-4 border-t border-slate-100 flex items-center justify-between bg-slate-50/30">
+                                    <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                                        Page {page} of {totalPages}
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Button 
+                                            variant="outline" 
+                                            size="sm" 
+                                            className="h-9 px-4 rounded-xl font-bold uppercase tracking-widest text-[10px]"
+                                            disabled={page === 1}
+                                            onClick={() => setPage(p => p - 1)}
+                                        >
+                                            <ChevronLeft className="w-3.5 h-3.5 mr-1" />
+                                            Prev
+                                        </Button>
+                                        <Button 
+                                            variant="outline" 
+                                            size="sm" 
+                                            className="h-9 px-4 rounded-xl font-bold uppercase tracking-widest text-[10px]"
+                                            disabled={page === totalPages}
+                                            onClick={() => setPage(p => p + 1)}
+                                        >
+                                            Next
+                                            <ChevronRight className="w-3.5 h-3.5 ml-1" />
+                                        </Button>
+                                    </div>
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
                 </TabsContent>
