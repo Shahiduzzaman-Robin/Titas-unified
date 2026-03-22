@@ -4,19 +4,19 @@
 .admin-root {
     min-height: 100vh;
     background: #f1f5f9;
-    font-family: var(--font-bangla), 'Inter', sans-serif;
+    font-family: 'LalSabuj', var(--font-bangla), 'Inter', sans-serif;
 }
 
 /* Bengali text rendering */
 .bn-text {
-    font-family: var(--font-bangla), 'Inter', sans-serif;
+    font-family: 'LalSabuj', var(--font-bangla), 'Inter', sans-serif;
 }
 
 /* Admin Layout */
 .admin-layout {
     min-height: 100vh;
     background: #f1f5f9;
-    font-family: var(--font-bangla), 'Inter', sans-serif;
+    font-family: 'LalSabuj', var(--font-bangla), 'Inter', sans-serif;
     overflow-x: hidden;
     width: 100%;
     max-width: 100%;
@@ -180,7 +180,7 @@
 /* Quill Styling */
 .ql-container.ql-snow {
     min-height: 420px;
-    font-family: var(--font-bangla), 'Inter', sans-serif !important;
+    font-family: 'LalSabuj', var(--font-bangla), 'Inter', sans-serif !important;
     border-bottom-left-radius: 14px;
     border-bottom-right-radius: 14px;
     border-color: #e2e8f0 !important;

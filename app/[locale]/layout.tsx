@@ -16,54 +16,14 @@ const inter = Inter({
 const bnFont = localFont({
     src: [
         {
-            path: '../../public/fonts/li-ador-noirrit/Li-Ador-Noirrit-ExtraLight.ttf',
-            weight: '200',
-            style: 'normal',
-        },
-        {
-            path: '../../public/fonts/li-ador-noirrit/Li-Ador-Noirrit-ExtraLight-Italic.ttf',
-            weight: '200',
-            style: 'italic',
-        },
-        {
-            path: '../../public/fonts/li-ador-noirrit/Li-Ador-Noirrit-Light.ttf',
-            weight: '300',
-            style: 'normal',
-        },
-        {
-            path: '../../public/fonts/li-ador-noirrit/Li-Ador-Noirrit-Light-Italic.ttf',
-            weight: '300',
-            style: 'italic',
-        },
-        {
-            path: '../../public/fonts/li-ador-noirrit/Li-Ador-Noirrit-Regular.ttf',
+            path: '../../public/fonts/Lal_Sabuj_Normal_31-08-2012.ttf',
             weight: '400',
             style: 'normal',
         },
         {
-            path: '../../public/fonts/li-ador-noirrit/Li-Ador-Noirrit-Italic.ttf',
-            weight: '400',
-            style: 'italic',
-        },
-        {
-            path: '../../public/fonts/li-ador-noirrit/Li-Ador-Noirrit-SemiBold.ttf',
-            weight: '600',
-            style: 'normal',
-        },
-        {
-            path: '../../public/fonts/li-ador-noirrit/Li-Ador-Noirrit-SemiBold-Italic.ttf',
-            weight: '600',
-            style: 'italic',
-        },
-        {
-            path: '../../public/fonts/li-ador-noirrit/Li-Ador-Noirrit-Bold.ttf',
+            path: '../../public/fonts/LalSabuj Normal_Bold-04-09-2012.ttf',
             weight: '700',
             style: 'normal',
-        },
-        {
-            path: '../../public/fonts/li-ador-noirrit/Li-Ador-Noirrit-Bold-Italic.ttf',
-            weight: '700',
-            style: 'italic',
         },
     ],
     variable: '--font-bangla',
