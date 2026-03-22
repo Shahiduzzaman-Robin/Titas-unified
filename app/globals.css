@@ -95,8 +95,22 @@
   animation: train-move 10s linear infinite;
 }
 
+@font-face {
+  font-family: 'LalSabuj';
+  src: url('/fonts/Lal_Sabuj_Normal_31-08-2012.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LalSabuj';
+  src: url('/fonts/LalSabuj%20Normal_Bold-04-09-2012.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
 .bn-text {
-  font-family: var(--font-bangla), sans-serif !important;
+  font-family: 'LalSabuj', var(--font-bangla), sans-serif !important;
 }
 
 .en-text {
@@ -105,6 +119,7 @@
 .blog-content * {
   word-break: break-word;
   max-width: 100%;
+  font-family: 'LalSabuj', var(--font-bangla), sans-serif !important;
 }
 
 .blog-content blockquote {
