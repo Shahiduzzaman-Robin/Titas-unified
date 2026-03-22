@@ -54,21 +54,43 @@ export async function POST(
         }
 
         // Handle Like Action
-        if (action === 'like' && commentId) {
-            // Note: In Prisma/SQL we don't have a likedBy JSON array easily without extra relations or JSON fields.
-            // For now, we'll just increment the likes counter.
-            // If we want real 'likedBy', we'd need another table. 
-            // The clone uses a client-side clientId. We can store this in a JSON field if available.
+        if (action === 'like' && commentId && clientId) {
+            const comment = await prisma.blog_comments.findUnique({
+                where: { id: parseInt(commentId) },
+                select: { likes: true, likedBy: true }
+            })
+
+            if (!comment) {
+                return NextResponse.json({ error: 'Comment not found' }, { status: 404 })
+            }
+
+            let likedBy = (comment.likedBy as string[]) || []
+            const hasLiked = likedBy.includes(clientId)
             
+            let updateData: any = {}
+            if (hasLiked) {
+                // Remove like (toggle)
+                likedBy = likedBy.filter(id => id !== clientId)
+                updateData = {
+                    likes: { decrement: 1 },
+                    likedBy
+                }
+            } else {
+                // Add like
+                likedBy.push(clientId)
+                updateData = {
+                    likes: { increment: 1 },
+                    likedBy
+                }
+            }
+
             const updatedComment = await prisma.blog_comments.update({
                 where: { id: parseInt(commentId) },
-                data: {
-                    likes: { increment: 1 }
-                }
+                data: updateData
             })
 
             return NextResponse.json({
-                message: 'Liked',
+                message: hasLiked ? 'Unliked' : 'Liked',
                 comment: updatedComment
             })
         }
@@ -81,10 +103,10 @@ export async function POST(
         const comment = await prisma.blog_comments.create({
             data: {
                 postId: post.id,
-                name: name.slice(0, 100),
+                name: name.slice(0, 100) || 'Anonymous',
                 email: email?.slice(0, 100),
                 text: text,
-                approved: true // Auto-approve for now, or false if moderation is needed
+                approved: true // Auto-approve for now
             }
         })
 

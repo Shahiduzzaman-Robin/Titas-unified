@@ -165,7 +165,8 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
             text: true,
             createdAt: true,
             likes: true,
-            approved: true
+            approved: true,
+            likedBy: true
         }
     })
 

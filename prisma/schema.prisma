@@ -273,6 +273,7 @@ model blog_comments {
   email      String?    @db.VarChar(100)
   text       String     @db.Text
   likes      Int        @default(0)
+  likedBy    Json?
   approved   Boolean    @default(true)
   flagged    Boolean    @default(false)
   flagReason String?    @db.Text
