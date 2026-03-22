@@ -57,7 +57,8 @@
         "myAccount": "আমার অ্যাকাউন্ট",
         "profileSettings": "প্রোফাইল সেটিংস",
         "signedInAs": "লগইন করা আছে",
-        "adminRole": "অ্যাডমিন"
+        "adminRole": "অ্যাডমিন",
+        "contact": "যোগাযোগ"
     },
     "admin": {
         "title": "তিতাস - অ্যাডমিন প্যানেল",
@@ -520,6 +521,22 @@
             "smsNote": "আপনার অ্যাকাউন্ট অনুমোদিত হলে আপনি একটি এসএমএস নোটিফিকেশন পাবেন।",
             "backHome": "হোমে ফিরে যান",
             "login": "লগইন করুন"
+        },
+        "contact": {
+            "title": "যোগাযোগ",
+            "subtitle": "তিতাস টিমের সাথে যোগাযোগ করুন",
+            "description": "আমরা আপনার মতামত, পরামর্শ বা অভিযোগ শুনতে প্রস্তুত। তিতাস পরিবারের যেকোনো প্রয়োজনে নির্দ্বিধায় আমাদের সাথে যোগাযোগ করুন।",
+            "heroBadge": "Let's Connect",
+            "heroTitleMain": "যেকোনো প্রয়োজনে",
+            "heroTitleAccent": "যোগাযোগ করুন",
+            "officeTitle": "অফিস",
+            "officeAddress": "টিএসসি, ঢাকা বিশ্ববিদ্যালয়, ঢাকা-১০০০",
+            "hotlineTitle": "হটলাইন",
+            "emailTitle": "ইমেইল",
+            "officeHoursTitle": "অফিস সময়",
+            "officeHoursValue": "রবিবার - বৃহস্পতিবার: সকাল ১০টা - বিকাল ৫টা",
+            "formHeader": "আমাদের লিখে জানান",
+            "formSubheader": "We'd love to hear from you!"
         }
     },
     "student": {

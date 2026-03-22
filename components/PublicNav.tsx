@@ -45,6 +45,7 @@ export function PublicNav({ session: serverSession }: PublicNavProps) {
         { name: tNav('students'), href: `/${locale}/students` },
         { name: tNav('blog'), href: `/${locale}/blog` },
         { name: tNav('gallery'), href: `/${locale}/gallery` },
+        { name: tNav('contact'), href: `/${locale}/contact` },
         { name: tNav('register'), href: `/${locale}/register` },
     ]
 

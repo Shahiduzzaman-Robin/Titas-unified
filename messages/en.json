@@ -57,7 +57,8 @@
         "myAccount": "My Account",
         "profileSettings": "Profile Settings",
         "signedInAs": "Signed in as",
-        "adminRole": "Admin"
+        "adminRole": "Admin",
+        "contact": "Contact Us"
     },
     "admin": {
         "title": "Titas - Admin Panel",
@@ -520,6 +521,22 @@
             "smsNote": "You will receive an SMS notification once your account is approved.",
             "backHome": "Back to Home",
             "login": "Login Now"
+        },
+        "contact": {
+            "title": "Contact Us",
+            "subtitle": "Get in touch with the Titas team",
+            "description": "We are ready to hear your feedback, suggestions, or complaints. Feel free to contact us for any needs of the Titas family.",
+            "heroBadge": "Let's Connect",
+            "heroTitleMain": "For any needs",
+            "heroTitleAccent": "Connect with us",
+            "officeTitle": "Office",
+            "officeAddress": "TSC, University of Dhaka, Dhaka-1000",
+            "hotlineTitle": "Hotline",
+            "emailTitle": "Email",
+            "officeHoursTitle": "Office Hours",
+            "officeHoursValue": "Sunday - Thursday: 10 AM - 5 PM",
+            "formHeader": "Send us a message",
+            "formSubheader": "We'd love to hear from you!"
         }
     },
     "student": {
