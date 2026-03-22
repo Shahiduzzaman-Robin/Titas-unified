@@ -75,7 +75,7 @@ export default function PublicBlogPage() {
                 search,
                 category: categoryFilter === 'all' ? '' : categoryFilter,
                 page: pagination.page.toString(),
-                limit: '9',
+                limit: '12',
                 status: 'published'
             })
             const res = await fetch(`/api/blog/posts?${params.toString()}`)
@@ -244,6 +244,33 @@ export default function PublicBlogPage() {
                                 <div className="space-y-8">
                                     <SidebarTabs trending={trendingPosts} latest={latestPosts} />
                                 </div>
+                            </div>
+                        )}
+
+                        {/* Pagination for Editorial Layout */}
+                        {pagination.totalPages > 1 && (
+                            <div className="flex justify-center items-center gap-4 pt-16 border-t border-slate-200">
+                                <Button 
+                                    variant="outline" 
+                                    disabled={pagination.page === 1}
+                                    onClick={() => setPagination({ ...pagination, page: pagination.page - 1 })}
+                                    className="rounded-none border-slate-300 font-bold"
+                                >
+                                    <ChevronLeft className="h-4 w-4 mr-2" />
+                                    {locale === 'bn' ? 'পূর্ববর্তী' : 'Previous'}
+                                </Button>
+                                <div className="text-slate-600 font-medium bn-text">
+                                    {pagination.page} / {pagination.totalPages}
+                                </div>
+                                <Button 
+                                    variant="outline" 
+                                    disabled={pagination.page === pagination.totalPages}
+                                    onClick={() => setPagination({ ...pagination, page: pagination.page + 1 })}
+                                    className="rounded-none border-slate-300 font-bold"
+                                >
+                                    {locale === 'bn' ? 'পরবর্তী' : 'Next'}
+                                    <ChevronRight className="h-4 w-4 ml-2" />
+                                </Button>
                             </div>
                         )}
                     </div>
