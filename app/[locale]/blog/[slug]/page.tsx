@@ -111,161 +111,223 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
         }
     })
 
+    const trending = await prisma.blog_posts.findMany({
+        where: {
+            status: 'published'
+        },
+        take: 5,
+        orderBy: { views: 'desc' },
+        select: {
+            id: true,
+            title: true,
+            slug: true,
+            featuredImage: true,
+            publishedAt: true,
+            views: true,
+            category: { select: { name: true } }
+        }
+    })
+
+    const latest = await prisma.blog_posts.findMany({
+        where: {
+            status: 'published'
+        },
+        take: 5,
+        orderBy: { publishedAt: 'desc' },
+        select: {
+            id: true,
+            title: true,
+            slug: true,
+            featuredImage: true,
+            publishedAt: true,
+            category: { select: { name: true } }
+        }
+    })
+
     const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://titasdu.com'}/${locale}/blog/${post.slug}`
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-[#fcfcfc]">
             <PublicNav />
-            <div className="pt-32 pb-24">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Back Link */}
-                <div className="mb-12">
-                    <Link href={`/${locale}/blog`}>
-                        <Button variant="ghost" className="rounded-full pl-2 pr-6 h-12 hover:bg-slate-50 text-slate-500 font-bold uppercase tracking-widest text-xs group">
-                            <ArrowLeft className="h-4 w-4 mr-2 transition-transform group-hover:-translate-x-1" />
-                            Back to Feed
-                        </Button>
-                    </Link>
-                </div>
+            
+            <div className="pt-24 lg:pt-32 pb-24">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    
+                    {/* Breadcrumbs */}
+                    <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-8 overflow-x-auto whitespace-nowrap py-2 sticky top-[80px] bg-[#fcfcfc]/80 backdrop-blur-sm z-20 md:static md:bg-transparent">
+                        <Link href={`/${locale}`} className="hover:text-slate-900 transition-colors">হোম</Link>
+                        <ChevronRight className="h-3 w-3" />
+                        <Link href={`/${locale}/blog`} className="hover:text-slate-900 transition-colors">ব্লগ</Link>
+                        <ChevronRight className="h-3 w-3" />
+                        <Link href={`/${locale}/blog?category=${post.category?.slug}`} className="hover:text-slate-900 transition-colors">{post.category?.name}</Link>
+                        <ChevronRight className="h-3 w-3" />
+                        <span className="text-slate-400 truncate max-w-[200px]">{post.title}</span>
+                    </nav>
 
-                <div className="flex flex-col gap-16 max-w-4xl mx-auto">
-                    {/* Main Content */}
-                    <div className="w-full">
-                        <article className="space-y-12">
-                            {/* Header */}
-                            <header className="space-y-8 max-w-[65ch] mx-auto w-full text-center">
-                                <Badge className="bg-slate-900 text-white font-black uppercase tracking-[0.2em] text-[10px] px-6 py-2 border-none">
-                                    {post.category?.name}
-                                </Badge>
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+                        
+                        {/* Main Article Column */}
+                        <main className="lg:col-span-8 space-y-8">
+                            
+                            <article className="space-y-8 bg-white p-6 sm:p-10 rounded shadow-sm border border-slate-100">
                                 
-                                <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15] uppercase bn-text">
-                                    {post.title}
-                                </h1>
+                                <header className="space-y-6">
+                                    <Link href={`/${locale}/blog?category=${post.category?.slug}`}>
+                                        <Badge className="bg-[#00827f] hover:bg-[#006a68] text-white px-3 py-1 rounded-sm text-[11px] font-bold border-none">
+                                            {post.category?.name}
+                                        </Badge>
+                                    </Link>
 
-                                <div className="flex flex-wrap items-center justify-center gap-6 py-8 border-t border-b border-slate-100">
-                                    <div className="flex items-center gap-3">
-                                        <div className="h-10 w-10 flex items-center justify-center bg-slate-100 text-slate-900 font-black rounded-full border border-slate-200">
-                                            {(post.authorName || post.author?.name || 'A')[0]}
+                                    <h1 className="text-3xl md:text-5xl font-extrabold text-[#1a1a1a] leading-[1.3] bn-text">
+                                        {post.title}
+                                    </h1>
+
+                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 py-6 border-t border-slate-100">
+                                        <div className="flex items-center gap-4">
+                                            <div className="h-10 w-1 bg-[#d92228] self-stretch" title="Author Identifier" role="presentation" />
+                                            <div>
+                                                <p className="text-sm font-bold text-slate-900">
+                                                    লেখক
+                                                </p>
+                                                <p className="text-sm text-slate-500 font-medium italic">
+                                                    {post.authorName || 'Titas Editorial Team'}
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div className="text-left">
-                                            <p className="text-sm font-bold text-slate-900 leading-none">{post.authorName || 'Titas Editorial Team'}</p>
-                                            <p className="text-[10px] text-slate-400 font-medium uppercase tracking-widest mt-1">Author</p>
+                                        
+                                        <div className="space-y-1 sm:text-right">
+                                            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest leading-none">প্রকাশিতঃ</p>
+                                            <p className="text-sm font-bold text-slate-700">
+                                                {new Date(post.publishedAt!).toLocaleDateString('bn-BD', { day: 'numeric', month: 'long', year: 'numeric' })}
+                                            </p>
                                         </div>
                                     </div>
 
-                                    <div className="h-8 w-[1px] bg-slate-100 hidden sm:block" />
-
-                                    <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">
-                                        <div className="flex items-center gap-2">
-                                            <Calendar className="h-4 w-4 text-slate-900" />
-                                            {new Date(post.publishedAt!).toLocaleDateString(locale === 'bn' ? 'bn-BD' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Clock className="h-4 w-4 text-slate-900" />
-                                            {post.readingTime} MIN READ
-                                        </div>
-                                        <ViewCounter slug={slug} initialViews={post.views ?? 0} />
+                                    <div className="flex items-center gap-2 border-y border-slate-100 py-3">
+                                        <SocialShare url={shareUrl} title={post.title} />
                                     </div>
+                                </header>
+
+                                {/* Featured Image */}
+                                <div className="relative aspect-[16/9] md:aspect-[21/9] bg-slate-100 overflow-hidden">
+                                    <img 
+                                        src={post.featuredImage || '/blog-placeholder.jpg'} 
+                                        alt={post.title} 
+                                        className="h-full w-full object-cover" 
+                                    />
                                 </div>
-                            </header>
 
-                            {/* Featured Image */}
-                            <div className="relative aspect-[21/9] rounded-[2rem] overflow-hidden shadow-2xl shadow-slate-100 border-8 border-white">
-                                <img 
-                                    src={post.featuredImage || '/blog-placeholder.jpg'} 
-                                    alt={post.title} 
-                                    className="h-full w-full object-cover" 
-                                />
-                            </div>
-
-                            {/* Content */}
-                            <div className="bg-slate-50/80 rounded-[2.5rem] p-6 sm:p-10 md:p-16 shadow-sm border border-slate-100 max-w-4xl mx-auto w-full overflow-hidden">
-                                <div 
-                                    className="blog-content bn-text w-full mx-auto prose prose-slate md:prose-lg max-w-[65ch] break-words prose-headings:font-bold prose-headings:text-slate-900 prose-p:leading-relaxed prose-p:text-slate-700 prose-a:text-indigo-600 prose-img:rounded-2xl prose-img:shadow-lg text-left"
+                                {/* Body Content */}
+                                <div className="blog-content bn-text prose prose-slate max-w-none md:prose-lg 
+                                    prose-p:text-slate-700 prose-p:leading-[1.8] prose-p:mb-8
+                                    prose-headings:text-[#1a1a1a] prose-headings:font-bold prose-headings:mb-6
+                                    prose-img:rounded-sm prose-img:shadow-sm
+                                    prose-strong:text-slate-900
+                                    text-left break-words overflow-hidden"
                                     dangerouslySetInnerHTML={{ __html: post.content }}
                                 />
+
+                                <div className="text-xs text-slate-400 italic pt-4 border-t border-slate-50">
+                                    ক্রেডিটঃ তিতাস মিডিয়া সেল
+                                </div>
+
+                                {/* Post Footer: Tags & Author Credits */}
+                                <footer className="pt-12 border-t border-slate-100 space-y-12">
+                                    {post.tags.length > 0 && (
+                                        <div className="flex flex-wrap gap-2">
+                                            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest mr-2 flex items-center">ট্যাগঃ</span>
+                                            {post.tags.map((tag: any) => (
+                                                <Link key={tag.id} href={`/${locale}/blog?tag=${tag.slug}`}>
+                                                    <Badge variant="secondary" className="bg-slate-100 hover:bg-slate-200 text-slate-600 border-none px-3 py-1 rounded-sm text-[11px] font-bold cursor-pointer">
+                                                        {tag.name}
+                                                    </Badge>
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* Related Content */}
+                                    {related.length > 0 && (
+                                        <div className="space-y-6 pt-12 border-t border-slate-100">
+                                            <h3 className="text-lg font-bold text-slate-900 border-b-2 border-[#00827f] inline-block pb-1">আরও পড়ুন</h3>
+                                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                                                {related.map((rel: any) => (
+                                                    <Link key={rel.id} href={`/${locale}/blog/${rel.slug}`} className="group space-y-3">
+                                                        <div className="aspect-[16/9] rounded overflow-hidden">
+                                                            <img src={rel.featuredImage} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="" />
+                                                        </div>
+                                                        <h4 className="text-sm font-bold text-slate-900 line-clamp-2 leading-snug group-hover:text-[#00827f] transition-colors">{rel.title}</h4>
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </footer>
+                            </article>
+                        </main>
+
+                        {/* Sidebar Column */}
+                        <aside className="lg:col-span-4 space-y-10">
+                            
+                            {/* Search Box */}
+                            <div className="space-y-4">
+                                <h3 className="text-base font-bold text-slate-900 border-b-2 border-slate-900 inline-block pb-1">যা খুঁজতে চান</h3>
+                                <form className="flex gap-2" action={`/${locale}/blog`}>
+                                    <input 
+                                        name="q"
+                                        type="text" 
+                                        placeholder="অনুসন্ধান করুন..." 
+                                        className="flex-1 bg-white border border-slate-200 px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#00827f] rounded-sm"
+                                    />
+                                    <Button type="submit" className="bg-[#00827f] hover:bg-[#006a68] text-white px-6 font-bold text-xs uppercase tracking-widest rounded-sm">
+                                        অনুসন্ধান
+                                    </Button>
+                                </form>
                             </div>
 
-                            {/* Tags & Footer */}
-                            <footer className="pt-12 border-t border-slate-100 space-y-10 max-w-[65ch] mx-auto">
-                                <div className="flex flex-wrap gap-2">
-                                    {post.tags.map((tag: any) => (
-                                        <Link key={tag.id} href={`/${locale}/blog?tag=${tag.slug}`}>
-                                            <Badge variant="outline" className="px-4 py-2 rounded-full border-slate-200 text-slate-500 hover:bg-slate-50 transition-colors font-bold uppercase tracking-widest text-[9px] cursor-pointer">
-                                                #{tag.name}
-                                            </Badge>
-                                        </Link>
-                                    ))}
+                            {/* Latest & Trending Mini List */}
+                            <div className="bg-white p-1 rounded border border-slate-100 shadow-sm">
+                                <div className="grid grid-cols-2 text-center text-[10px] font-black uppercase tracking-widest">
+                                    <div className="bg-slate-900 text-white py-3 cursor-pointer">ট্রেন্ডিং</div>
+                                    <div className="hover:bg-slate-50 text-slate-500 py-3 cursor-pointer border-l border-slate-100">সর্বশেষ</div>
                                 </div>
-
-                                <div className="bg-slate-50 rounded-[2rem] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
-                                    <div>
-                                        <h4 className="text-2xl font-black text-slate-900 uppercase tracking-tight leading-tight">Inspiring Story?</h4>
-                                        <p className="text-slate-500 font-medium">Spread the knowledge with your circle.</p>
-                                    </div>
-                                    <SocialShare url={shareUrl} title={post.title} />
-                                </div>
-                            </footer>
-                        </article>
-                    </div>
-
-                    {/* Bottom Section (Formerly Sidebar) */}
-                    <aside className="w-full space-y-16 pt-16 border-t border-slate-100">
-                        {/* Related Stories */}
-                        {related.length > 0 && (
-                            <div className="space-y-8">
-                                <div className="text-center space-y-2">
-                                    <h3 className="text-sm font-black uppercase tracking-[0.2em] text-slate-400 flex items-center justify-center gap-2">
-                                        <FolderOpen className="h-4 w-4 text-slate-900" />
-                                        Keep Reading
-                                    </h3>
-                                    <h2 className="text-2xl font-black text-slate-900 uppercase">Related Stories</h2>
-                                </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                                    {related.map((rel: any) => (
-                                        <Link key={rel.id} href={`/${locale}/blog/${rel.slug}`} className="group block space-y-4">
-                                            <div className="aspect-[16/9] rounded-2xl overflow-hidden bg-slate-100 shadow-md group-hover:shadow-xl transition-all duration-500">
-                                                <img src={rel.featuredImage} alt="" className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                <div className="p-4 space-y-6">
+                                    {trending.map((rel: any) => (
+                                        <Link key={rel.id} href={`/${locale}/blog/${rel.slug}`} className="flex gap-4 group">
+                                            <div className="h-16 w-24 shrink-0 bg-slate-100 rounded-sm overflow-hidden">
+                                                <img src={rel.featuredImage} className="w-full h-full object-cover group-hover:scale-110 transition-transform" alt="" />
                                             </div>
-                                            <div className="space-y-2">
-                                                <h4 className="text-lg font-black text-slate-900 uppercase tracking-tight leading-tight group-hover:text-slate-600 transition-colors">
-                                                    {rel.title}
-                                                </h4>
-                                                <div className="flex items-center gap-4 text-[9px] font-bold text-slate-400 uppercase tracking-widest">
-                                                    <span className="flex items-center gap-1.5">
-                                                        <Calendar className="h-2.5 w-2.5" />
-                                                        {new Date(rel.publishedAt).toLocaleDateString()}
-                                                    </span>
-                                                    <span className="h-0.5 w-0.5 bg-slate-300 rounded-full" />
-                                                    <span>{rel.readingTime} MIN READ</span>
+                                            <div className="space-y-1 flex-1">
+                                                <div className="text-[10px] font-bold text-[#00827f] uppercase">{rel.category?.name}</div>
+                                                <h4 className="text-xs font-bold text-slate-900 leading-snug line-clamp-2 group-hover:text-[#00827f] transition-colors">{rel.title}</h4>
+                                                <div className="text-[10px] text-slate-400 font-medium uppercase">
+                                                    {new Date(rel.publishedAt).toLocaleDateString('bn-BD', { month: 'short', day: 'numeric', year: 'numeric' })}
                                                 </div>
                                             </div>
                                         </Link>
                                     ))}
                                 </div>
                             </div>
-                        )}
 
-                        {/* Newsletter/Action */}
-                        <div className="bg-slate-50 border border-slate-200 rounded-[2.5rem] p-10 md:p-16 space-y-6 relative overflow-hidden group max-w-2xl mx-auto shadow-sm">
-                            <div className="relative z-10 space-y-6 text-center">
-                                <div className="h-20 w-20 bg-white rounded-3xl flex items-center justify-center mx-auto mb-4 border border-slate-200 shadow-sm group-hover:border-slate-300 transition-colors">
-                                    <Share2 className="h-10 w-10 text-slate-900" />
+                            {/* Featured Action */}
+                            <div className="bg-[#00827f] p-8 rounded text-white space-y-4 relative overflow-hidden group shadow-lg">
+                                <div className="relative z-10 space-y-4">
+                                    <h4 className="text-2xl font-black leading-tight">শিক্ষা ও সেবায় পাশে থাকুন</h4>
+                                    <p className="text-teal-50/80 text-sm font-medium">ব্রাহ্মণবাড়িয়ার অস্বচ্ছল মেধাবী শিক্ষার্থীদের সহায়তায় তিতাসের সাথে যুক্ত হন।</p>
+                                    <Button className="w-full bg-white text-[#00827f] hover:bg-teal-50 font-black uppercase tracking-widest h-12 rounded-sm border-none shadow-md">
+                                        সহযোগিতা করুন
+                                    </Button>
                                 </div>
-                                <div>
-                                    <h4 className="text-3xl font-black text-slate-900 uppercase tracking-tight leading-none mb-3">Stay Connected</h4>
-                                    <p className="text-slate-500 text-base font-medium max-w-sm mx-auto">Join our community for regular updates and exclusive stories straight to your inbox.</p>
-                                </div>
-                                <Button className="w-full sm:w-auto px-12 bg-slate-900 text-white hover:bg-slate-800 transition-colors font-bold uppercase tracking-widest text-xs h-14 rounded-xl">
-                                    Support Titas
-                                </Button>
+                                <div className="absolute -bottom-10 -right-10 h-40 w-40 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-700" />
                             </div>
-                        </div>
-                    </aside>
-                </div>
+                        </aside>
+                        
+                    </div>
                 </div>
             </div>
             <Footer />
         </div>
     )
 }
+
+

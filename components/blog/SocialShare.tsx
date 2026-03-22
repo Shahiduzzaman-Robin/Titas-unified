@@ -52,31 +52,32 @@ export default function SocialShare({ url, title }: SocialShareProps) {
     }
 
     return (
-        <div className="flex flex-col gap-4">
-            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Share Story</h4>
-            <div className="flex flex-wrap gap-2">
-                {shareLinks.map((link) => (
-                    <Button
-                        key={link.name}
-                        variant="ghost"
-                        size="icon"
-                        className={`h-10 w-10 rounded-full ${link.color} shadow-lg shadow-indigo-100 hover:scale-110 transition-transform`}
-                        onClick={() => window.open(link.href, '_blank')}
-                        title={`Share on ${link.name}`}
-                    >
-                        {link.icon}
-                    </Button>
-                ))}
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-10 w-10 rounded-full bg-white border border-slate-200 text-slate-600 shadow-lg shadow-indigo-100 hover:scale-110 transition-transform"
-                    onClick={copyToClipboard}
-                    title="Copy Link"
+        <div className="flex flex-wrap gap-1.5">
+            {shareLinks.map((link) => (
+                <button
+                    key={link.name}
+                    className={`h-9 w-9 flex items-center justify-center rounded-sm ${link.color} hover:opacity-90 transition-opacity`}
+                    onClick={() => window.open(link.href, '_blank')}
+                    title={`Share on ${link.name}`}
                 >
-                    {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
-                </Button>
-            </div>
+                    {link.icon}
+                </button>
+            ))}
+            <button
+                className="h-9 w-9 flex items-center justify-center rounded-sm bg-[#4267B2] text-white hover:opacity-90 transition-opacity"
+                onClick={() => window.open(`https://www.facebook.com/dialog/send?app_id=123456789&link=${encodedUrl}&redirect_uri=${encodedUrl}`, '_blank')}
+                title="Messenger"
+            >
+                <MessageCircle className="h-4 w-4" />
+            </button>
+            <button
+                className="h-9 w-9 flex items-center justify-center rounded-sm bg-slate-100 border border-slate-200 text-slate-600 hover:bg-slate-200 transition-colors"
+                onClick={copyToClipboard}
+                title="Copy Link"
+            >
+                {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
+            </button>
         </div>
     )
 }
+

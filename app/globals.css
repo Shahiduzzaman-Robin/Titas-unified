@@ -106,3 +106,23 @@
   word-break: break-word;
   max-width: 100%;
 }
+
+.blog-content blockquote {
+  position: relative;
+  padding-left: 2.5rem !important;
+  border-left: none !important;
+  font-style: italic;
+  color: #4b5563;
+  margin: 2rem 0;
+}
+
+.blog-content blockquote::before {
+  content: '“';
+  position: absolute;
+  left: 0;
+  top: -1.5rem;
+  font-size: 5rem;
+  color: #00827f;
+  font-family: serif;
+  opacity: 0.25;
+}
