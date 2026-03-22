@@ -135,7 +135,7 @@ export default function CommentSection({ slug, initialComments }: { slug: string
     return (
         <section className="comments-section bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-100 mt-12 mb-20">
             <div className="flex items-center gap-3 mb-8">
-                <div className="p-2 bg-indigo-50 rounded-xl text-indigo-600">
+                <div className="p-2 bg-[#0A8481]/10 rounded-xl text-[#0A8481]">
                     <MessageSquare size={24} />
                 </div>
                 <div>
