@@ -89,7 +89,7 @@ export function PublicNav({ session: serverSession }: PublicNavProps) {
                             {navItems.map((item) => (
                                 <Link key={item.href} href={item.href}>
                                     <span className={cn(
-                                        "px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap block",
+                                        "px-4 py-2 rounded-md text-base font-medium transition-colors whitespace-nowrap block",
                                         isActive(item.href)
                                             ? "bg-white text-primary shadow-sm"
                                             : "text-gray-500 hover:text-gray-900 hover:bg-white/50"
@@ -163,7 +163,7 @@ export function PublicNav({ session: serverSession }: PublicNavProps) {
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     <span className={cn(
-                                        "px-4 py-3 rounded-md text-base font-medium block transition-colors",
+                                        "px-4 py-3 rounded-md text-lg font-medium block transition-colors",
                                         isActive(item.href)
                                             ? "bg-primary/5 text-primary"
                                             : "text-gray-600 hover:bg-gray-50"
