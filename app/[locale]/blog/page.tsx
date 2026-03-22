@@ -26,6 +26,7 @@ import { cn, optimizeImage } from "@/lib/utils"
 import { motion } from "framer-motion"
 import { PublicNav } from "@/components/PublicNav"
 import Footer from "@/components/home/Footer"
+import SidebarTabs from "@/components/blog/SidebarTabs"
 
 export default function PublicBlogPage() {
     const t = useTranslations('nav')
@@ -34,6 +35,8 @@ export default function PublicBlogPage() {
     const locale = useLocale()
 
     const [posts, setPosts] = useState([])
+    const [latestPosts, setLatestPosts] = useState([])
+    const [trendingPosts, setTrendingPosts] = useState([])
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState("")
     const [categoryFilter, setCategoryFilter] = useState("all")
@@ -43,7 +46,27 @@ export default function PublicBlogPage() {
     useEffect(() => {
         fetchPosts()
         fetchCategories()
+        fetchSidebarPosts()
     }, [categoryFilter, pagination.page])
+
+    const fetchSidebarPosts = async () => {
+        try {
+            const [latestRes, trendingRes] = await Promise.all([
+                fetch(`/api/blog/posts?limit=5&status=published`),
+                fetch(`/api/blog/posts?limit=5&status=published&featured=true`)
+            ])
+            if (latestRes.ok) {
+                const data = await latestRes.json()
+                setLatestPosts(data.posts)
+            }
+            if (trendingRes.ok) {
+                const data = await trendingRes.json()
+                setTrendingPosts(data.posts)
+            }
+        } catch (error) {
+            console.error("Failed to fetch sidebar posts", error)
+        }
+    }
 
     const fetchPosts = async () => {
         setLoading(true)
@@ -217,30 +240,9 @@ export default function PublicBlogPage() {
                                     </div>
                                 </div>
 
-                                {/* Trending (Right 1/3) */}
+                                {/* Trending/Latest Sidebar (Right 1/3) */}
                                 <div className="space-y-8">
-                                    <div className="border-b border-slate-200">
-                                        <h3 className="text-xl font-bold text-slate-900 bn-text inline-block border-b-[3px] border-emerald-600 pb-3 -mb-[2px]">
-                                            ট্রেন্ডিং
-                                        </h3>
-                                    </div>
-
-                                    <div className="bg-slate-900 p-8 text-white space-y-8 relative overflow-hidden">
-                                        {/* Decorative Element */}
-                                        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-600/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none" />
-                                        
-                                        {/* We use post views or just the oldest/random ones here for demo */}
-                                        {[...posts].reverse().slice(0, 4).map((post: any, i: number) => (
-                                            <Link key={post.id} href={`/${locale}/blog/${post.slug}`} className="group flex flex-col gap-2 border-b border-slate-800 pb-6 last:border-0 last:pb-0 relative z-10">
-                                                <div className="text-xs text-emerald-500 font-medium tracking-wider uppercase">
-                                                    {post.category?.name || 'Story'}
-                                                </div>
-                                                <h4 className="text-lg font-bold text-white bn-text leading-snug group-hover:text-emerald-400 transition-colors">
-                                                    {post.title}
-                                                </h4>
-                                            </Link>
-                                        ))}
-                                    </div>
+                                    <SidebarTabs trending={trendingPosts} latest={latestPosts} />
                                 </div>
                             </div>
                         )}
