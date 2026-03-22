@@ -7,7 +7,7 @@ export const slugify = (value: string = ''): string => {
     return value
         .toLowerCase()
         .trim()
-        .replace(/[^\w\s-]/g, '')
+        .replace(/[^\p{L}\p{M}\p{N}\s-]/gu, '') // Keep Letter, Mark, Number
         .replace(/[\s_-]+/g, '-')
         .replace(/^-+|-+$/g, '');
 }
