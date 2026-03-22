@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Loader2, ArrowRight, Images } from 'lucide-react';
 import { useLocale } from 'next-intl';
+import { optimizeImage } from '@/lib/utils';
 
 interface GalleryImage {
     id: number;
@@ -63,7 +64,7 @@ const GallerySection = () => {
                                     style={{ minHeight: idx === 0 ? '360px' : '180px' }}
                                 >
                                     <Image
-                                        src={img.url}
+                                        src={idx === 0 ? optimizeImage(img.url, 800) : optimizeImage(img.url, 400)}
                                         alt={img.title || 'Gallery Image'}
                                         fill
                                         sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"

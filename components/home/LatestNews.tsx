@@ -6,6 +6,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Calendar, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { optimizeImage } from "@/lib/utils"
 
 interface Post {
     id: number
@@ -81,7 +82,7 @@ export default function LatestNews() {
                             <div className="relative h-56 w-full">
                                 {post.featuredImage ? (
                                     <Image 
-                                        src={post.featuredImage} 
+                                        src={optimizeImage(post.featuredImage, 600)} 
                                         alt={post.title}
                                         fill
                                         className="object-cover transition-transform duration-500 group-hover:scale-110"

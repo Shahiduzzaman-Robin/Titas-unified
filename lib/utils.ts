@@ -60,3 +60,21 @@ export function getStudentImageUrl(path: string | null | undefined): string {
     // Default fallback: ensure leading slash
     return path.startsWith("/") ? path : `/${path}`
 }
+
+export function optimizeImage(url: string | null | undefined, width: number = 1200): string {
+    if (!url) return "/assets/placeholder.jpg"
+    
+    // Only optimize Cloudinary URLs
+    if (url.includes('res.cloudinary.com')) {
+        // If it already has transformations, return as is or consider merging
+        if (url.includes('/image/upload/')) {
+            // Check if it already contains optimization flags
+            if (url.includes('f_auto') || url.includes('w_')) return url;
+            
+            // Inject f_auto, q_auto, and width
+            return url.replace('/image/upload/', `/image/upload/f_auto,q_auto,w_${width}/`);
+        }
+    }
+    
+    return url
+}
