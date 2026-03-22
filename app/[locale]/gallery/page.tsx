@@ -128,9 +128,7 @@ export default function PublicGalleryPage() {
                                         }}
                                     />
                                 </div>
-                                <div className="relative z-10 flex flex-col items-center justify-center">
-                                    <ImageIcon className="w-10 h-10 text-white/60 drop-shadow-lg" />
-                                </div>
+                                {/* No icon or text for a cleaner shimmer */}
                             </div>
                         ))}
                     </div>
@@ -237,7 +235,7 @@ export default function PublicGalleryPage() {
                 )}
             </AnimatePresence>
             <Footer />
-            {/* Glassmorphism shimmer effect styles */}
+            {/* Glassmorphism shimmer effect styles (grey, smooth transition) */}
             <style jsx global>{`
                 .lux-shimmer {
                     position: absolute;
@@ -245,22 +243,27 @@ export default function PublicGalleryPage() {
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    background: linear-gradient(120deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.32) 40%, rgba(255,255,255,0.12) 100%);
-                    filter: blur(2px);
-                    opacity: 0.8;
-                    animation: lux-shimmer-move 1.6s infinite linear;
+                    background: linear-gradient(120deg, rgba(156,163,175,0.10) 0%, rgba(209,213,219,0.28) 40%, rgba(156,163,175,0.10) 100%);
+                    filter: blur(2.5px);
+                    opacity: 0.85;
+                    animation: lux-shimmer-move 1.8s cubic-bezier(0.4,0,0.2,1) infinite;
+                    transition: background 0.6s cubic-bezier(0.4,0,0.2,1), opacity 0.6s cubic-bezier(0.4,0,0.2,1);
                 }
                 @keyframes lux-shimmer-move {
                     0% {
-                        transform: translateX(-60%) skewX(-12deg);
+                        transform: translateX(-60%) skewX(-10deg) scale(1.01);
                         opacity: 0.7;
                     }
-                    50% {
-                        transform: translateX(20%) skewX(-12deg);
+                    40% {
+                        transform: translateX(10%) skewX(-10deg) scale(1.03);
                         opacity: 1;
                     }
+                    60% {
+                        transform: translateX(30%) skewX(-10deg) scale(1.01);
+                        opacity: 0.95;
+                    }
                     100% {
-                        transform: translateX(100%) skewX(-12deg);
+                        transform: translateX(100%) skewX(-10deg) scale(1);
                         opacity: 0.7;
                     }
                 }
