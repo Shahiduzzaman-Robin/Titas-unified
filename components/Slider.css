@@ -57,7 +57,7 @@
     z-index: 2;
     color: white;
     max-width: 800px;
-    padding: 0 4rem;
+    padding: 0 7rem;
     margin-right: auto;
     text-align: left;
     opacity: 0;
@@ -165,7 +165,7 @@
         border-radius: 16px;
     }
     .slide-content {
-        padding: 0 2rem;
+        padding: 0 4rem;
         text-align: center;
         margin: 0 auto;
     }
