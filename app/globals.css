@@ -100,6 +100,7 @@
   src: url('/fonts/Lal_Sabuj_Normal_31-08-2012.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -107,6 +108,7 @@
   src: url('/fonts/LalSabuj%20Normal_Bold-04-09-2012.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
+  font-display: swap;
 }
 
 .bn-text {

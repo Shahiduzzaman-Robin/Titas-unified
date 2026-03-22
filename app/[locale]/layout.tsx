@@ -89,6 +89,19 @@ export default async function LocaleLayout({
 
     return (
         <html lang={locale} className="notranslate" translate="no" suppressHydrationWarning>
+            <head>
+                {/* Preload Bengali Fonts to break the critical path latency chain */}
+                <link rel="preload" href="/fonts/Lal_Sabuj_Normal_31-08-2012.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
+                <link rel="preload" href="/fonts/LalSabuj%20Normal_Bold-04-09-2012.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
+                
+                {/* Preload Hero Image to improve LCP */}
+                <link 
+                    rel="preload" 
+                    as="image" 
+                    href="https://res.cloudinary.com/dwybib7hh/image/upload/w_1200,f_auto,q_auto/v1774170410/titas/hero/Fruit_Fest.jpg" 
+                    fetchPriority="high"
+                />
+            </head>
             <body className={`${bnFont.variable} ${inter.variable} ${inter.className} ${locale === 'bn' ? 'bn-text' : ''}`} suppressHydrationWarning>
                 <NextIntlClientProvider messages={messages}>
                     <SessionProviderWrapper>
