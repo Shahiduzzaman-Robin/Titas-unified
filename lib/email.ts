@@ -82,7 +82,7 @@ export function renderEmailLayout({
         <td class="email-footer" style="padding:14px 28px 24px;border-top:1px solid #e2e8f0;background:#f8fafc;">
           <p style="margin:0 0 10px;color:#64748b;font-size:12px;line-height:1.7;">${safeFooter}</p>
           <p style="margin:0;color:#64748b;font-size:12px;line-height:1.7;">
-            🌐 <a href="${process.env.NEXTAUTH_URL || 'https://titasdu.com'}" style="color:#1d4ed8;text-decoration:none;">titasdu.com</a>
+            🌐 <a href="${process.env.NEXTAUTH_URL || 'https://titaas.vercel.app'}" style="color:#1d4ed8;text-decoration:none;">titaas.vercel.app</a>
           </p>
         </td>
       </tr>

@@ -36,7 +36,7 @@ export async function generateMetadata(
 
     if (!post) return {}
 
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://titasdu.com'
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://titaas.vercel.app'
     const canonicalUrl = `${baseUrl}/${locale}/blog/${post.slug}`
     
     // Ensure OG image is an absolute URL
@@ -46,7 +46,7 @@ export async function generateMetadata(
     }
     
     return {
-        title: `${post.title} | TITAS`,
+        title: `${post.title} | Titas`,
         description: post.excerpt || `তিতাসে ${post.title} সম্পর্কে বিস্তারিত পড়ুন।`,
         metadataBase: new URL(baseUrl),
         alternates: {
@@ -57,6 +57,7 @@ export async function generateMetadata(
             description: post.excerpt || `তিতাসে ${post.title} সম্পর্কে বিস্তারিত পড়ুন।`,
             url: canonicalUrl,
             siteName: 'Titas - Dhaka University Students\' Association of Brahmanbaria',
+
             type: 'article',
             publishedTime: post.publishedAt?.toISOString(),
             authors: post.authorName ? [post.authorName] : ['তিতাস মিডিয়া সেল'],
@@ -149,7 +150,7 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
         }
     })
 
-    const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://titasdu.com'}/${locale}/blog/${post.slug}`
+    const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://titaas.vercel.app'}/${locale}/blog/${post.slug}`
 
     return (
         <div className="min-h-screen bg-[#fcfcfc]">

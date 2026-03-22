@@ -96,7 +96,7 @@ const Footer = () => {
                                 <div className="p-3 bg-white/5 rounded-xl border border-white/10 group-hover:bg-purple-600/20 group-hover:border-purple-500/30 transition-all">
                                     <Mail size={18} className="text-purple-400" />
                                 </div>
-                                <span className="en-text text-sm font-medium">info@titasdu.com</span>
+                                <span className="en-text text-sm font-medium">info@titaas.vercel.app</span>
                             </li>
                         </ul>
                     </div>
