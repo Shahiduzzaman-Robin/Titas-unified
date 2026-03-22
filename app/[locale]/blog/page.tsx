@@ -179,13 +179,13 @@ export default function PublicBlogPage() {
     return (
         <div className="min-h-screen bg-white">
             <PublicNav />
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-24">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 pb-24">
                 
                 {/* Header & Controls */}
-                <div className="flex flex-col md:flex-row justify-between items-end mb-12 pb-6 border-b-2 border-slate-900">
-                    <div>
-                        <h1 className="text-4xl md:text-5xl font-black text-slate-900 bn-text uppercase tracking-tight">
-                            {t('blog')}
+                <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-12 pb-6 border-b-2 border-slate-900">
+                    <div className="w-full text-center md:text-left">
+                        <h1 className="text-3xl md:text-5xl font-black text-slate-900 bn-text uppercase tracking-tight">
+                            {locale === 'bn' ? 'তিতাস জার্নাল' : 'TITAS JOURNAL'}
                         </h1>
                     </div>
                     <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto mt-6 md:mt-0">
