@@ -22,11 +22,54 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import { cn, optimizeImage } from "@/lib/utils"
 import { motion } from "framer-motion"
 import { PublicNav } from "@/components/PublicNav"
 import Footer from "@/components/home/Footer"
 import SidebarTabs from "@/components/blog/SidebarTabs"
+
+const BlogSkeleton = ({ locale }: { locale: string }) => (
+    <div className="space-y-16 animate-in fade-in duration-500">
+        {/* Hero Skeleton */}
+        <div className="aspect-[16/9] md:aspect-[21/9] lg:aspect-[2.5/1] w-full bg-slate-100 relative overflow-hidden">
+            <Skeleton className="h-full w-full rounded-none" />
+        </div>
+
+        {/* 3 Cards Skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+                <div key={i} className="space-y-4">
+                    <Skeleton className="aspect-[16/10] w-full rounded-none" />
+                    <Skeleton className="h-8 w-3/4 rounded-none" />
+                    <div className="space-y-2">
+                        <Skeleton className="h-4 w-full rounded-none" />
+                        <Skeleton className="h-4 w-5/6 rounded-none" />
+                    </div>
+                </div>
+            ))}
+        </div>
+
+        {/* Latest & Sidebar Skeleton */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 pt-16 border-t border-slate-200">
+            <div className="lg:col-span-2 space-y-8">
+                <Skeleton className="h-10 w-32 rounded-none mb-8" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                    {[1, 2, 3, 4].map((i) => (
+                        <div key={i} className="space-y-4">
+                            <Skeleton className="aspect-[16/10] w-full rounded-none" />
+                            <Skeleton className="h-6 w-5/6 rounded-none" />
+                            <Skeleton className="h-4 w-1/3 rounded-none" />
+                        </div>
+                    ))}
+                </div>
+            </div>
+            <div className="space-y-8">
+                <Skeleton className="h-[400px] w-full rounded-none" />
+            </div>
+        </div>
+    </div>
+)
 
 export default function PublicBlogPage() {
     const t = useTranslations('nav')
@@ -140,9 +183,7 @@ export default function PublicBlogPage() {
                 </div>
 
                 {loading ? (
-                    <div className="flex justify-center py-32">
-                        <Loader2 className="h-10 w-10 animate-spin text-emerald-600" />
-                    </div>
+                    <BlogSkeleton locale={locale} />
                 ) : posts.length === 0 ? (
                     <div className="text-center py-24 border-y border-slate-200">
                         <FileText className="h-12 w-12 text-slate-300 mx-auto mb-4" />
