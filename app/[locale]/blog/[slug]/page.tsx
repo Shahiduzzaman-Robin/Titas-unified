@@ -23,6 +23,7 @@ import { PublicNav } from "@/components/PublicNav"
 import Footer from "@/components/home/Footer"
 import { optimizeImage } from "@/lib/utils"
 import ViewCounter from "./ViewCounter"
+import CommentSection from "@/components/blog/CommentSection"
 
 
 export async function generateMetadata(
@@ -152,6 +153,22 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
         }
     })
 
+    const initialComments = await prisma.blog_comments.findMany({
+        where: { 
+            postId: post.id,
+            approved: true 
+        },
+        orderBy: { createdAt: 'desc' },
+        select: {
+            id: true,
+            name: true,
+            text: true,
+            createdAt: true,
+            likes: true,
+            approved: true
+        }
+    })
+
     const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://titaas.vercel.app'}/${locale}/blog/${post.slug}`
 
     return (
@@ -211,8 +228,11 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center gap-2 border-y border-slate-100 py-3">
+                                    <div className="flex items-center justify-between gap-2 border-y border-slate-100 py-3">
                                         <SocialShare url={shareUrl} title={post.title} />
+                                        <div className="text-[11px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                            <ViewCounter slug={post.slug} initialViews={post.views} />
+                                        </div>
                                     </div>
                                 </header>
 
@@ -279,6 +299,9 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                                     )}
                                 </footer>
                             </article>
+
+                            {/* Comment Section */}
+                            <CommentSection slug={post.slug} initialComments={initialComments as any} />
                         </main>
 
                         {/* Sidebar Column */}

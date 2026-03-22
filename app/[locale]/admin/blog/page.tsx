@@ -11,6 +11,7 @@ import {
     Eye, 
     Edit, 
     Trash2, 
+    MessageSquare,
     FileText,
     Calendar,
     Tag,
@@ -61,6 +62,7 @@ import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { CategoryManager, TagManager } from "./_components/TaxonomyManager"
+import { CommentManager } from "./_components/CommentManager"
 
 export default function AdminBlogPage() {
     const t = useTranslations('admin.students.blog')
@@ -177,6 +179,10 @@ export default function AdminBlogPage() {
                     <TabsTrigger value="tags" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm font-bold uppercase tracking-widest text-xs px-8 h-10 transition-all text-slate-500">
                         <Tag className="h-4 w-4 mr-2" />
                         Tags
+                    </TabsTrigger>
+                    <TabsTrigger value="comments" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm font-bold uppercase tracking-widest text-xs px-8 h-10 transition-all text-slate-500">
+                        <MessageSquare className="h-4 w-4 mr-2" />
+                        Comments
                     </TabsTrigger>
                 </TabsList>
 
@@ -405,6 +411,21 @@ export default function AdminBlogPage() {
                         </CardHeader>
                         <CardContent className="p-6">
                             <TagManager />
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+                <TabsContent value="comments">
+                    <Card className="border-slate-100 shadow-sm overflow-hidden rounded-3xl bg-white">
+                        <CardHeader className="bg-white border-b border-slate-50 p-6">
+                            <CardTitle className="text-xl font-black text-slate-900 flex items-center gap-3">
+                                <div className="p-2 bg-slate-50 rounded-xl text-slate-600">
+                                    <MessageSquare className="h-5 w-5" />
+                                </div>
+                                Manage Comments
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-6">
+                            <CommentManager />
                         </CardContent>
                     </Card>
                 </TabsContent>

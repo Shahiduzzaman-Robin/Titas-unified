@@ -29,6 +29,8 @@ export type AdminAction =
     | 'create_event'
     | 'update_event'
     | 'delete_event'
+    | 'update_comment'
+    | 'delete_comment'
     | 'admin_login'
     | 'admin_logout'
     | 'other'

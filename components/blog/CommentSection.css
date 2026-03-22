@@ -1,0 +1,198 @@
+/* Facebook Style Comment System CSS */
+
+.comments-section {
+  max-width: 100%;
+}
+
+/* Comment Form Bubble */
+.comment-form-fb {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.comment-avatar-placeholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.comment-input-container {
+  flex-grow: 1;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 8px 16px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.comment-input-container:focus-within {
+  background: white;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.comment-editable-input {
+  min-height: 20px;
+  max-height: 150px;
+  overflow-y: auto;
+  outline: none;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #1e293b;
+  width: 100%;
+  padding: 2px 0;
+}
+
+.comment-editable-input:empty:before {
+  content: attr(data-placeholder);
+  color: #94a3b8;
+  cursor: text;
+}
+
+.comment-input-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 6px;
+}
+
+.comment-submit-btn {
+  background: #6366f1;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+}
+
+.comment-submit-btn:hover:not(:disabled) {
+  background: #4f46e5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(99, 102, 241, 0.4);
+}
+
+.comment-submit-btn:disabled {
+  background: #e2e8f0;
+  color: #94a3b8;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Comment Item Style */
+.comment-avatar-small {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #6366f1;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.comment-content-main {
+  flex-grow: 1;
+}
+
+.comment-bubble {
+  background: #f1f5f9;
+  border-radius: 18px;
+  padding: 10px 14px;
+  display: inline-block;
+  max-width: 100%;
+  position: relative;
+}
+
+.comment-author-name {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 2px;
+}
+
+.comment-text {
+  font-size: 14px;
+  color: #334155;
+  font-weight: 400;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+
+/* Reaction Badge Overlay */
+.comment-likes-badge {
+  position: absolute;
+  right: -8px;
+  bottom: -4px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  padding: 2px 6px 2px 4px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid #f1f5f9;
+}
+
+.comment-likes-badge:hover {
+  background: #fee2e2;
+  border-color: #fecaca;
+}
+
+/* Actions Footer */
+.comment-actions-footer {
+  padding: 4px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.comment-action-btn {
+  background: none;
+  border: none;
+  font-size: 12px;
+  font-weight: 800;
+  color: #64748b;
+  cursor: pointer;
+  padding: 0;
+}
+
+.comment-action-btn:hover {
+  text-decoration: underline;
+  color: #6366f1;
+}
+
+.comment-action-btn.active {
+  color: #ef4444;
+}
+
+.dot-divider {
+  color: #cbd5e1;
+  font-size: 8px;
+}
+
+.comment-timestamp {
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
