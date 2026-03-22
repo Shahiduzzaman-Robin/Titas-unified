@@ -75,7 +75,7 @@ export default function PublicBlogPage() {
                 search,
                 category: categoryFilter === 'all' ? '' : categoryFilter,
                 page: pagination.page.toString(),
-                limit: '12',
+                limit: '20',
                 status: 'published'
             })
             const res = await fetch(`/api/blog/posts?${params.toString()}`)
@@ -217,9 +217,9 @@ export default function PublicBlogPage() {
                                     </div>
                                     
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                                        {posts.slice(4).map((post: any, i: number) => (
+                                        {posts.slice(4, 10).map((post: any, i: number) => (
                                             <Link key={post.id} href={`/${locale}/blog/${post.slug}`} className="group block space-y-4">
-                                                <div className={cn("aspect-[16/10] bg-slate-100 overflow-hidden relative", i === 0 ? "sm:aspect-[16/9]" : "")}>
+                                                <div className="aspect-[16/10] bg-slate-100 overflow-hidden relative">
                                                     <Image 
                                                         src={optimizeImage(post.featuredImage, 600)} 
                                                         className="object-cover group-hover:scale-105 transition-transform duration-700" 
@@ -246,6 +246,36 @@ export default function PublicBlogPage() {
                                 </div>
                             </div>
                         )}
+
+                        {/* 4. Bottom Full-Width Grid (To balance layout) */}
+                        {posts.length > 10 && (
+                            <div className="pt-16 border-t border-slate-200">
+                                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                                    {posts.slice(10).map((post: any) => (
+                                        <Link key={post.id} href={`/${locale}/blog/${post.slug}`} className="group block space-y-4">
+                                            <div className="aspect-[16/10] bg-slate-100 overflow-hidden relative">
+                                                <Image 
+                                                    src={optimizeImage(post.featuredImage, 600)} 
+                                                    className="object-cover group-hover:scale-105 transition-transform duration-700" 
+                                                    alt={post.title} 
+                                                    fill
+                                                />
+                                            </div>
+                                            <div>
+                                                <h4 className="text-base font-bold text-slate-900 bn-text leading-snug mb-2 group-hover:text-emerald-700 transition-colors line-clamp-2">
+                                                    {post.title}
+                                                </h4>
+                                                <div className="text-slate-500 text-xs bn-text uppercase font-bold tracking-tight">
+                                                    {new Date(post.publishedAt).toLocaleDateString(locale === 'bn' ? 'bn-BD' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Pagination for Editorial Layout */}
 
                         {/* Pagination for Editorial Layout */}
                         {pagination.totalPages > 1 && (
