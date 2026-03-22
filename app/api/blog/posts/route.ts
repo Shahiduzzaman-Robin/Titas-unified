@@ -13,8 +13,8 @@ export async function GET(request: NextRequest) {
         const limit = parseInt(searchParams.get('limit') || '10')
         const skip = (page - 1) * limit
         const search = searchParams.get('search') || ''
-        const categorySlug = searchParams.get('category')
-        const tagSlug = searchParams.get('tag')
+        const categorySlug = searchParams.get('category') ? decodeURIComponent(searchParams.get('category')!) : null
+        const tagSlug = searchParams.get('tag') ? decodeURIComponent(searchParams.get('tag')!) : null
         const status = searchParams.get('status') || 'published'
         const isFeatured = searchParams.get('featured') === 'true'
 

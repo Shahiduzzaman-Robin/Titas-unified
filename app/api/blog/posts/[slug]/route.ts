@@ -11,7 +11,7 @@ export async function GET(
     { params }: { params: { slug: string } }
 ) {
     try {
-        const { slug } = params
+        const slug = decodeURIComponent(params.slug)
         const { searchParams } = new URL(request.url)
         const isAdmin = searchParams.get('admin') === 'true'
 
@@ -74,7 +74,7 @@ export async function PUT(
         }
 
         const adminId = getAdminIdFromSession(session)
-        const currentSlug = params.slug
+        const currentSlug = decodeURIComponent(params.slug)
         const formData = await request.formData()
 
         const post = await prisma.blog_posts.findUnique({
@@ -198,7 +198,7 @@ export async function DELETE(
         }
 
         const adminId = getAdminIdFromSession(session)
-        const { slug } = params
+        const slug = decodeURIComponent(params.slug)
 
         const post = await prisma.blog_posts.findUnique({
             where: { slug }

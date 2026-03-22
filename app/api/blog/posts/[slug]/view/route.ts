@@ -6,7 +6,7 @@ export async function POST(
     { params }: { params: { slug: string } }
 ) {
     try {
-        const { slug } = params
+        const slug = decodeURIComponent(params.slug)
 
         const post = await prisma.blog_posts.update({
             where: { slug },

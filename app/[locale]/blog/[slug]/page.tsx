@@ -28,7 +28,8 @@ import ViewCounter from "./ViewCounter"
 export async function generateMetadata(
     { params }: { params: Promise<{ slug: string; locale: string }> }
 ): Promise<Metadata> {
-    const { slug, locale } = await params
+    const { slug: rawSlug, locale } = await params
+    const slug = decodeURIComponent(rawSlug)
     const post = await prisma.blog_posts.findUnique({
         where: { slug },
         include: { category: true, author: { select: { name: true } } }
@@ -82,7 +83,8 @@ export async function generateMetadata(
 
 
 export default async function BlogPostDetailsPage({ params }: { params: { slug: string, locale: string } }) {
-    const { slug, locale } = params
+    const { slug: rawSlug, locale } = params
+    const slug = decodeURIComponent(rawSlug)
 
     const post = await prisma.blog_posts.findUnique({
         where: { slug },
