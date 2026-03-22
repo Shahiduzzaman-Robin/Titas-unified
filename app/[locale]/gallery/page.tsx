@@ -129,8 +129,7 @@ export default function PublicGalleryPage() {
                                     />
                                 </div>
                                 <div className="relative z-10 flex flex-col items-center justify-center">
-                                    <ImageIcon className="w-10 h-10 text-white/60 drop-shadow-lg mb-2" />
-                                    <span className="text-white/70 font-bold text-xs tracking-widest drop-shadow-lg">Loading...</span>
+                                    <ImageIcon className="w-10 h-10 text-white/60 drop-shadow-lg" />
                                 </div>
                             </div>
                         ))}
