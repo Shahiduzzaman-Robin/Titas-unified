@@ -80,7 +80,7 @@ export default function PublicBlogPage() {
     }
 
     return (
-        <div className="min-h-screen bg-white font-sans">
+        <div className="min-h-screen bg-white">
             <PublicNav />
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-24">
                 
