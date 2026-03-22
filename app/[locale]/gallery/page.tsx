@@ -111,9 +111,28 @@ export default function PublicGalleryPage() {
                 {loading ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {Array.from({ length: 8 }).map((_, i) => (
-                            <Card key={i} className="overflow-hidden border-none shadow-sm rounded-2xl bg-white aspect-[4/3]">
-                                <Skeleton className="w-full h-full min-h-[180px]" style={{ animationDelay: `${i * 0.1}s` }} />
-                            </Card>
+                            <div
+                                key={i}
+                                className="overflow-hidden rounded-2xl aspect-[4/3] relative flex items-center justify-center"
+                                style={{ minHeight: 180 }}
+                            >
+                                <div
+                                    className="absolute inset-0 bg-white/10 border border-white/20 backdrop-blur-lg shadow-xl rounded-2xl"
+                                    style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.18)' }}
+                                />
+                                <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
+                                    <div
+                                        className="lux-shimmer w-full h-full"
+                                        style={{
+                                            animationDelay: `${i * 0.1}s`,
+                                        }}
+                                    />
+                                </div>
+                                <div className="relative z-10 flex flex-col items-center justify-center">
+                                    <ImageIcon className="w-10 h-10 text-white/60 drop-shadow-lg mb-2" />
+                                    <span className="text-white/70 font-bold text-xs tracking-widest drop-shadow-lg">Loading...</span>
+                                </div>
+                            </div>
                         ))}
                     </div>
                 ) : images.length === 0 ? (
@@ -219,6 +238,34 @@ export default function PublicGalleryPage() {
                 )}
             </AnimatePresence>
             <Footer />
+            {/* Glassmorphism shimmer effect styles */}
+            <style jsx global>{`
+                .lux-shimmer {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(120deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.32) 40%, rgba(255,255,255,0.12) 100%);
+                    filter: blur(2px);
+                    opacity: 0.8;
+                    animation: lux-shimmer-move 1.6s infinite linear;
+                }
+                @keyframes lux-shimmer-move {
+                    0% {
+                        transform: translateX(-60%) skewX(-12deg);
+                        opacity: 0.7;
+                    }
+                    50% {
+                        transform: translateX(20%) skewX(-12deg);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translateX(100%) skewX(-12deg);
+                        opacity: 0.7;
+                    }
+                }
+            `}</style>
         </div>
     )
 }
