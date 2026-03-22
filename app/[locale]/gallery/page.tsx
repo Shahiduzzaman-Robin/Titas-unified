@@ -75,11 +75,11 @@ export default function PublicGalleryPage() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-12">
                 {/* Header */}
                 <div className="text-center space-y-4 mb-12">
-                    <Badge variant="outline" className="px-4 py-1 text-indigo-600 border-indigo-200 bg-indigo-50 font-bold uppercase tracking-widest text-xs">
+                    <Badge variant="outline" className="px-4 py-1 text-green-400 border-green-200 bg-green-50 font-bold uppercase tracking-widest text-xs">
                         {t('gallery')}
                     </Badge>
                     <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase">
-                        Capturing <span className="text-indigo-600">Moments</span>
+                        Capturing <span className="text-green-400">Moments</span>
                     </h1>
                     <p className="max-w-2xl mx-auto text-slate-500 font-medium">
                         Explore our campus, events, and student activities through these captured memories.
@@ -90,7 +90,7 @@ export default function PublicGalleryPage() {
                 <div className="flex flex-wrap justify-center items-center gap-2 mb-12">
                     <Button 
                         variant={categoryFilter === 'all' ? 'default' : 'outline'} 
-                        className={cn("rounded-full px-6 h-10 font-bold uppercase tracking-wider text-xs", categoryFilter === 'all' ? "bg-indigo-600 shadow-indigo-200 shadow-lg" : "bg-white border-slate-200")}
+                        className={cn("rounded-full px-6 h-10 font-bold uppercase tracking-wider text-xs", categoryFilter === 'all' ? "bg-green-400 shadow-green-200 shadow-lg" : "bg-white border-slate-200")}
                         onClick={() => setCategoryFilter('all')}
                     >
                         All
@@ -99,7 +99,7 @@ export default function PublicGalleryPage() {
                         <Button 
                             key={cat}
                             variant={categoryFilter === cat ? 'default' : 'outline'} 
-                            className={cn("rounded-full px-6 h-10 font-bold uppercase tracking-wider text-xs", categoryFilter === cat ? "bg-indigo-600 shadow-indigo-200 shadow-lg" : "bg-white border-slate-200")}
+                            className={cn("rounded-full px-6 h-10 font-bold uppercase tracking-wider text-xs", categoryFilter === cat ? "bg-green-400 shadow-green-200 shadow-lg" : "bg-white border-slate-200")}
                             onClick={() => setCategoryFilter(cat)}
                         >
                             {tAdmin(`categories.${cat.toLowerCase()}`)}
@@ -109,7 +109,7 @@ export default function PublicGalleryPage() {
 
                 {loading ? (
                     <div className="flex flex-col items-center justify-center min-h-[400px]">
-                        <Loader2 className="h-12 w-12 animate-spin text-indigo-600 mb-4" />
+                        <Loader2 className="h-12 w-12 animate-spin text-green-400 mb-4" />
                         <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">{tCommon('loading')}</p>
                     </div>
                 ) : images.length === 0 ? (
@@ -137,7 +137,7 @@ export default function PublicGalleryPage() {
                                             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" 
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6">
-                                            <Badge className="w-fit mb-2 bg-indigo-600/90 text-white border-none backdrop-blur-md font-bold uppercase tracking-widest text-[10px]">
+                                            <Badge className="w-fit mb-2 bg-green-400/90 text-white border-none backdrop-blur-md font-bold uppercase tracking-widest text-[10px]">
                                                 {tAdmin(`categories.${img.category.toLowerCase()}`)}
                                             </Badge>
                                             <h3 className="text-white font-black uppercase tracking-tight truncate leading-tight">
@@ -200,7 +200,7 @@ export default function PublicGalleryPage() {
                                 className="max-h-[70vh] w-auto object-contain rounded-lg shadow-2xl"
                             />
                             <div className="mt-8 text-center space-y-2">
-                                <Badge className="bg-indigo-600 text-white border-none font-black uppercase tracking-widest px-4 py-1">
+                                <Badge className="bg-green-400 text-white border-none font-black uppercase tracking-widest px-4 py-1">
                                     {tAdmin(`categories.${images[selectedImageIndex].category.toLowerCase()}`)}
                                 </Badge>
                                 <h2 className="text-white text-2xl md:text-3xl font-black uppercase tracking-tight">
