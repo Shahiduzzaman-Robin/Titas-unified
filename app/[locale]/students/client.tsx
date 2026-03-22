@@ -190,7 +190,7 @@ export default function StudentDirectoryClient({
                         </form>
 
                         {/* Pagination Buttons (Top) */}
-                        <div className="flex items-center gap-2">
+                        <div className="hidden lg:flex items-center gap-2">
                             <button
                                 onClick={() => handleFilterChange('page', (pagination.page - 1).toString())}
                                 disabled={pagination.page <= 1 || isPending}
