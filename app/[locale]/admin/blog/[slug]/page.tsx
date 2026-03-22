@@ -6,8 +6,9 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { notFound } from "next/navigation"
 
-export default async function EditBlogPostPage({ params }: { params: { slug: string } }) {
-    const { slug } = params
+export default async function EditBlogPostPage({ params }: { params: any }) {
+    const { slug: rawSlug, locale } = await params
+    const slug = decodeURIComponent(rawSlug)
 
     const [post, categories, tags] = await Promise.all([
         prisma.blog_posts.findUnique({
@@ -16,13 +17,13 @@ export default async function EditBlogPostPage({ params }: { params: { slug: str
                 category: true,
                 tags: true
             }
-        }),
+        }).then(p => p ? JSON.parse(JSON.stringify(p)) : null),
         prisma.blog_categories.findMany({
             orderBy: { name: 'asc' }
-        }),
+        }).then(c => JSON.parse(JSON.stringify(c))),
         prisma.blog_tags.findMany({
             orderBy: { name: 'asc' }
-        })
+        }).then(t => JSON.parse(JSON.stringify(t)))
     ])
 
     if (!post) {
