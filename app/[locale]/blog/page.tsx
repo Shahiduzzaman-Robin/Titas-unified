@@ -75,7 +75,7 @@ export default function PublicBlogPage() {
                 search,
                 category: categoryFilter === 'all' ? '' : categoryFilter,
                 page: pagination.page.toString(),
-                limit: '20',
+                limit: '19',
                 status: 'published'
             })
             const res = await fetch(`/api/blog/posts?${params.toString()}`)
