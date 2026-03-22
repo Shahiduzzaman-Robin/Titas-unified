@@ -38,23 +38,28 @@ export async function generateMetadata(
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://titasdu.com'
     const canonicalUrl = `${baseUrl}/${locale}/blog/${post.slug}`
-    const ogImage = post.featuredImage || `${baseUrl}/og-default.png`
+    
+    // Ensure OG image is an absolute URL
+    let ogImage = post.featuredImage || `${baseUrl}/og-default.png`
+    if (ogImage && !ogImage.startsWith('http')) {
+        ogImage = `${baseUrl}${ogImage.startsWith('/') ? '' : '/'}${ogImage}`
+    }
     
     return {
-        title: `${post.title} | TITAS Blog`,
-        description: post.excerpt || `Read about ${post.title} on TITAS`,
+        title: `${post.title} | TITAS`,
+        description: post.excerpt || `তিতাসে ${post.title} সম্পর্কে বিস্তারিত পড়ুন।`,
         metadataBase: new URL(baseUrl),
         alternates: {
             canonical: canonicalUrl
         },
         openGraph: {
             title: post.title,
-            description: post.excerpt || `Read about ${post.title} on TITAS`,
+            description: post.excerpt || `তিতাসে ${post.title} সম্পর্কে বিস্তারিত পড়ুন।`,
             url: canonicalUrl,
-            siteName: 'TITAS - Dhaka University Students\' Welfare Association of Brahmanbaria',
+            siteName: 'Titas - Dhaka University Students\' Association of Brahmanbaria',
             type: 'article',
             publishedTime: post.publishedAt?.toISOString(),
-            authors: post.authorName ? [post.authorName] : ['Titas Editorial Team'],
+            authors: post.authorName ? [post.authorName] : ['তিতাস মিডিয়া সেল'],
             locale: locale === 'bn' ? 'bn_BD' : 'en_US',
             images: [
                 {
@@ -62,18 +67,18 @@ export async function generateMetadata(
                     width: 1200,
                     height: 630,
                     alt: post.title,
-                    type: 'image/jpeg'
                 }
             ]
         },
         twitter: {
             card: 'summary_large_image',
             title: post.title,
-            description: post.excerpt || `Read about ${post.title} on TITAS`,
+            description: post.excerpt || `তিতাসে ${post.title} সম্পর্কে বিস্তারিত পড়ুন।`,
             images: [ogImage]
         }
     }
 }
+
 
 export default async function BlogPostDetailsPage({ params }: { params: { slug: string, locale: string } }) {
     const { slug, locale } = params
