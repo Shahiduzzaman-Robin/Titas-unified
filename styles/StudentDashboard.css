@@ -122,7 +122,7 @@
 
 .completion-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, #4f46e5 0%, #a855f7 100%);
+    background: linear-gradient(90deg, #00827F 0%, #4fd1c5 100%);
     transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

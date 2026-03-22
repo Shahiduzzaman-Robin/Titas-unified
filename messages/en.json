@@ -39,7 +39,9 @@
             "emergency": "Emergency Contact",
             "issuingAuthority": "Issuing Authority",
             "issuingOrg": "TITAS CENTRAL COMMITTEE"
-        }
+        },
+        "edit_profile": "Edit Profile",
+        "back": "Back"
     },
     "nav": {
         "home": "Home",

@@ -1,3 +1,4 @@
+"use client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useTranslations } from "next-intl"
 import { CheckCircle2, Circle, Target, Sparkles } from "lucide-react"
@@ -30,7 +31,7 @@ export default function ProfileCompletionMeter({ student }: ProfileCompletionMet
         <Card className="dashboard-card h-full">
             <CardHeader className="border-b border-slate-100/60 pb-6">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500">
+                    <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-[#00827F]">
                         <Target className="w-5 h-5" />
                     </div>
                     <CardTitle className="text-xl font-black text-slate-900">{t('title')}</CardTitle>
@@ -43,7 +44,7 @@ export default function ProfileCompletionMeter({ student }: ProfileCompletionMet
                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('progress')}</p>
                             <span className="text-3xl font-black text-slate-900">{percentage}%</span>
                         </div>
-                        <p className="text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-lg">
+                        <p className="text-[11px] font-bold text-[#00827F] bg-[#E0F7F6] px-2 py-1 rounded-lg">
                             {completedCount} / {totalCount} {t('fieldsCompleted')}
                         </p>
                     </div>
@@ -89,15 +90,15 @@ export default function ProfileCompletionMeter({ student }: ProfileCompletionMet
                     <motion.div 
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="p-4 bg-indigo-50 border border-indigo-100 rounded-2xl flex gap-3 relative overflow-hidden group"
+                        className="p-4 bg-[#E0F7F6] border border-[#B2E6E3] rounded-2xl flex gap-3 relative overflow-hidden group"
                     >
                         <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:scale-150 transition-transform">
-                            <Sparkles className="w-12 h-12 text-indigo-600" />
+                            <Sparkles className="w-12 h-12 text-[#00827F]" />
                         </div>
-                        <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-indigo-600 shadow-sm shrink-0">
+                        <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-[#00827F] shadow-sm shrink-0">
                             <Sparkles className="w-4 h-4" />
                         </div>
-                        <p className="text-[11px] font-bold text-indigo-900 leading-relaxed z-10">
+                        <p className="text-[11px] font-bold text-[#00827F] leading-relaxed z-10">
                             {t('encouragement')}
                         </p>
                     </motion.div>

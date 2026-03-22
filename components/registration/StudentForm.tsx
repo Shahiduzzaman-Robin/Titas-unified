@@ -1,6 +1,8 @@
 "use client"
 
 import { useTranslations } from 'next-intl'
+import { useRouter } from "next/navigation"
+import { ChevronLeft } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -24,6 +26,7 @@ interface StudentFormProps {
 }
 
 export function StudentForm({ initialData, mode = 'create', onSubmit, isSubmitting }: StudentFormProps) {
+    const router = useRouter();
     const t = useTranslations('public.register')
     const tCommon = useTranslations('common')
     const locale = useLocale()
@@ -282,8 +285,18 @@ export function StudentForm({ initialData, mode = 'create', onSubmit, isSubmitti
     return (
         <Card className="border border-slate-200 shadow-sm bg-white bn-text rounded-2xl overflow-hidden max-w-6xl mx-auto my-12">
             <CardHeader className="p-10 pb-4 text-center">
+                <div className="flex items-center justify-start mb-2">
+                    <button
+                        type="button"
+                        onClick={() => router.push('/bn/student/profile')}
+                        className="flex items-center gap-1 text-[#00827F] font-bold hover:underline"
+                    >
+                        <ChevronLeft className="w-5 h-5" />
+                        {tCommon('back', { defaultValue: 'Back' })}
+                    </button>
+                </div>
                 <CardTitle className="text-3xl font-extrabold text-slate-900 mb-2 mt-4 text-center">
-                    {mode === 'edit' ? tCommon('edit_profile') : t('formTitle')}
+                    {mode === 'edit' ? tCommon('edit_profile', { defaultValue: 'Edit Profile' }) : t('formTitle')}
                 </CardTitle>
                 <CardDescription className="text-base text-slate-500">
                     {t('formDescription')}
