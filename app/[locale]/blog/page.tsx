@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useTranslations, useLocale } from "next-intl"
 import Link from "next/link"
+import Image from "next/image"
 import { 
     Search, 
     Filter, 
@@ -21,7 +22,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { cn } from "@/lib/utils"
+import { cn, optimizeImage } from "@/lib/utils"
 import { motion } from "framer-motion"
 import { PublicNav } from "@/components/PublicNav"
 import Footer from "@/components/home/Footer"
@@ -132,7 +133,13 @@ export default function PublicBlogPage() {
                         {/* 1. Hero Post (Full Width) */}
                         <Link href={`/${locale}/blog/${posts[0].slug}`} className="block relative group overflow-hidden">
                             <div className="aspect-[16/9] md:aspect-[21/9] lg:aspect-[2.5/1] w-full bg-slate-100 relative">
-                                <img src={posts[0].featuredImage || '/blog-placeholder.jpg'} alt={posts[0].title} className="w-full h-full object-cover" />
+                                <Image 
+                                    src={optimizeImage(posts[0].featuredImage, 1200)} 
+                                    alt={posts[0].title} 
+                                    fill
+                                    className="object-cover" 
+                                    priority
+                                />
                                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/30 to-transparent transition-opacity duration-300 group-hover:from-slate-900" />
                                 <div className="absolute bottom-0 left-0 p-6 md:p-12 w-full md:w-5/6 lg:w-3/4">
                                     <Badge className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-none mb-4 md:mb-6 font-normal px-3 py-1.5 text-xs tracking-wider">
@@ -154,8 +161,13 @@ export default function PublicBlogPage() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {posts.slice(1, 4).map((post: any) => (
                                 <Link key={post.id} href={`/${locale}/blog/${post.slug}`} className="group block">
-                                    <div className="aspect-[16/10] bg-slate-100 mb-5 overflow-hidden">
-                                        <img src={post.featuredImage || '/blog-placeholder.jpg'} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={post.title} />
+                                    <div className="aspect-[16/10] bg-slate-100 mb-5 overflow-hidden relative">
+                                        <Image 
+                                            src={optimizeImage(post.featuredImage, 600)} 
+                                            className="object-cover group-hover:scale-105 transition-transform duration-700" 
+                                            alt={post.title}
+                                            fill
+                                        />
                                     </div>
                                     <h3 className="text-xl md:text-2xl font-bold text-slate-900 bn-text leading-[1.3] mb-3 group-hover:text-emerald-700 transition-colors">
                                         {post.title}
@@ -184,8 +196,13 @@ export default function PublicBlogPage() {
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                                         {posts.slice(4).map((post: any, i: number) => (
                                             <Link key={post.id} href={`/${locale}/blog/${post.slug}`} className="group block space-y-4">
-                                                <div className={cn("aspect-[16/10] bg-slate-100 overflow-hidden", i === 0 ? "sm:aspect-[16/9]" : "")}>
-                                                    <img src={post.featuredImage || '/blog-placeholder.jpg'} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="" />
+                                                <div className={cn("aspect-[16/10] bg-slate-100 overflow-hidden relative", i === 0 ? "sm:aspect-[16/9]" : "")}>
+                                                    <Image 
+                                                        src={optimizeImage(post.featuredImage, 600)} 
+                                                        className="object-cover group-hover:scale-105 transition-transform duration-700" 
+                                                        alt={post.title} 
+                                                        fill
+                                                    />
                                                 </div>
                                                 <div>
                                                     <h4 className="text-lg md:text-xl font-bold text-slate-900 bn-text leading-snug mb-2 group-hover:text-emerald-700 transition-colors">
@@ -234,8 +251,13 @@ export default function PublicBlogPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {posts.map((post: any) => (
                                 <Link key={post.id} href={`/${locale}/blog/${post.slug}`} className="group block">
-                                    <div className="aspect-[16/10] bg-slate-100 mb-4 overflow-hidden">
-                                        <img src={post.featuredImage || '/blog-placeholder.jpg'} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={post.title} />
+                                    <div className="aspect-[16/10] bg-slate-100 mb-4 overflow-hidden relative">
+                                        <Image 
+                                            src={optimizeImage(post.featuredImage, 600)} 
+                                            className="object-cover group-hover:scale-105 transition-transform duration-500" 
+                                            alt={post.title} 
+                                            fill
+                                        />
                                     </div>
                                     <h3 className="text-xl font-bold text-slate-900 bn-text leading-[1.3] mb-2 group-hover:text-emerald-700 transition-colors">
                                         {post.title}

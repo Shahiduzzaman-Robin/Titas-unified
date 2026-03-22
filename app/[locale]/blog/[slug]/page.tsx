@@ -1,5 +1,6 @@
 import { Suspense } from "react"
 import { prisma } from "@/lib/prisma"
+import Image from "next/image"
 import { notFound } from "next/navigation"
 import { 
     Calendar, 
@@ -20,8 +21,7 @@ import { calculateReadingTime } from "@/lib/blog-utils"
 import { Metadata } from "next"
 import { PublicNav } from "@/components/PublicNav"
 import Footer from "@/components/home/Footer"
-
-// View Counter Component (Client Side)
+import { optimizeImage } from "@/lib/utils"
 import ViewCounter from "./ViewCounter"
 
 
@@ -218,10 +218,12 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
 
                                 {/* Featured Image */}
                                 <div className="relative aspect-[16/9] md:aspect-[21/9] bg-slate-100 overflow-hidden">
-                                    <img 
-                                        src={post.featuredImage || '/blog-placeholder.jpg'} 
+                                    <Image 
+                                        src={optimizeImage(post.featuredImage || '/blog-placeholder.jpg', 1200)} 
                                         alt={post.title} 
-                                        className="h-full w-full object-cover" 
+                                        className="object-cover" 
+                                        fill
+                                        priority
                                     />
                                 </div>
 
@@ -261,8 +263,13 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                                                 {related.map((rel: any) => (
                                                     <Link key={rel.id} href={`/${locale}/blog/${rel.slug}`} className="group space-y-3">
-                                                        <div className="aspect-[16/9] rounded overflow-hidden">
-                                                            <img src={rel.featuredImage} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="" />
+                                                        <div className="aspect-[16/9] rounded overflow-hidden relative">
+                                                            <Image 
+                                                                src={optimizeImage(rel.featuredImage, 600)} 
+                                                                className="object-cover group-hover:scale-110 transition-transform duration-500" 
+                                                                alt="" 
+                                                                fill
+                                                            />
                                                         </div>
                                                         <h4 className="text-sm font-bold text-slate-900 line-clamp-2 leading-snug group-hover:text-[#00827f] transition-colors">{rel.title}</h4>
                                                     </Link>
@@ -302,8 +309,13 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                                 <div className="p-4 space-y-6">
                                     {trending.map((rel: any) => (
                                         <Link key={rel.id} href={`/${locale}/blog/${rel.slug}`} className="flex gap-4 group">
-                                            <div className="h-16 w-24 shrink-0 bg-slate-100 rounded-sm overflow-hidden">
-                                                <img src={rel.featuredImage} className="w-full h-full object-cover group-hover:scale-110 transition-transform" alt="" />
+                                            <div className="h-16 w-24 shrink-0 bg-slate-100 rounded-sm overflow-hidden relative">
+                                                <Image 
+                                                    src={optimizeImage(rel.featuredImage, 300)} 
+                                                    className="object-cover group-hover:scale-110 transition-transform" 
+                                                    alt="" 
+                                                    fill
+                                                />
                                             </div>
                                             <div className="space-y-1 flex-1">
                                                 <div className="text-[10px] font-bold text-[#00827f] uppercase">{rel.category?.name}</div>
