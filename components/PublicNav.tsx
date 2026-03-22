@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { useTranslations, useLocale } from "next-intl"
 import { useState } from "react"
@@ -68,7 +69,14 @@ export function PublicNav({ session: serverSession }: PublicNavProps) {
                 <div className="flex justify-between items-center h-20">
                     {/* Logo & Title */}
                     <Link href="/" className="flex items-center gap-3 md:gap-4 hover:opacity-80 transition-opacity">
-                        <img src="/logo.png" alt="Logo" className="h-12 w-12 md:h-14 md:w-14 object-contain" />
+                        <Image 
+                            src="https://res.cloudinary.com/dwybib7hh/image/upload/v1774173529/titas/brand/logo.png" 
+                            alt="Logo" 
+                            width={56} 
+                            height={56} 
+                            className="object-contain" 
+                            priority
+                        />
                         <div>
                             <h1 className="text-xl md:text-2xl font-normal text-primary leading-tight">{tPublic('title')}</h1>
                             <p className="text-[10px] md:text-xs text-gray-500 uppercase tracking-wider font-semibold">{tPublic('subtitle')}</p>

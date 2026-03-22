@@ -89,7 +89,7 @@ export default function LatestNews() {
                                     />
                                 ) : (
                                     <div className="h-full w-full bg-slate-200 flex items-center justify-center">
-                                        <Image src="/logo.png" alt="Logo" width={40} height={40} className="opacity-20 grayscale" />
+                                        <Image src="https://res.cloudinary.com/dwybib7hh/image/upload/v1774173529/titas/brand/logo.png" alt="Logo" width={40} height={40} className="opacity-20 grayscale" />
                                     </div>
                                 )}
                                 <div className="absolute top-4 left-4">
