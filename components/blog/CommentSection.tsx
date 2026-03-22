@@ -233,7 +233,7 @@ export default function CommentSection({ slug, initialComments }: { slug: string
                                         className={`comment-action-btn ${isCommentLiked(comment) ? 'active' : ''}`}
                                         onClick={() => handleLike(comment.id)}
                                     >
-                                        {locale === 'bn' ? (isCommentLiked(comment) ? 'পছন্দ হয়েছে' : 'পছন্দ') : (isCommentLiked(comment) ? 'Loved' : 'Love')}
+                                        {isCommentLiked(comment) ? '❤️' : '🤍'}
                                     </button>
                                     <span className="dot-divider">•</span>
                                     <span className="comment-timestamp">
