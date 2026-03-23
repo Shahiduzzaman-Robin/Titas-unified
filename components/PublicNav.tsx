@@ -88,12 +88,16 @@ export function PublicNav({ session: serverSession }: PublicNavProps) {
                         <nav className="flex items-center gap-0.5 bg-slate-50 p-1 rounded-lg border border-slate-100">
                             {navItems.map((item) => (
                                 <Link key={item.href} href={item.href}>
-                                    <span className={cn(
-                                        "px-3 py-2 rounded-md text-base font-medium transition-colors whitespace-nowrap block",
-                                        isActive(item.href)
-                                            ? "bg-white text-primary shadow-sm"
-                                            : "text-gray-500 hover:text-gray-900 hover:bg-white/50"
-                                    )}>
+                                    <span
+                                        className={cn(
+                                            locale === 'en'
+                                                ? "px-3 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap block"
+                                                : "px-3 py-2 rounded-md text-base font-medium transition-colors whitespace-nowrap block",
+                                            isActive(item.href)
+                                                ? "bg-white text-primary shadow-sm"
+                                                : "text-gray-500 hover:text-gray-900 hover:bg-white/50"
+                                        )}
+                                    >
                                         {item.name}
                                     </span>
                                 </Link>
