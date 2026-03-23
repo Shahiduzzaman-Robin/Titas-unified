@@ -18,7 +18,12 @@ export default async function ReviewPage({
         notFound()
     }
 
+    // Parse changes if it's a string
+    const parsedEdit = {
+        ...edit,
+        changes: typeof edit.changes === 'string' ? JSON.parse(edit.changes) : edit.changes
+    }
     return (
-        <ReviewEditClient edit={edit} student={edit.student} locale={locale} />
+        <ReviewEditClient edit={parsedEdit} student={edit.student} locale={locale} />
     )
 }

@@ -94,7 +94,7 @@ export async function POST(req: Request) {
         await prisma.student_edits.create({
             data: {
                 studentId: studentId,
-                changes: actualChanges,
+                changes: JSON.stringify(actualChanges),
                 status: "pending"
             }
         })

@@ -34,8 +34,9 @@ export async function POST(req: Request) {
         }
 
         // Apply changes
+        // Parse changes from JSON string
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const changes = edit.changes as any
+        const changes = JSON.parse(edit.changes) as any
 
         // Fix for legacy edits that might have wrong keys
         if (changes.name) {
