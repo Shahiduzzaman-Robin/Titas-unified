@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useCallback, useTransition } from 'react'
+import React, { useState, useCallback, useTransition, useEffect, useRef } from 'react'
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { Search, Building2, Calendar, Home, Droplets, MapPin, X, ChevronLeft, ChevronRight, Loader2, Users, Filter } from 'lucide-react'
@@ -120,10 +120,18 @@ export default function StudentDirectoryClient({
         })
     }
 
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault()
-        handleFilterChange('search', searchInput)
-    }
+
+    // Debounced search effect
+    const debounceRef = useRef<NodeJS.Timeout | null>(null)
+    useEffect(() => {
+        if (debounceRef.current) clearTimeout(debounceRef.current)
+        debounceRef.current = setTimeout(() => {
+            handleFilterChange('search', searchInput)
+        }, 400)
+        return () => {
+            if (debounceRef.current) clearTimeout(debounceRef.current)
+        }
+    }, [searchInput])
 
     const clearFilters = () => {
         setSearchInput('')
@@ -173,7 +181,7 @@ export default function StudentDirectoryClient({
                         </div>
 
                         {/* Search Bar */}
-                        <form onSubmit={handleSearch} className="relative w-full max-w-xl group">
+                        <form className="relative w-full max-w-xl group" onSubmit={e => e.preventDefault()}>
                             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 group-focus-within:text-slate-900 transition-colors" />
                             <Input
                                 type="text"

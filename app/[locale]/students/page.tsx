@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma'
 import StudentDirectoryClient from './client'
 import { notFound } from 'next/navigation'
@@ -48,7 +49,8 @@ export default async function StudentsPage({ params, searchParams }: StudentsPag
             filters.OR = [
                 { name_en: { contains: searchParamsVal.search } },
                 { name_bn: { contains: searchParamsVal.search } },
-                { mobile: { contains: searchParamsVal.search } },
+                // Only allow mobile search for non-female students
+                { AND: [ { gender: { not: 'female' } }, { mobile: { contains: searchParamsVal.search } } ] },
                 { email: { contains: searchParamsVal.search } }
             ];
         }

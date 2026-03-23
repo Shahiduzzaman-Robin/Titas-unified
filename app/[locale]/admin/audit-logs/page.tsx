@@ -47,7 +47,7 @@ export default function AdminAuditLogsPage() {
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
     
-    const limit = 30
+    const limit = 100
 
     const fetchLogs = useCallback(async () => {
         setLoading(true)
