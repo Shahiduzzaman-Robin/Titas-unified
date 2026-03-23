@@ -20,8 +20,7 @@ export async function POST(req: Request) {
 
         const isEmail = identifier.includes('@')
 
-        // Unified OTP flow for both email and mobile
-        // Try to find student by email or mobile
+        // Find student by email or mobile
         let student = null;
         if (isEmail) {
             student = await prisma.students.findFirst({ where: { email: identifier } })
@@ -48,16 +47,15 @@ export async function POST(req: Request) {
         const otp = generateOTP()
         const expiresAt = new Date(Date.now() + 900000) // 15 mins
 
-        // Save OTP (store with email or mobile for lookup)
-        await prisma.otp_verifications.create({
-            data: {
-                mobile: student.mobile,
-                otp,
-                expiresAt
-            }
-        })
-
-        if (student.email) {
+        // If identifier is email, always send to email
+        if (isEmail) {
+            await prisma.otp_verifications.create({
+                data: {
+                    email: student.email,
+                    otp,
+                    expiresAt
+                }
+            })
             // Send OTP to email
             const result = await (await import('@/lib/email')).sendPasswordResetOtpEmail(student.email, otp)
             if (!result.sent) {
@@ -67,8 +65,35 @@ export async function POST(req: Request) {
                 )
             }
             return NextResponse.json({ message: "OTP sent to email", type: 'email', email: student.email })
-        } else {
-            // Send OTP to mobile
+        }
+
+        // If identifier is mobile, check if student has email
+        if (student.email) {
+            // Save OTP with email and send to email
+            await prisma.otp_verifications.create({
+                data: {
+                    email: student.email,
+                    otp,
+                    expiresAt
+                }
+            })
+            const result = await (await import('@/lib/email')).sendPasswordResetOtpEmail(student.email, otp)
+            if (!result.sent) {
+                return NextResponse.json(
+                    { message: "Failed to send email" },
+                    { status: 500 }
+                )
+            }
+            return NextResponse.json({ message: "OTP sent to email", type: 'email', email: student.email })
+        } else if (student.mobile) {
+            // Save OTP with mobile and send to mobile
+            await prisma.otp_verifications.create({
+                data: {
+                    mobile: student.mobile,
+                    otp,
+                    expiresAt
+                }
+            })
             const message = `Your Titas password reset OTP is: ${otp}`
             const result = await SMSService.sendSMS(student.mobile, message, student.id)
             if (!result.success) {
@@ -78,6 +103,11 @@ export async function POST(req: Request) {
                 )
             }
             return NextResponse.json({ message: "OTP sent to mobile", type: 'mobile', mobile: student.mobile })
+        } else {
+            return NextResponse.json(
+                { message: "No email or mobile found for this user" },
+                { status: 404 }
+            )
         }
 
     } catch (error) {

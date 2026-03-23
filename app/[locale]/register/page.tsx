@@ -71,7 +71,19 @@ export default function Register() {
             <PublicNav />
             <div className="py-10 px-4">
                 <div className="max-w-4xl mx-auto space-y-6">
-
+                    <div className="mb-4">
+                        <div className="text-center">
+                            {locale === 'bn' ? (
+                                <span className="block text-red-600 font-semibold text-base">
+                                    শুধুমাত্র ঢাকা বিশ্ববিদ্যালয়ের সাবেক ও বর্তমান শিক্ষার্থীদের জন্য।
+                                </span>
+                            ) : (
+                                <span className="block text-red-600 font-semibold text-base">
+                                    For current and former students of University of Dhaka only
+                                </span>
+                            )}
+                        </div>
+                    </div>
                     <StudentForm
                         onSubmit={handleSubmit}
                         isSubmitting={submitting}

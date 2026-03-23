@@ -33,16 +33,15 @@ export default function ForgotPasswordPage() {
             const data = await res.json()
 
             if (res.ok) {
-                if (data.type === 'mobile') {
-                    // Redirect to OTP Verification
-                    window.location.href = `/student/verify-otp?mobile=${encodeURIComponent(email)}`
+                if (data.type === 'mobile' && data.mobile) {
+                    // Redirect to OTP Verification for mobile
+                    window.location.href = `/student/verify-otp?mobile=${encodeURIComponent(data.mobile)}`
+                } else if (data.type === 'email' && data.email) {
+                    // Redirect to OTP Verification for email
+                    window.location.href = `/student/verify-otp?email=${encodeURIComponent(data.email)}`
                 } else {
+                    toast.success("OTP sent!")
                     setSubmitted(true)
-                    toast.success("Reset link sent!")
-                    // Assuming data.email contains the email sent to
-                    if (data.email) {
-                        setSentTo(data.email)
-                    }
                 }
             } else {
                 toast.error(data.message || "An error occurred. Please try again.")

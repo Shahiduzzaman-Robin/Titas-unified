@@ -200,14 +200,7 @@ export default function LoginPage() {
                         </div>
                     </div>
                     
-                    <motion.p 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.6 }}
-                        className="text-center mt-8 text-slate-500 text-sm font-medium"
-                    >
-                        &copy; {new Date().getFullYear()} Titas Students Union. All rights reserved.
-                    </motion.p>
+                    {/* Copyright text removed as requested */}
                 </motion.div>
             </main>
             <Footer />

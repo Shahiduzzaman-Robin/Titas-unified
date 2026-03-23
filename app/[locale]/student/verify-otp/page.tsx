@@ -1,12 +1,12 @@
 "use client"
 
-import { useState, useRef, useEffect, Suspense } from "react"
+import { useState } from "react"
 import { motion } from "framer-motion"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { MessageSquare, ArrowLeft, Loader2, Sparkles, ShieldCheck } from "lucide-react"
+import { MessageSquare, ArrowLeft, Loader2, Sparkles, ShieldCheck, CheckCircle2 } from "lucide-react"
 import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from "next/navigation"
 import { PublicNav } from "@/components/PublicNav"
@@ -18,34 +18,49 @@ export default function VerifyOtpPage() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const mobile = searchParams.get('mobile')
+    const email = searchParams.get('email')
 
     const [otp, setOtp] = useState("")
     const [loading, setLoading] = useState(false)
+    const [success, setSuccess] = useState(false)
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
 
-        if (!mobile) {
-            toast.error("Mobile number missing")
+        if (!otp || (!mobile && !email)) {
+            toast.error("OTP and identifier required")
             setLoading(false)
             return
         }
 
         try {
+            let body: any = {}
+            if (mobile) {
+                body.mobile = mobile
+                body.otp = otp.toUpperCase()
+            } else if (email) {
+                body.email = email
+                body.otp = otp.toUpperCase()
+            }
             const res = await fetch("/api/auth/verify-otp", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ mobile, otp: otp.toUpperCase() }),
+                body: JSON.stringify(body),
             })
-
             const data = await res.json()
-
             if (res.ok && data.success) {
-                toast.success(t('success'))
-                router.push(`/student/reset-password?mobile=${encodeURIComponent(mobile)}&otp=${encodeURIComponent(otp.toUpperCase())}`)
+                setSuccess(true)
+                toast.success("OTP verified! Please set your new password.")
+                setTimeout(() => {
+                    if (mobile) {
+                        router.push(`/student/reset-password?mobile=${encodeURIComponent(mobile)}&otp=${encodeURIComponent(otp.toUpperCase())}`)
+                    } else if (email) {
+                        router.push(`/student/reset-password?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp.toUpperCase())}`)
+                    }
+                }, 1000)
             } else {
-                toast.error(data.message || t('error'))
+                toast.error(data.message || "Failed to verify OTP")
             }
         } catch (error) {
             toast.error("An error occurred")
@@ -54,7 +69,7 @@ export default function VerifyOtpPage() {
         }
     }
 
-    if (!mobile) {
+    if (!mobile && !email) {
         return (
             <div className="min-h-screen bg-slate-50 flex flex-col">
                 <PublicNav />
@@ -64,7 +79,7 @@ export default function VerifyOtpPage() {
                             <ShieldCheck className="w-8 h-8" />
                         </div>
                         <h2 className="text-xl font-bold text-slate-900 mb-2">Invalid Request</h2>
-                        <p className="text-slate-500 mb-6">Mobile number parameter is missing.</p>
+                        <p className="text-slate-500 mb-6">No email or mobile parameter found.</p>
                         <Link href="/login">
                             <Button className="w-full">Back to Login</Button>
                         </Link>
@@ -77,7 +92,6 @@ export default function VerifyOtpPage() {
     return (
         <div className="bg-slate-50 min-h-screen flex flex-col">
             <PublicNav />
-            
             <main className="flex-1 auth-page-container">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -100,56 +114,67 @@ export default function VerifyOtpPage() {
                                 {t('title')}
                                 <Sparkles className="w-5 h-5 opacity-80" />
                             </h1>
-                            <p className="max-w-[280px] mx-auto opacity-90">{t('description')} to <span className="font-bold underline tracking-wider">{mobile}</span></p>
+                            <p className="max-w-[280px] mx-auto opacity-90">
+                                {t('description')} to <span className="font-bold underline tracking-wider">{mobile || email}</span>
+                            </p>
                         </div>
-
                         <div className="p-8 md:p-10">
-                            <form onSubmit={handleSubmit} className="space-y-6">
-                                <div className="space-y-2">
-                                    <Label htmlFor="otp" className="text-slate-700 font-semibold ml-1">
-                                        {t('otpLabel')}
-                                    </Label>
-                                    <div className="auth-input-group">
-                                        <Input
-                                            id="otp"
-                                            type="text"
-                                            value={otp}
-                                            onChange={(e) => setOtp(e.target.value.toUpperCase())}
-                                            placeholder="XXXX"
-                                            className="auth-input tracking-[1rem] text-center font-bold text-xl uppercase pr-0"
-                                            maxLength={4}
-                                            required
-                                            autoFocus
-                                        />
-                                        <MessageSquare className="auth-input-icon h-5 w-5" />
+                            {success ? (
+                                <div className="text-center space-y-6">
+                                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto text-green-600">
+                                        <CheckCircle2 className="w-10 h-10" />
                                     </div>
-                                    <p className="text-xs text-center text-slate-400 mt-2">
-                                        Didn't receive code? <button type="button" className="text-primary hover:underline font-semibold" onClick={() => toast.info("Resend feature coming soon!")}>Resend</button>
-                                    </p>
+                                    <div className="space-y-2">
+                                        <p className="text-slate-900 font-bold text-lg">OTP verified!</p>
+                                        <p className="text-slate-500 text-sm">Redirecting to password reset...</p>
+                                    </div>
                                 </div>
-
-                                <Button
-                                    type="submit"
-                                    className="w-full auth-button"
-                                    disabled={loading}
-                                >
-                                    {loading ? (
-                                        <Loader2 className="h-5 w-5 animate-spin mr-2" />
-                                    ) : (
-                                        t('submit')
-                                    )}
-                                </Button>
-
-                                <div className="text-center pt-2">
-                                    <Link
-                                        href="/login"
-                                        className="auth-footer-link inline-flex items-center"
+                            ) : (
+                                <form onSubmit={handleSubmit} className="space-y-6">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="otp" className="text-slate-700 font-semibold ml-1">
+                                            {t('otpLabel')}
+                                        </Label>
+                                        <div className="auth-input-group">
+                                            <Input
+                                                id="otp"
+                                                type="text"
+                                                value={otp}
+                                                onChange={(e) => setOtp(e.target.value.toUpperCase())}
+                                                placeholder="XXXX"
+                                                className="auth-input tracking-[1rem] text-center font-bold text-xl uppercase pr-0"
+                                                maxLength={6}
+                                                required
+                                                autoFocus
+                                            />
+                                            <MessageSquare className="auth-input-icon h-5 w-5" />
+                                        </div>
+                                        <p className="text-xs text-center text-slate-400 mt-2">
+                                            Didn't receive code? <button type="button" className="text-primary hover:underline font-semibold" onClick={() => toast.info("Resend feature coming soon!")}>Resend</button>
+                                        </p>
+                                    </div>
+                                    <Button
+                                        type="submit"
+                                        className="w-full auth-button"
+                                        disabled={loading}
                                     >
-                                        <ArrowLeft className="w-4 h-4 mr-2" />
-                                        Back to Login
-                                    </Link>
-                                </div>
-                            </form>
+                                        {loading ? (
+                                            <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                                        ) : (
+                                            t('submit')
+                                        )}
+                                    </Button>
+                                    <div className="text-center pt-2">
+                                        <Link
+                                            href="/login"
+                                            className="auth-footer-link inline-flex items-center"
+                                        >
+                                            <ArrowLeft className="w-4 h-4 mr-2" />
+                                            Back to Login
+                                        </Link>
+                                    </div>
+                                </form>
+                            )}
                         </div>
                     </div>
                 </motion.div>

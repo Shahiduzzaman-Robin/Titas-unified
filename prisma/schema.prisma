@@ -176,12 +176,14 @@ model password_resets {
 
 model otp_verifications {
   id        Int      @id @default(autoincrement())
-  mobile    String
+  mobile    String?
+  email     String?
   otp       String
   expiresAt DateTime
   createdAt DateTime @default(now())
 
   @@index([mobile])
+  @@index([email])
 }
 
 model admin_activity_logs {

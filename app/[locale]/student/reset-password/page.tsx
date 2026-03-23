@@ -19,6 +19,7 @@ function ResetPasswordForm() {
     const searchParams = useSearchParams()
     const token = searchParams.get('token')
     const mobile = searchParams.get('mobile')
+    const email = searchParams.get('email')
     const otp = searchParams.get('otp')
 
     const [formData, setFormData] = useState({
@@ -36,7 +37,7 @@ function ResetPasswordForm() {
             return
         }
 
-        if (!token && (!mobile || !otp)) {
+        if (!token && (!mobile && !email) || !otp) {
             toast.error("Invalid verification credentials")
             return
         }
@@ -44,15 +45,17 @@ function ResetPasswordForm() {
         setLoading(true)
 
         try {
+            const body: any = {
+                password: formData.password,
+                otp
+            }
+            if (token) body.token = token
+            if (mobile) body.mobile = mobile
+            if (email) body.email = email
             const res = await fetch("/api/auth/reset-password", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    token,
-                    mobile,
-                    otp,
-                    password: formData.password
-                }),
+                body: JSON.stringify(body),
             })
 
             const data = await res.json()
@@ -97,7 +100,7 @@ function ResetPasswordForm() {
         )
     }
 
-    if (!token && (!mobile || !otp)) {
+    if (!token && (!mobile && !email) || !otp) {
         return (
             <div className="text-center space-y-4 py-4">
                 <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto text-red-600">

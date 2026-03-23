@@ -17,56 +17,48 @@ export async function POST(req: Request) {
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        // Scenario 1: Email Token
-        if (token) {
-            const resetRecord = await prisma.password_resets.findUnique({ where: { token } })
+        // Unified OTP for both email and mobile
+        if ((mobile && otp) || (body.email && otp)) {
+            // Find valid OTP for this mobile or email
+            const whereClause: any = {
+                otp,
+                expiresAt: { gt: new Date() }
+            };
+            if (mobile) whereClause.mobile = mobile;
+            if (body.email) whereClause.email = body.email;
 
-            if (!resetRecord || resetRecord.expiresAt < new Date()) {
-                if (resetRecord) await prisma.password_resets.delete({ where: { id: resetRecord.id } })
-                return NextResponse.json({ message: "Invalid or expired token" }, { status: 400 })
-            }
-
-            const student = await prisma.students.findFirst({ where: { email: resetRecord.email } })
-            if (!student) return NextResponse.json({ message: "User not found" }, { status: 404 })
-
-            await prisma.students.update({
-                where: { id: student.id },
-                data: { password: hashedPassword }
-            })
-
-            await prisma.password_resets.deleteMany({ where: { email: resetRecord.email } })
-            return NextResponse.json({ message: "Password updated successfully" })
-        }
-        // Scenario 2: Mobile OTP
-        else if (mobile && otp) {
-            // Verify OTP
-            // Find valid OTP for this mobile
             const otpRecord = await prisma.otp_verifications.findFirst({
-                where: {
-                    mobile,
-                    otp,
-                    expiresAt: { gt: new Date() } // Not expired
-                },
+                where: whereClause,
                 orderBy: { createdAt: 'desc' }
-            })
+            });
 
             if (!otpRecord) {
-                return NextResponse.json({ message: "Invalid or expired OTP" }, { status: 400 })
+                return NextResponse.json({ message: "Invalid or expired OTP" }, { status: 400 });
             }
 
-            const student = await prisma.students.findFirst({ where: { mobile } })
-            if (!student) return NextResponse.json({ message: "User not found" }, { status: 404 })
+            // Find student by mobile or email
+            let student = null;
+            if (mobile) {
+                student = await prisma.students.findFirst({ where: { mobile } });
+            } else if (body.email) {
+                student = await prisma.students.findFirst({ where: { email: body.email } });
+            }
+            if (!student) return NextResponse.json({ message: "User not found" }, { status: 404 });
 
             await prisma.students.update({
                 where: { id: student.id },
                 data: { password: hashedPassword }
-            })
+            });
 
             // Delete used OTPs
-            await prisma.otp_verifications.deleteMany({ where: { mobile } })
-            return NextResponse.json({ message: "Password updated successfully" })
+            if (mobile) {
+                await prisma.otp_verifications.deleteMany({ where: { mobile } });
+            } else if (body.email) {
+                await prisma.otp_verifications.deleteMany({ where: { email: body.email } });
+            }
+            return NextResponse.json({ message: "Password updated successfully" });
         } else {
-            return NextResponse.json({ message: "Missing token or OTP" }, { status: 400 })
+            return NextResponse.json({ message: "Missing OTP or identifier" }, { status: 400 });
         }
 
     } catch (error) {
