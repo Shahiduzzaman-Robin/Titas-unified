@@ -182,9 +182,22 @@ export default function AboutUsPage() {
                         height={90} 
                     />
                     <h1 className="about-hero-title bn-text text-white">তিতাস</h1>
-                    <p className="about-hero-tagline bn-text">
-                        শিক্ষা · সহযোগিতা · সংস্কৃতি · ভ্রাতৃত্ব
-                    </p>
+                    <div className="flex flex-wrap justify-center gap-3 md:gap-4 mt-6 mb-8">
+                        {[
+                            { label: 'শিক্ষা', Icon: GraduationCap, glow: 'bg-blue-400/20' },
+                            { label: 'সহযোগিতা', Icon: HeartHandshake, glow: 'bg-emerald-400/20' },
+                            { label: 'সংস্কৃতি', Icon: Music, glow: 'bg-purple-400/20' },
+                            { label: 'ভ্রাতৃত্ব', Icon: Users, glow: 'bg-orange-400/20' }
+                        ].map((item, idx) => (
+                            <div key={idx} className="group relative flex items-center gap-2.5 px-5 py-2 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 transition-all duration-300 hover:bg-white/15 hover:-translate-y-1 hover:border-white/20">
+                                <item.Icon size={16} className="text-white/70 group-hover:text-white transition-colors" />
+                                <span className="bn-text text-[13px] md:text-[15px] font-bold text-white/90 tracking-wide group-hover:text-white">
+                                    {item.label}
+                                </span>
+                                <div className={`absolute inset-0 blur-xl ${item.glow} -z-10 opacity-0 group-hover:opacity-100 transition-opacity`}></div>
+                            </div>
+                        ))}
+                    </div>
                     <p className="about-hero-subtitle bn-text">
                         ঢাকা বিশ্ববিদ্যালয়স্থ ব্রাহ্মণবাড়িয়া জেলা ছাত্রকল্যাণ পরিষদ
                     </p>
