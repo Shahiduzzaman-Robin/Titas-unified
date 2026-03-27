@@ -1,7 +1,7 @@
 import { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { prisma } from "@/lib/prisma"
-import { verifyPassword } from "@/lib/auth"
+import { verifyPassword, verifyLegacyPassword, hashPassword } from "@/lib/auth"
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -74,20 +74,45 @@ export const authOptions: NextAuthOptions = {
                     })
 
                     if (student) {
-                        // If no password set, they can't login via this method
-                        if (!student.password) {
-                            return null
+                        // 1. Check current password (new format)
+                        if (student.password) {
+                            const isValid = await verifyPassword(password, student.password)
+                            if (isValid) {
+                                return {
+                                    id: student.id.toString(),
+                                    email: student.email || student.mobile,
+                                    name: student.name_en || student.name_bn || "Student",
+                                    role: "student",
+                                    image: student.image_path,
+                                    approval: student.approval
+                                }
+                            }
                         }
 
-                        const isValid = await verifyPassword(password, student.password)
-                        if (isValid) {
-                            return {
-                                id: student.id.toString(),
-                                email: student.email || student.mobile, // Fallback to mobile if no email
-                                name: student.name_en || student.name_bn || "Student",
-                                role: "student",
-                                image: student.image_path, // Add image for profile avatar
-                                approval: student.approval // Add approval status
+                        // 2. Check legacy password (shadow migration)
+                        if (student.legacy_password) {
+                            const isLegacyValid = await verifyLegacyPassword(password, student.legacy_password)
+                            if (isLegacyValid) {
+                                // UPGRADE! Re-hash to current format and remove legacy hash
+                                console.log(`🚀 Upgrading legacy password for ${student.email || student.mobile}`)
+                                const newHash = await hashPassword(password)
+                                
+                                await prisma.students.update({
+                                    where: { id: student.id },
+                                    data: {
+                                        password: newHash,
+                                        legacy_password: null
+                                    }
+                                })
+
+                                return {
+                                    id: student.id.toString(),
+                                    email: student.email || student.mobile,
+                                    name: student.name_en || student.name_bn || "Student",
+                                    role: "student",
+                                    image: student.image_path,
+                                    approval: student.approval
+                                }
                             }
                         }
                     }

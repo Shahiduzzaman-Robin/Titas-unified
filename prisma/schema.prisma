@@ -32,6 +32,7 @@ model students {
   show_job_position String?               @db.VarChar(10)
   prefix            String                @default("TITAS") @db.VarChar(255)
   password          String?               @db.VarChar(255)
+  legacy_password   String?               @db.VarChar(255)
   district          String?               @db.VarChar(100)
   createdAt         DateTime              @default(now())
   updatedAt         DateTime              @default(now()) @updatedAt
