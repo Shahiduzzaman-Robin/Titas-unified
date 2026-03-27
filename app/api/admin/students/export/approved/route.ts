@@ -41,6 +41,27 @@ export async function GET(req: NextRequest) {
             ]
         });
 
+        // --- AUDIT LOGGING ---
+        try {
+            await prisma.admin_activity_logs.create({
+                data: {
+                    adminId: (session.user as any).id,
+                    action: 'export_excel',
+                    description: `Exported student directory to Excel (${students.length} records)`,
+                    metadata: JSON.stringify({
+                        filters: { sessions, departments, upazilas, statuses, fields },
+                        count: students.length,
+                        timestamp: new Date().toISOString()
+                    }),
+                    ipAddress: req.headers.get('x-forwarded-for')?.split(',')[0] || '127.0.0.1',
+                    userAgent: req.headers.get('user-agent') || 'Unknown'
+                }
+            });
+        } catch (logError) {
+            console.error('Failed to create audit log for export:', logError);
+            // We don't block the export if logging fails, but we record the error
+        }
+
         // 5. Initialize Workbook
         const workbook = new ExcelJS.Workbook();
         workbook.creator = 'Titas DU Website';
