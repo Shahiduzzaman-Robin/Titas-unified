@@ -25,10 +25,12 @@ interface StatsData {
 }
 
 const StatsPage = () => {
+    const [mounted, setMounted] = useState(false);
     const [data, setData] = useState<StatsData | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        setMounted(true);
         fetch('/api/public/stats')
             .then(res => {
                 if (!res.ok) throw new Error('API request failed');
@@ -45,7 +47,7 @@ const StatsPage = () => {
             });
     }, []);
 
-    if (loading) return (
+    if (!mounted || loading) return (
         <div className="stats-loading">
             <motion.div 
                 animate={{ rotate: 360 }}
@@ -65,21 +67,13 @@ const StatsPage = () => {
         </div>
     );
 
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: { staggerChildren: 0.1 }
-        }
-    };
-
-    const itemVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0 }
-    };
-
     const renderCard = (title: string, items: StatItem[] = [], icon: React.ReactNode, total: number) => (
-        <motion.div className="stats-card" variants={itemVariants}>
+        <motion.div 
+            className="stats-card" 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+        >
             <div className="stats-card-header">
                 <div className="stats-card-icon-box">{icon}</div>
                 <h3>{title}</h3>
@@ -102,8 +96,8 @@ const StatsPage = () => {
                                                 <motion.div 
                                                     className="percent-bar-fill" 
                                                     initial={{ width: 0 }}
-                                                    whileInView={{ width: `${percent}%` }}
-                                                    transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
+                                                    animate={{ width: `${percent}%` }}
+                                                    transition={{ duration: 1, ease: "easeOut", delay: 0.1 }}
                                                 />
                                             </div>
                                             <span className="percent-text">{percent}%</span>
@@ -120,15 +114,23 @@ const StatsPage = () => {
 
     return (
         <div className="public-stats-page">
-            <motion.div 
+            <div 
                 className="stats-container"
-                initial="hidden"
-                animate="visible"
-                variants={containerVariants}
             >
                 <header className="stats-header">
-                    <motion.h1 variants={itemVariants}>Collective Impact <span>Dashboard</span></motion.h1>
-                    <motion.div className="total-badge" variants={itemVariants}>
+                    <motion.h1 
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.6 }}
+                    >
+                        Collective Impact <span>Dashboard</span>
+                    </motion.h1>
+                    <motion.div 
+                        className="total-badge" 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                    >
                         <div className="growth-icon"><TrendingUp size={16} color="#16a34a" /></div>
                         <span>Total Members: <strong>{data.total}</strong> active students</span>
                     </motion.div>
@@ -148,7 +150,12 @@ const StatsPage = () => {
                     {renderCard("Knowledge Hub", data.departments, <GraduationCap size={22} />, data.total)}
 
                     {/* Gender Distribution */}
-                    <motion.div className="stats-card" variants={itemVariants}>
+                    <motion.div 
+                        className="stats-card"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                    >
                         <div className="stats-card-header">
                             <div className="stats-card-icon-box"><PieChart size={22} /></div>
                             <h3>Gender Diversity</h3>
@@ -167,7 +174,7 @@ const StatsPage = () => {
                                                     <motion.div 
                                                         className="percent-bar-fill male" 
                                                         initial={{ width: 0 }} 
-                                                        whileInView={{ width: `${data.total > 0 ? (data.males / data.total) * 100 : 0}%` }} 
+                                                        animate={{ width: `${data.total > 0 ? (data.males / data.total) * 100 : 0}%` }} 
                                                         transition={{ duration: 0.8 }}
                                                     />
                                                 </div>
@@ -186,7 +193,7 @@ const StatsPage = () => {
                                                     <motion.div 
                                                         className="percent-bar-fill female" 
                                                         initial={{ width: 0 }} 
-                                                        whileInView={{ width: `${data.total > 0 ? (data.females / data.total) * 100 : 0}%` }} 
+                                                        animate={{ width: `${data.total > 0 ? (data.females / data.total) * 100 : 0}%` }} 
                                                         transition={{ duration: 0.8 }}
                                                     />
                                                 </div>
@@ -202,7 +209,7 @@ const StatsPage = () => {
                     {/* Blood Registry */}
                     {renderCard("Lifesaving Support", data.bloodGroups, <Droplets size={22} />, data.total)}
                 </div>
-            </motion.div>
+            </div>
         </div>
     );
 };
