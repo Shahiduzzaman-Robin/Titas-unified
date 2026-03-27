@@ -34,8 +34,9 @@ export default function BrahmanbariaMap({ upazilas, total }: Props) {
   const maxCount = Math.max(...Object.keys(ID_TO_BN).map(id => getCount(id)), 1);
   const getColor = (id: string) => {
     const ratio = getCount(id) / maxCount;
-    const l = Math.round(88 - ratio * 48);
-    const s = Math.round(45 + ratio * 45);
+    // Use a wider range so even 0-count is clearly distinct
+    const l = Math.round(82 - ratio * 40); // 82% (lightest) to 42% (darkest)
+    const s = Math.round(55 + ratio * 35); // always saturated
     return `hsl(220,${s}%,${l}%)`;
   };
 
@@ -55,7 +56,7 @@ export default function BrahmanbariaMap({ upazilas, total }: Props) {
                 key={id}
                 d={d}
                 className={`bb-upazila${active === id ? ' bb-active' : ''}`}
-                style={{ fill: getColor(id), stroke: '#fff', strokeWidth: 3 }}
+                style={{ fill: getColor(id), stroke: '#fff', strokeWidth: active === id ? 4 : 2, strokeLinejoin: 'round' }}
                 onMouseEnter={() => setActive(id)}
                 onMouseLeave={() => setActive(null)}
               />
