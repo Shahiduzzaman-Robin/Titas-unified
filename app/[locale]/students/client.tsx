@@ -145,20 +145,20 @@ export default function StudentDirectoryClient({
             <PublicNav />
 
             {/* Premium Header/Controls */}
-            <div className="sticky top-16 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm py-6">
+            <div className="relative lg:sticky top-0 lg:top-16 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-none lg:shadow-sm py-4 lg:py-6">
                 <div className="container mx-auto px-4">
-                    <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
+                    <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 items-center justify-between">
                         {/* Title & Stats Section */}
                         <div className="flex items-center justify-between w-full lg:w-auto">
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white shadow-lg shrink-0">
-                                    <Users size={24} />
+                                <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white shadow-lg shrink-0">
+                                    <Users size={20} className="lg:scale-110" />
                                 </div>
                                 <div>
-                                    <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight bn-text truncate max-w-[150px] sm:max-w-none">
+                                    <h1 className="text-lg sm:text-2xl font-bold text-slate-900 tracking-tight bn-text truncate max-w-[140px] sm:max-w-none">
                                         {isBengali ? 'শিক্ষার্থী তালিকা' : 'Student Directory'}
                                     </h1>
-                                    <p className="text-sm text-slate-500 font-medium flex items-center gap-1.5 mt-0.5 whitespace-nowrap">
+                                    <p className="text-xs sm:text-sm text-slate-500 font-medium flex items-center gap-1.5 mt-0 sm:mt-0.5 whitespace-nowrap">
                                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                                         {pagination.total} {isBengali ? 'জন শিক্ষার্থী সচল' : 'Members Active'}
                                     </p>
