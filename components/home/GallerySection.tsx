@@ -64,10 +64,14 @@ const GallerySection = () => {
                                     style={{ minHeight: idx === 0 ? '360px' : '180px' }}
                                 >
                                     <Image
-                                        src={idx === 0 ? optimizeImage(img.url, 1200) : optimizeImage(img.url, 800)}
+                                        src={img.url}
                                         alt={img.title || 'Gallery Image'}
                                         fill
-                                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                                        sizes={
+                                            idx === 0 
+                                                ? "(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 50vw"
+                                                : "(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                                        }
                                         style={{ objectFit: 'cover' }}
                                         className="transition-transform duration-700 group-hover:scale-110"
                                     />
