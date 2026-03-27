@@ -136,8 +136,8 @@ export default function ActivityTimeline({ edits }: ActivityTimelineProps) {
                     )}
                 </div>
             </CardHeader>
-            <CardContent className="pt-8 flex-1 flex flex-col min-h-0 overflow-hidden">
-                <div className="space-y-0 flex-1 relative overflow-y-auto pr-2 max-h-[420px] scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
+            <CardContent className="pt-8 flex-1 flex flex-col">
+                <div className="space-y-0 flex-1 relative">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={currentPage}
