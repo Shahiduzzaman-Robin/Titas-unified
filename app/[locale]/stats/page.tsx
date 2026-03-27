@@ -27,8 +27,12 @@ const StatsPage = () => {
 
     useEffect(() => {
         fetch('/api/public/stats')
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error('API request failed');
+                return res.json();
+            })
             .then(stats => {
+                if (stats.error) throw new Error(stats.error);
                 setData(stats);
                 setLoading(false);
             })
@@ -39,9 +43,9 @@ const StatsPage = () => {
     }, []);
 
     if (loading) return <div className="stats-loading">Loading Statistics...</div>;
-    if (!data) return <div className="stats-error">Failed to load statistics.</div>;
+    if (!data || data.error) return <div className="stats-error">Failed to load statistics. Please ensure you have approved students in the system.</div>;
 
-    const renderTable = (title: string, items: StatItem[], icon: React.ReactNode, total: number) => (
+    const renderTable = (title: string, items: StatItem[] = [], icon: React.ReactNode, total: number) => (
         <div className="stats-card">
             <div className="stats-card-header">
                 {icon}
@@ -57,7 +61,7 @@ const StatsPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {items.map((item, i) => {
+                        {(items || []).map((item, i) => {
                             const percent = total > 0 ? ((item.count / total) * 100).toFixed(1) : '0';
                             return (
                                 <tr key={i}>
