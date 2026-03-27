@@ -602,71 +602,58 @@
 
 /* === Home Page Compact Map Overrides === */
 .home-compact-map .bb-map-wrapper {
-    flex-direction: column !important;
-    gap: 1.5rem;
+    flex-direction: row !important;
+    gap: 2rem;
+    align-items: center;
 }
 
 .home-compact-map .bb-map-container {
-    flex: none;
-    width: 100%;
-    max-height: 400px;
+    flex: 1;
+    width: auto;
+    max-height: 380px;
     display: flex;
     justify-content: center;
 }
 
 .home-compact-map .bb-map-svg {
-    max-height: 400px;
+    max-height: 380px;
     width: auto;
 }
 
 .home-compact-map .bb-legend {
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
+    flex: 1;
+    display: flex !important;
+    flex-direction: column !important;
     gap: 0.6rem;
-    max-height: none;
-    padding: 0;
-    overflow: visible;
-    background: transparent;
+    max-height: 380px;
+    padding: 0.5rem;
+    overflow-y: auto;
+    background: rgba(255,255,255,0.3);
+    border-radius: 24px;
 }
 
 .home-compact-map .bb-legend-item {
     display: flex !important;
     align-items: center;
-    justify-content: space-between;
-    padding: 0.5rem 0.75rem;
-    background: white !important;
-    border: 1px solid #f1f5f9;
-    border-radius: 100px; /* Pill shape */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-    transition: all 0.2s ease;
+    gap: 0.75rem;
+    padding: 0.4rem 0.6rem;
+    background: transparent !important;
+    border: none;
+    border-radius: 12px;
 }
 
-.home-compact-map .bb-legend-item:hover {
-    transform: translateY(-2px);
-    border-color: #3b82f6;
-    box-shadow: 0 4px 12px rgba(59,130,246,0.1);
-}
+.home-compact-map .bb-legend-dot { display: block; width: 8px; height: 8px; }
+.home-compact-map .bb-legend-label { font-size: 0.8rem; font-weight: 700; min-width: 80px; color: #475569; }
+.home-compact-map .bb-legend-num { font-size: 0.8rem; font-weight: 800; color: #1e293b; min-width: 30px; text-align: right; background: transparent; padding: 0; }
+.home-compact-map .bb-legend-pct { display: block; font-size: 0.75rem; color: #94a3b8; min-width: 40px; text-align: right; }
+.home-compact-map .bb-legend-bar-bg { display: block; flex: 1; height: 6px; background: #f1f5f9; border-radius: 10px; overflow: hidden; }
+.home-compact-map .bb-legend-bar-fill { height: 100%; border-radius: 10px; }
 
-.home-compact-map .bb-legend-dot { display: none; } /* Hide dot for cleaner pill look on home */
-
-.home-compact-map .bb-legend-label { 
-    font-size: 0.75rem; 
-    font-weight: 700; 
-    color: #475569; 
-    margin: 0;
+@media (max-width: 768px) {
+    .home-stats-section { padding-top: 3rem !important; padding-bottom: 3rem !important; }
+    .home-compact-map .bb-map-wrapper { flex-direction: column !important; }
+    .home-compact-map .bb-legend { width: 100%; max-height: none; }
 }
-
-.home-compact-map .bb-legend-num { 
-    font-size: 0.75rem; 
-    font-weight: 800; 
-    color: #2563eb; 
-    background: #eff6ff;
-    padding: 0.1rem 0.4rem;
-    border-radius: 6px;
-    min-width: unset;
-}
-.home-compact-map .bb-legend-pct { display: none; }
-.home-compact-map .bb-legend-bar-bg { display: none; }
 
 @media (max-width: 640px) {
     .home-compact-map .bb-legend {

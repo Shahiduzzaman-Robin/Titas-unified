@@ -28,56 +28,55 @@ export default function HomeStatistics() {
     if (loading || !data) return null;
 
     return (
-        <section className="home-stats-section py-16 bg-slate-50 overflow-hidden relative">
+        <section className="home-stats-section py-20 bg-slate-50 overflow-hidden relative">
             <div className="absolute top-0 right-0 w-1/3 h-full bg-blue-600/5 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2"></div>
             
             <div className="container mx-auto px-4 relative z-10">
                 <div className="flex flex-col lg:flex-row gap-12 items-center">
                     
-                    {/* Left: Content */}
-                    <div className="lg:w-1/2">
+                    {/* Left: Content (35%) */}
+                    <div className="lg:w-[35%]">
                         <motion.div
                             initial={{ opacity: 0, x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.6 }}
                             viewport={{ once: true }}
                         >
-                            <div className="section-label text-blue-600 font-bold uppercase tracking-widest text-sm mb-3">Live Statistics</div>
-                            <h2 className="section-title bn-text text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
+                            <div className="section-label text-blue-600 font-bold uppercase tracking-widest text-xs mb-3">Live Statistics</div>
+                            <h2 className="section-title bn-text text-3xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
                                 একনজরে <span className="text-blue-600">তিতাস</span>
                             </h2>
-                            <p className="section-desc bn-text text-lg text-slate-600 mb-8 leading-relaxed max-w-xl">
-                                ব্রাহ্মণবাড়িয়ার ৯টি উপজেলা থেকে আসা ঢাকা বিশ্ববিদ্যালয়ের মেধাবী শিক্ষার্থীদের এই সুবিশাল নেটওয়ার্ক। আমাদের বৈচিত্র্যই আমাদের শক্তি।
+                            <p className="section-desc bn-text text-lg text-slate-600 mb-8 leading-relaxed">
+                                ব্রাহ্মণবাড়িয়ার ৯টি উপজেলা থেকে আসা ঢাকা বিশ্ববিদ্যালয়ের মেধাবী শিক্ষার্থীদের এই সুবিশাল নেটওয়ার্ক।
                             </p>
 
-                            <div className="grid grid-cols-2 gap-4 mb-8">
-                                <div className="p-4 bg-white rounded-2xl shadow-sm border border-slate-100 group hover:border-blue-200 transition-all">
-                                    <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 mb-3 group-hover:scale-110 transition-transform">
-                                        <TrendingUp size={20} />
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="p-5 bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-2">
+                                    <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
+                                        <TrendingUp size={22} />
                                     </div>
-                                    <h4 className="text-2xl font-extrabold text-slate-900 mb-0.5">{data.total}</h4>
-                                    <p className="text-[11px] text-slate-500 font-bold bn-text">সক্রিয় সদস্য</p>
+                                    <div>
+                                        <h4 className="text-2xl font-extrabold text-slate-900">{data.total}</h4>
+                                        <p className="text-[11px] text-slate-500 font-bold bn-text">সক্রিয় সদস্য</p>
+                                    </div>
                                 </div>
-                                <div className="p-4 bg-white rounded-2xl shadow-sm border border-slate-100 group hover:border-blue-200 transition-all">
-                                    <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 mb-3 group-hover:scale-110 transition-transform">
-                                        <MapPin size={20} />
+                                <div className="p-5 bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-2">
+                                    <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600">
+                                        <MapPin size={22} />
                                     </div>
-                                    <h4 className="text-2xl font-extrabold text-slate-900 mb-0.5">৯টি</h4>
-                                    <p className="text-[11px] text-slate-500 font-bold bn-text">উপজেলা</p>
+                                    <div>
+                                        <h4 className="text-2xl font-extrabold text-slate-900">৯টি</h4>
+                                        <p className="text-[11px] text-slate-500 font-bold bn-text">উপজেলা</p>
+                                    </div>
                                 </div>
                             </div>
-
-                            <Link href="/stats" className="inline-flex items-center gap-3 bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-blue-600 transition-all group scale-100 hover:scale-105 active:scale-95 shadow-xl shadow-slate-900/10">
-                                <span className="bn-text">বিস্তারিত পরিসংখ্যান দেখুন</span>
-                                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                            </Link>
                         </motion.div>
                     </div>
 
-                    {/* Right: Interactive Map */}
-                    <div className="lg:w-1/2 w-full lg:max-w-[700px]">
+                    {/* Right: Interactive Map (65%) */}
+                    <div className="lg:w-[65%] w-full">
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
+                            initial={{ opacity: 0, scale: 0.95 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.8 }}
                             viewport={{ once: true }}
@@ -86,8 +85,21 @@ export default function HomeStatistics() {
                             <BrahmanbariaMap upazilas={data.upazilas} total={data.total} />
                         </motion.div>
                     </div>
-
                 </div>
+
+                {/* Bottom Center Button */}
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    viewport={{ once: true }}
+                    className="flex justify-center mt-12"
+                >
+                    <Link href="/stats" className="inline-flex items-center gap-3 bg-slate-900 text-white px-10 py-5 rounded-2xl font-bold hover:bg-blue-600 transition-all group shadow-2xl shadow-slate-900/20">
+                        <span className="bn-text text-lg">বিস্তারিত পরিসংখ্যান দেখুন</span>
+                        <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                </motion.div>
             </div>
         </section>
     );
