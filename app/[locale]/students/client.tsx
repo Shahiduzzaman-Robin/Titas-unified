@@ -148,23 +148,39 @@ export default function StudentDirectoryClient({
             <div className="sticky top-16 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm py-6">
                 <div className="container mx-auto px-4">
                     <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
-                        {/* Title & Stats */}
+                        {/* Title & Stats Section */}
                         <div className="flex items-center justify-between w-full lg:w-auto">
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white shadow-lg">
+                                <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white shadow-lg shrink-0">
                                     <Users size={24} />
                                 </div>
                                 <div>
-                                    <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight bn-text truncate max-w-[180px] sm:max-w-none">
+                                    <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight bn-text truncate max-w-[150px] sm:max-w-none">
                                         {isBengali ? 'শিক্ষার্থী তালিকা' : 'Student Directory'}
                                     </h1>
-                                    <p className="text-sm text-slate-500 font-medium flex items-center gap-1.5 mt-0.5">
+                                    <p className="text-sm text-slate-500 font-medium flex items-center gap-1.5 mt-0.5 whitespace-nowrap">
                                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                                         {pagination.total} {isBengali ? 'জন শিক্ষার্থী সচল' : 'Members Active'}
                                     </p>
                                 </div>
                             </div>
 
+                            {/* Filter Button - Compact for Mobile row saving */}
+                            <button
+                                onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                                className={cn(
+                                    "p-3 rounded-xl border transition-all flex items-center gap-2 font-bold text-sm h-11 shadow-sm ml-4",
+                                    isFiltersOpen 
+                                        ? "bg-blue-600 text-white border-blue-600 shadow-md" 
+                                        : "bg-white text-slate-600 border-gray-200 hover:border-blue-400 hover:text-blue-600"
+                                )}
+                            >
+                                <Filter size={18} />
+                                <span className="hidden sm:inline">{isBengali ? 'ফিল্টার' : 'Filters'}</span>
+                                {hasActiveFilters && (
+                                    <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] ml-1 animate-pulse" />
+                                )}
+                            </button>
                         </div>
 
                         {/* Search Bar */}
@@ -184,27 +200,8 @@ export default function StudentDirectoryClient({
                             )}
                         </form>
 
-                        {/* Right: Filter & Pagination Controls */}
-                        <div className="flex items-center gap-3 w-full lg:w-auto justify-between lg:justify-end">
-                            {/* Filter Button */}
-                            <button
-                                onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-                                className={cn(
-                                    "p-3 rounded-xl border transition-all flex items-center gap-2 font-bold text-sm h-11 shadow-sm",
-                                    isFiltersOpen 
-                                        ? "bg-blue-600 text-white border-blue-600 shadow-md" 
-                                        : "bg-white text-slate-600 border-gray-200 hover:border-blue-400 hover:text-blue-600"
-                                )}
-                            >
-                                <Filter size={18} />
-                                <span className="hidden sm:inline">{isBengali ? 'ফিল্টার' : 'Filters'}</span>
-                                {hasActiveFilters && (
-                                    <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] ml-1" />
-                                )}
-                            </button>
-
-                            {/* Pagination Buttons (Top) */}
-                            <div className="hidden lg:flex items-center gap-2">
+                        {/* Right: Pagination Controls */}
+                        <div className="hidden lg:flex items-center gap-2">
                                 <button
                                     onClick={() => handleFilterChange('page', (pagination.page - 1).toString())}
                                     disabled={pagination.page <= 1 || isPending}
@@ -222,7 +219,6 @@ export default function StudentDirectoryClient({
                                 >
                                     <ChevronRight size={20} />
                                 </button>
-                            </div>
                         </div>
                     </div>
 
