@@ -185,7 +185,7 @@ export default function AboutUsPage() {
                     <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-4 mt-8 mb-10">
                         {['শিক্ষা', 'সহযোগিতা', 'সংস্কৃতি', 'ভ্রাতৃত্ব'].map((label, idx) => (
                             <div key={label} className="flex items-center gap-4 md:gap-6">
-                                <span className="bn-text text-3xl md:text-5xl font-black text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] transition-all hover:scale-105">
+                                <span className="bn-text text-2xl md:text-4xl font-black text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] transition-all hover:scale-105">
                                     {label}
                                 </span>
                                 {idx < 3 && (
