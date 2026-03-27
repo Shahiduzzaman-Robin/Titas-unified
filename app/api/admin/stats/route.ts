@@ -17,47 +17,7 @@ export async function GET() {
         const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
 
         // Run all queries in parallel
-        const [
-            total,
-            approved,
-            pending,
-            rejected,
-            todayCount,
-            monthlyCount,
-            lastMonthCount,
-            males,
-            females,
-            bloodGroupRaw,
-            upazilaRaw,
-            hallRaw,
-            departmentRaw,
-            trendRaw,
-            // Blog stats
-            blogTotal,
-            blogPublished,
-            blogDraft,
-            blogViews,
-            blogComments,
-            // Events
-            eventsTotal,
-            eventsUpcoming,
-            eventsPast,
-            // Gallery
-            galleryTotal,
-            // Notices
-            noticesTotal,
-            noticesActive,
-            noticesUrgent,
-            // Messages
-            messagesTotal,
-            messagesUnread,
-            messagesReplied,
-            // Pending edits
-            pendingEdits,
-            // Audit logs
-            recentActivityLogs,
-            last24hLogs,
-        ] = await Promise.all([
+        const queries = [
             prisma.students.count(),
             prisma.students.count({ where: { approval: 1 } }),
             prisma.students.count({ where: { approval: 0 } }),
@@ -68,9 +28,10 @@ export async function GET() {
             prisma.students.count({ where: { gender: { in: ['Male', 'male', 'পুরুষ'] } } }),
             prisma.students.count({ where: { gender: { in: ['Female', 'female', 'মহিলা', 'নারী'] } } }),
             prisma.students.groupBy({ by: ['blood_group'], _count: { blood_group: true }, where: { blood_group: { not: null }, approval: 1 }, orderBy: { _count: { blood_group: 'desc' } } }),
-            prisma.students.groupBy({ by: ['upazila'], _count: { upazila: true }, where: { upazila: { not: null }, approval: 1 }, orderBy: { _count: { upazila: 'desc' } }, take: 10 }),
-            prisma.students.groupBy({ by: ['hall'], _count: { hall: true }, where: { hall: { not: null }, approval: 1 }, orderBy: { _count: { hall: 'desc' } }, take: 10 }),
-            prisma.students.groupBy({ by: ['department'], _count: { department: true }, where: { department: { not: null }, approval: 1 }, orderBy: { _count: { department: 'desc' } }, take: 10 }),
+            prisma.students.groupBy({ by: ['upazila'], _count: { upazila: true }, where: { upazila: { not: null }, approval: 1 }, orderBy: { _count: { upazila: 'desc' } } }),
+            prisma.students.groupBy({ by: ['hall'], _count: { hall: true }, where: { hall: { not: null }, approval: 1 }, orderBy: { _count: { hall: 'desc' } } }),
+            prisma.students.groupBy({ by: ['department'], _count: { department: true }, where: { department: { not: null }, approval: 1 }, orderBy: { _count: { department: 'desc' } } }),
+            prisma.students.groupBy({ by: ['session'], _count: { session: true }, where: { session: { not: null }, approval: 1 }, orderBy: { session: 'desc' } }),
             // Daily registrations - last 7 days
             prisma.$queryRaw`SELECT DATE(createdAt) as day, COUNT(*) as count FROM students WHERE createdAt >= ${sevenDaysAgo} GROUP BY DATE(createdAt) ORDER BY day ASC`,
             // Blog
@@ -98,16 +59,32 @@ export async function GET() {
             // Audit
             prisma.admin_activity_logs.findMany({ orderBy: { createdAt: 'desc' }, take: 5, include: { admin: { select: { name: true, email: true } } } }),
             prisma.admin_activity_logs.count({ where: { createdAt: { gte: new Date(now.getTime() - 24 * 60 * 60 * 1000) } } }),
-        ])
+        ] as any[]
+
+        const results = await Promise.all(queries)
+        const [
+            total, approved, pending, rejected,
+            todayCount, monthlyCount, lastMonthCount,
+            males, females,
+            bloodGroupRaw, upazilaRaw, hallRaw, departmentRaw, sessionRaw,
+            trendRaw,
+            blogTotal, blogPublished, blogDraft, blogViews, blogComments,
+            eventsTotal, eventsUpcoming, eventsPast,
+            galleryTotal,
+            noticesTotal, noticesActive, noticesUrgent,
+            messagesTotal, messagesUnread, messagesReplied,
+            pendingEdits,
+            recentActivityLogs, last24hLogs
+        ] = results
 
         const approvalRate = total ? Math.round((approved / total) * 100) : 0
 
         // Build 7-day trend labels
         const trendMap = new Map<string, number>()
-        ;(trendRaw as any[]).forEach(row => {
-            const dateStr = new Date(row.day).toLocaleDateString('bn-BD', { month: 'short', day: 'numeric' })
-            trendMap.set(dateStr, Number(row.count))
-        })
+            ; (trendRaw as any[]).forEach(row => {
+                const dateStr = new Date(row.day).toLocaleDateString('bn-BD', { month: 'short', day: 'numeric' })
+                trendMap.set(dateStr, Number(row.count))
+            })
         const trend = Array.from({ length: 7 }, (_, i) => {
             const d = new Date(now)
             d.setDate(d.getDate() - (6 - i))
@@ -126,10 +103,11 @@ export async function GET() {
             approvalRate,
             males,
             females,
-            bloodGroups: bloodGroupRaw.map(b => ({ _id: b.blood_group, count: b._count.blood_group })),
-            upazilas: upazilaRaw.map(u => ({ _id: u.upazila, count: u._count.upazila })),
-            halls: hallRaw.map(h => ({ _id: h.hall, count: h._count.hall })),
-            departments: departmentRaw.map(d => ({ _id: d.department, count: d._count.department })),
+            bloodGroups: bloodGroupRaw.map((b: any) => ({ _id: b.blood_group, count: b._count.blood_group })),
+            upazilas: upazilaRaw.map((u: any) => ({ _id: u.upazila, count: u._count.upazila })),
+            halls: hallRaw.map((h: any) => ({ _id: h.hall, count: h._count.hall })),
+            departments: departmentRaw.map((d: any) => ({ _id: d.department, count: d._count.department })),
+            sessions: sessionRaw.map((s: any) => ({ _id: s.session, count: s._count.session })),
             trend,
             blog: {
                 total: blogTotal,

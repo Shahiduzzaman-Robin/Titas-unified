@@ -54,7 +54,7 @@ export function Combobox({
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className={cn("w-full justify-between font-normal", !value && "text-muted-foreground", className)}
+                    className={cn("w-full justify-between font-normal min-w-0 overflow-hidden", !value && "text-muted-foreground", className)}
                     disabled={disabled}
                     type="button"
                 >
