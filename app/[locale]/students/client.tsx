@@ -165,18 +165,21 @@ export default function StudentDirectoryClient({
                                 </div>
                             </div>
 
-                            {/* Mobile Filter Toggle */}
+                            {/* Filter Toggle (Always visible now) */}
                             <button
                                 onClick={() => setIsFiltersOpen(!isFiltersOpen)}
                                 className={cn(
-                                    "lg:hidden p-3 rounded-xl border transition-all flex items-center gap-2 font-bold text-sm",
+                                    "p-3 rounded-xl border transition-all flex items-center gap-2 font-bold text-sm h-12",
                                     isFiltersOpen 
                                         ? "bg-slate-900 text-white border-slate-900 shadow-md" 
-                                        : "bg-gray-50 text-slate-600 border-gray-100"
+                                        : "bg-gray-50 text-slate-600 border-gray-200 hover:bg-white hover:border-gray-300"
                                 )}
                             >
                                 <Filter size={18} />
-                                {isBengali ? 'ফিল্টার' : 'Filters'}
+                                <span className="hidden sm:inline">{isBengali ? 'ফিল্টার' : 'Filters'}</span>
+                                {hasActiveFilters && (
+                                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse ml-1" />
+                                )}
                             </button>
                         </div>
 
@@ -219,12 +222,12 @@ export default function StudentDirectoryClient({
                         </div>
                     </div>
 
-                    {/* Filter Bar */}
+                    {/* Filter Bar - Now collapsible on all screens */}
                     <div className={cn(
-                        "transition-all duration-300 lg:h-auto lg:opacity-100 lg:mt-8 overflow-hidden lg:overflow-visible",
+                        "transition-all duration-300 overflow-hidden",
                         isFiltersOpen 
                             ? "max-h-[800px] mt-6 opacity-100" 
-                            : "max-h-0 opacity-0 lg:max-h-none"
+                            : "max-h-0 opacity-0"
                     )}>
                         <div className="flex flex-wrap items-center gap-3">
                             {/* Department */}
