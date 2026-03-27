@@ -469,3 +469,130 @@
     .bb-tooltip-name { font-size: 0.9rem; }
     .bb-tooltip-count { font-size: 1.4rem; }
 }
+
+/* === Gender Distribution V2 === */
+.gender-dist-v2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5rem;
+    padding: 1.5rem 0;
+    width: 100%;
+}
+
+.gender-chart-container {
+    position: relative;
+    width: 220px;
+    height: 220px;
+}
+
+.gender-svg {
+    transform: rotate(0deg);
+    filter: drop-shadow(0 10px 30px rgba(37,99,235,0.08));
+}
+
+.chart-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+}
+
+.center-total {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.05em;
+}
+
+.center-label {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin-top: 0.25rem;
+    font-weight: 600;
+}
+
+.gender-legend-v2 {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.legend-item-v2 {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 0;
+}
+
+.legend-icon-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.male .legend-icon-box { background: #eff6ff; color: #2563eb; }
+.female .legend-icon-box { background: #fdf2f8; color: #db2777; }
+
+.legend-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.legend-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #374151;
+}
+
+.legend-val {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.val-num {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #1e293b;
+}
+
+.val-pct {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #94a3b8;
+}
+
+.legend-track {
+    width: 80px;
+    height: 8px;
+    background: #f1f5f9;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-left: auto;
+}
+
+.legend-fill {
+    height: 100%;
+    border-radius: 10px;
+}
+
+.male .legend-fill { background: #2563eb; }
+.female .legend-fill { background: #db2777; }
+
+@media (max-width: 768px) {
+    .gender-chart-container { width: 180px; height: 180px; }
+    .center-total { font-size: 1.75rem; }
+    .legend-track { width: 60px; }
+}

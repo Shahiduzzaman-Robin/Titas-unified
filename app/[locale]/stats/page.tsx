@@ -9,6 +9,7 @@ import Footer from '@/components/home/Footer';
 import './Stats.css';
 
 const BrahmanbariaMap = dynamic(() => import('@/components/BrahmanbariaMap'), { ssr: false });
+const GenderDist = dynamic(() => import('@/components/GenderDist'), { ssr: false });
 
 interface StatItem {
     label: string;
@@ -168,7 +169,6 @@ const StatsPage = () => {
                     {/* By Department */}
                     {renderCard("বিভাগ ও অনুষদ", data.departments, <GraduationCap size={22} />, data.total)}
 
-                    {/* Gender Distribution */}
                     <motion.div 
                         className="stats-card"
                         initial={{ opacity: 0, y: 20 }}
@@ -179,50 +179,7 @@ const StatsPage = () => {
                             <div className="stats-card-icon-box"><PieChart size={22} /></div>
                             <h3>লিঙ্গভিত্তিক বিভাজন</h3>
                         </div>
-                        <div className="stats-table-wrapper">
-                            <table className="stats-table">
-                                <tbody>
-                                    <tr style={{ height: '60px' }}>
-                                        <td className="td-label">পুরুষ</td>
-                                        <td className="td-count">
-                                            <span className="count-num">{data.males}</span><span className="count-unit">জন</span>
-                                        </td>
-                                        <td className="td-percent">
-                                            <div className="percent-row">
-                                                <div className="percent-bar-bg">
-                                                    <motion.div 
-                                                        className="percent-bar-fill male" 
-                                                        initial={{ width: 0 }} 
-                                                        animate={{ width: `${data.total > 0 ? (data.males / data.total) * 100 : 0}%` }} 
-                                                        transition={{ duration: 0.8 }}
-                                                    />
-                                                </div>
-                                                <span className="percent-text">{data.total > 0 ? ((data.males / data.total) * 100).toFixed(1) : 0}%</span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr style={{ height: '60px' }}>
-                                        <td className="td-label">নারী</td>
-                                        <td className="td-count">
-                                            <span className="count-num">{data.females}</span><span className="count-unit">জন</span>
-                                        </td>
-                                        <td className="td-percent">
-                                            <div className="percent-row">
-                                                <div className="percent-bar-bg">
-                                                    <motion.div 
-                                                        className="percent-bar-fill female" 
-                                                        initial={{ width: 0 }} 
-                                                        animate={{ width: `${data.total > 0 ? (data.females / data.total) * 100 : 0}%` }} 
-                                                        transition={{ duration: 0.8 }}
-                                                    />
-                                                </div>
-                                                <span className="percent-text">{data.total > 0 ? ((data.females / data.total) * 100).toFixed(1) : 0}%</span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <GenderDist males={data.males} females={data.females} total={data.total} />
                     </motion.div>
 
                     {/* Blood Registry */}
