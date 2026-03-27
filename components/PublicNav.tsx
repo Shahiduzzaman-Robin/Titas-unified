@@ -68,7 +68,7 @@ export function PublicNav({ session: serverSession }: PublicNavProps) {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-20">
                     {/* Logo & Title */}
-                    <Link href="/" className="flex items-center gap-3 md:gap-4 hover:opacity-80 transition-opacity">
+                    <Link href="/" className="navbar-logo flex items-center gap-3 md:gap-4 hover:opacity-80 transition-opacity focus:outline-none">
                         <Image 
                             src="https://res.cloudinary.com/dwybib7hh/image/upload/v1774173529/titas/brand/logo.png" 
                             alt="Logo" 

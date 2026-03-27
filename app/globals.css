@@ -79,6 +79,11 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  a:focus, button:focus, [role="button"]:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
 }
 
 @keyframes train-move {
