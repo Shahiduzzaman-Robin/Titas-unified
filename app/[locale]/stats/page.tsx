@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Users, Droplets, MapPin, Building2, GraduationCap, Calendar, PieChart } from 'lucide-react';
+import { Users, Droplets, MapPin, Building2, GraduationCap, Calendar, PieChart, Activity, TrendingUp } from 'lucide-react';
+import { motion } from 'framer-motion';
 import './Stats.css';
 
 interface StatItem {
@@ -44,26 +45,49 @@ const StatsPage = () => {
             });
     }, []);
 
-    if (loading) return <div className="stats-loading">Loading Statistics...</div>;
-    if (!data || data.error) return <div className="stats-error">Failed to load statistics. Please ensure you have approved students in the system.</div>;
+    if (loading) return (
+        <div className="stats-loading">
+            <motion.div 
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+            >
+                <Activity size={40} color="#2563eb" />
+            </motion.div>
+            <span>Analyzing our community...</span>
+        </div>
+    );
 
-    const renderTable = (title: string, items: StatItem[] = [], icon: React.ReactNode, total: number) => (
-        <div className="stats-card">
+    if (!data || data.error) return (
+        <div className="stats-error">
+            <Users size={48} color="#94a3b8" />
+            <h3>Transparency is coming</h3>
+            <p>We're currently processing official records. Please check back shortly.</p>
+        </div>
+    );
+
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: { staggerChildren: 0.1 }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 }
+    };
+
+    const renderCard = (title: string, items: StatItem[] = [], icon: React.ReactNode, total: number) => (
+        <motion.div className="stats-card" variants={itemVariants}>
             <div className="stats-card-header">
-                {icon}
+                <div className="stats-card-icon-box">{icon}</div>
                 <h3>{title}</h3>
             </div>
             <div className="stats-table-wrapper">
                 <table className="stats-table">
-                    <thead>
-                        <tr>
-                            <th className="th-label">{title.split(' ').pop()}</th>
-                            <th className="th-count">Count</th>
-                            <th className="th-percent">%</th>
-                        </tr>
-                    </thead>
                     <tbody>
-                        {(items || []).map((item, i) => {
+                        {(items || []).slice(0, 15).map((item, i) => {
                             const percent = total > 0 ? ((item.count / total) * 100).toFixed(1) : '0';
                             return (
                                 <tr key={i}>
@@ -71,11 +95,15 @@ const StatsPage = () => {
                                     <td className="td-count">{item.count}</td>
                                     <td className="td-percent">
                                         <div className="percent-cell">
-                                            <span>{percent}%</span>
+                                            <div className="percent-meta">
+                                                <span>{percent}%</span>
+                                            </div>
                                             <div className="percent-bar-bg">
-                                                <div 
+                                                <motion.div 
                                                     className="percent-bar-fill" 
-                                                    style={{ width: `${percent}%` }}
+                                                    initial={{ width: 0 }}
+                                                    whileInView={{ width: `${percent}%` }}
+                                                    transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
                                                 />
                                             </div>
                                         </div>
@@ -86,78 +114,76 @@ const StatsPage = () => {
                     </tbody>
                 </table>
             </div>
-        </div>
+        </motion.div>
     );
 
     return (
         <div className="public-stats-page">
-            <div className="stats-container">
+            <motion.div 
+                className="stats-container"
+                initial="hidden"
+                animate="visible"
+                variants={containerVariants}
+            >
                 <header className="stats-header">
-                    <h1>Students Statistics Dashboard</h1>
-                    <div className="total-badge">
-                        <Users size={20} />
-                        <span>Total Approved Students: <strong>{data.total}</strong></span>
-                    </div>
+                    <motion.h1 variants={itemVariants}>Collective Impact <span>Dashboard</span></motion.h1>
+                    <motion.div className="total-badge" variants={itemVariants}>
+                        <div className="growth-icon"><TrendingUp size={16} color="#16a34a" /></div>
+                        <span>Total Members: <strong>{data.total}</strong> active students</span>
+                    </motion.div>
                 </header>
 
                 <div className="stats-grid">
                     {/* By Session */}
-                    {renderTable("By Session", data.sessions, <Calendar size={18} />, data.total)}
+                    {renderCard("Academic Sessions", data.sessions, <Calendar size={22} />, data.total)}
                     
                     {/* By Upazila */}
-                    {renderTable("By Upazila", data.upazilas, <MapPin size={18} />, data.total)}
+                    {renderCard("Roots & Origins", data.upazilas, <MapPin size={22} />, data.total)}
 
                     {/* By Hall */}
-                    {renderTable("By Hall", data.halls, <Building2 size={18} />, data.total)}
+                    {renderCard("Shared Residence", data.halls, <Building2 size={22} />, data.total)}
 
                     {/* By Department */}
-                    {renderTable("By Department", data.departments, <GraduationCap size={18} />, data.total)}
+                    {renderCard("Knowledge Hub", data.departments, <GraduationCap size={22} />, data.total)}
 
                     {/* Gender Distribution */}
-                    <div className="stats-card">
+                    <motion.div className="stats-card" variants={itemVariants}>
                         <div className="stats-card-header">
-                            <PieChart size={18} />
-                            <h3>Gender Distribution</h3>
+                            <div className="stats-card-icon-box"><PieChart size={22} /></div>
+                            <h3>Gender Diversity</h3>
                         </div>
                         <div className="stats-table-wrapper">
                             <table className="stats-table">
-                                <thead>
-                                    <tr>
-                                        <th className="th-label">Gender</th>
-                                        <th className="th-count">Count</th>
-                                        <th className="th-percent">%</th>
-                                    </tr>
-                                </thead>
                                 <tbody>
-                                    <tr>
+                                    <tr style={{ height: '80px' }}>
                                         <td className="td-label">Male</td>
                                         <td className="td-count">{data.males}</td>
                                         <td className="td-percent">
                                             <div className="percent-cell">
-                                                <span>{data.total > 0 ? ((data.males / data.total) * 100).toFixed(1) : 0}%</span>
-                                                <div className="percent-bar-bg"><div className="percent-bar-fill male" style={{ width: `${(data.males/data.total)*100}%` }} /></div>
+                                                <div className="percent-meta"><span>{data.total > 0 ? ((data.males / data.total) * 100).toFixed(1) : 0}%</span></div>
+                                                <div className="percent-bar-bg"><motion.div className="percent-bar-fill male" initial={{width:0}} whileInView={{ width: `${(data.males/data.total)*100}%` }} /></div>
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr style={{ height: '80px' }}>
                                         <td className="td-label">Female</td>
                                         <td className="td-count">{data.females}</td>
                                         <td className="td-percent">
                                             <div className="percent-cell">
-                                                <span>{data.total > 0 ? ((data.females / data.total) * 100).toFixed(1) : 0}%</span>
-                                                <div className="percent-bar-bg"><div className="percent-bar-fill female" style={{ width: `${(data.females/data.total)*100}%` }} /></div>
+                                                <div className="percent-meta"><span>{data.total > 0 ? ((data.females / data.total) * 100).toFixed(1) : 0}%</span></div>
+                                                <div className="percent-bar-bg"><motion.div className="percent-bar-fill female" initial={{width:0}} whileInView={{ width: `${(data.females/data.total)*100}%` }} /></div>
                                             </div>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    </motion.div>
 
                     {/* Blood Registry */}
-                    {renderTable("Blood Registry", data.bloodGroups, <Droplets size={18} />, data.total)}
+                    {renderCard("Lifesaving Support", data.bloodGroups, <Droplets size={22} />, data.total)}
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 };
