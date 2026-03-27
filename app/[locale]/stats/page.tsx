@@ -156,23 +156,41 @@ const StatsPage = () => {
                         <div className="stats-table-wrapper">
                             <table className="stats-table">
                                 <tbody>
-                                    <tr style={{ height: '80px' }}>
+                                    <tr style={{ height: '60px' }}>
                                         <td className="td-label">Male</td>
-                                        <td className="td-count">{data.males}</td>
+                                        <td className="td-count">
+                                            <span className="count-num">{data.males}</span>
+                                        </td>
                                         <td className="td-percent">
-                                            <div className="percent-cell">
-                                                <div className="percent-meta"><span>{data.total > 0 ? ((data.males / data.total) * 100).toFixed(1) : 0}%</span></div>
-                                                <div className="percent-bar-bg"><motion.div className="percent-bar-fill male" initial={{width:0}} whileInView={{ width: `${(data.males/data.total)*100}%` }} /></div>
+                                            <div className="percent-row">
+                                                <div className="percent-bar-bg">
+                                                    <motion.div 
+                                                        className="percent-bar-fill male" 
+                                                        initial={{ width: 0 }} 
+                                                        whileInView={{ width: `${data.total > 0 ? (data.males / data.total) * 100 : 0}%` }} 
+                                                        transition={{ duration: 0.8 }}
+                                                    />
+                                                </div>
+                                                <span className="percent-text">{data.total > 0 ? ((data.males / data.total) * 100).toFixed(1) : 0}%</span>
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr style={{ height: '80px' }}>
+                                    <tr style={{ height: '60px' }}>
                                         <td className="td-label">Female</td>
-                                        <td className="td-count">{data.females}</td>
+                                        <td className="td-count">
+                                            <span className="count-num">{data.females}</span>
+                                        </td>
                                         <td className="td-percent">
-                                            <div className="percent-cell">
-                                                <div className="percent-meta"><span>{data.total > 0 ? ((data.females / data.total) * 100).toFixed(1) : 0}%</span></div>
-                                                <div className="percent-bar-bg"><motion.div className="percent-bar-fill female" initial={{width:0}} whileInView={{ width: `${(data.females/data.total)*100}%` }} /></div>
+                                            <div className="percent-row">
+                                                <div className="percent-bar-bg">
+                                                    <motion.div 
+                                                        className="percent-bar-fill female" 
+                                                        initial={{ width: 0 }} 
+                                                        whileInView={{ width: `${data.total > 0 ? (data.females / data.total) * 100 : 0}%` }} 
+                                                        transition={{ duration: 0.8 }}
+                                                    />
+                                                </div>
+                                                <span className="percent-text">{data.total > 0 ? ((data.females / data.total) * 100).toFixed(1) : 0}%</span>
                                             </div>
                                         </td>
                                     </tr>
