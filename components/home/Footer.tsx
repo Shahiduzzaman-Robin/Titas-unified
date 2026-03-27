@@ -54,7 +54,7 @@ const Footer = () => {
                         <ul className="footer-links space-y-4">
                             <li><Link href="/register" className="bn-text text-slate-400 hover:text-white hover:translate-x-1 transition-all inline-block">সদস্য রেজিস্ট্রেশন</Link></li>
                             <li><Link href="/students" className="bn-text text-slate-400 hover:text-white hover:translate-x-1 transition-all inline-block">সদস্য তালিকা</Link></li>
-                            <li><Link href="/stats" className="bn-text text-slate-400 hover:text-white hover:translate-x-1 transition-all inline-block">পরিসংখ্যান ড্যাশবোর্ড</Link></li>
+                            <li><Link href="/stats" className="bn-text text-slate-400 hover:text-white hover:translate-x-1 transition-all inline-block">শিক্ষার্থী পরিসংখ্যান ড্যাশবোর্ড</Link></li>
                             <li><Link href="/blog" className="bn-text text-slate-400 hover:text-white hover:translate-x-1 transition-all inline-block">আমাদের ব্লগ</Link></li>
                             <li><Link href="/contact" className="bn-text text-slate-400 hover:text-white hover:translate-x-1 transition-all inline-block">যোগাযোগ করুন</Link></li>
                         </ul>
