@@ -165,22 +165,6 @@ export default function StudentDirectoryClient({
                                 </div>
                             </div>
 
-                            {/* Filter Toggle (Always visible now) */}
-                            <button
-                                onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-                                className={cn(
-                                    "p-3 rounded-xl border transition-all flex items-center gap-2 font-bold text-sm h-12",
-                                    isFiltersOpen 
-                                        ? "bg-slate-900 text-white border-slate-900 shadow-md" 
-                                        : "bg-gray-50 text-slate-600 border-gray-200 hover:bg-white hover:border-gray-300"
-                                )}
-                            >
-                                <Filter size={18} />
-                                <span className="hidden sm:inline">{isBengali ? 'ফিল্টার' : 'Filters'}</span>
-                                {hasActiveFilters && (
-                                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse ml-1" />
-                                )}
-                            </button>
                         </div>
 
                         {/* Search Bar */}
@@ -200,25 +184,45 @@ export default function StudentDirectoryClient({
                             )}
                         </form>
 
-                        {/* Pagination Buttons (Top) */}
-                        <div className="hidden lg:flex items-center gap-2">
+                        {/* Right: Filter & Pagination Controls */}
+                        <div className="flex items-center gap-3 w-full lg:w-auto justify-between lg:justify-end">
+                            {/* Filter Button */}
                             <button
-                                onClick={() => handleFilterChange('page', (pagination.page - 1).toString())}
-                                disabled={pagination.page <= 1 || isPending}
-                                className="p-3 rounded-xl border border-gray-100 bg-white hover:bg-gray-50 disabled:opacity-30 transition-all text-slate-600"
+                                onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                                className={cn(
+                                    "p-3 rounded-xl border transition-all flex items-center gap-2 font-bold text-sm h-11 shadow-sm",
+                                    isFiltersOpen 
+                                        ? "bg-blue-600 text-white border-blue-600 shadow-md" 
+                                        : "bg-white text-slate-600 border-gray-200 hover:border-blue-400 hover:text-blue-600"
+                                )}
                             >
-                                <ChevronLeft size={20} />
+                                <Filter size={18} />
+                                <span className="hidden sm:inline">{isBengali ? 'ফিল্টার' : 'Filters'}</span>
+                                {hasActiveFilters && (
+                                    <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] ml-1" />
+                                )}
                             </button>
-                            <div className="text-sm font-bold text-slate-900 px-4 py-2 bg-gray-50 rounded-lg">
-                                {pagination.page} / {pagination.totalPages}
+
+                            {/* Pagination Buttons (Top) */}
+                            <div className="hidden lg:flex items-center gap-2">
+                                <button
+                                    onClick={() => handleFilterChange('page', (pagination.page - 1).toString())}
+                                    disabled={pagination.page <= 1 || isPending}
+                                    className="w-11 h-11 flex items-center justify-center rounded-xl border border-gray-100 bg-white hover:bg-gray-50 disabled:opacity-30 transition-all text-slate-600"
+                                >
+                                    <ChevronLeft size={20} />
+                                </button>
+                                <div className="text-sm font-bold text-slate-900 px-4 py-2 bg-gray-50 rounded-lg">
+                                    {pagination.page} / {pagination.totalPages}
+                                </div>
+                                <button
+                                    onClick={() => handleFilterChange('page', (pagination.page + 1).toString())}
+                                    disabled={pagination.page >= pagination.totalPages || isPending}
+                                    className="w-11 h-11 flex items-center justify-center rounded-xl border border-gray-100 bg-white hover:bg-gray-50 disabled:opacity-30 transition-all text-slate-600"
+                                >
+                                    <ChevronRight size={20} />
+                                </button>
                             </div>
-                            <button
-                                onClick={() => handleFilterChange('page', (pagination.page + 1).toString())}
-                                disabled={pagination.page >= pagination.totalPages || isPending}
-                                className="p-3 rounded-xl border border-gray-100 bg-white hover:bg-gray-50 disabled:opacity-30 transition-all text-slate-600"
-                            >
-                                <ChevronRight size={20} />
-                            </button>
                         </div>
                     </div>
 
