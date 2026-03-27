@@ -189,7 +189,7 @@ export default function AboutUsPage() {
                                     {label}
                                 </span>
                                 {idx < 3 && (
-                                    <div className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-[0_0_20px_rgba(59,130,246,1)] hidden md:block"></div>
+                                    <div className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-yellow-400 shadow-[0_0_15px_rgba(250,204,21,1),0_0_30px_rgba(250,204,21,0.6)] hidden md:block"></div>
                                 )}
                             </div>
                         ))}
