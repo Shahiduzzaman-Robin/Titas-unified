@@ -81,7 +81,7 @@ const StatsPage = () => {
             <div className="stats-table-wrapper">
                 <table className="stats-table">
                     <tbody>
-                        {(items || []).slice(0, 15).map((item, i) => {
+                        {(items || []).map((item, i) => {
                             const percent = total > 0 ? ((item.count / total) * 100).toFixed(1) : '0';
                             return (
                                 <tr key={i}>
