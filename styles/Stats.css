@@ -661,12 +661,31 @@
 
 @media (max-width: 768px) {
     .home-stats-section { padding-top: 3rem !important; padding-bottom: 3rem !important; }
-    .home-compact-map .bb-map-wrapper { flex-direction: column !important; gap: 1.5rem; }
-    .home-compact-map .bb-legend { width: 100%; max-height: none; }
-}
-
-@media (max-width: 640px) {
-    .home-compact-map .bb-legend {
-        grid-template-columns: 1fr 1fr !important;
+    .home-compact-map .bb-map-wrapper { 
+        flex-direction: column !important; 
+        gap: 2rem; 
+        align-items: center;
+    }
+    .home-compact-map .bb-map-container { 
+        width: 100% !important; 
+        height: auto !important;
+        max-height: none !important;
+        flex: none !important;
+    }
+    .home-compact-map .bb-map-svg {
+        width: 100% !important;
+        height: auto !important;
+        max-height: 350px !important;
+    }
+    .home-compact-map .bb-legend { 
+        width: 100% !important; 
+        flex: none !important;
+        max-height: none !important; 
+    }
+    .home-compact-map .bb-legend-item {
+        justify-content: space-between;
+    }
+    .home-compact-map .bb-legend-label {
+        flex: 1 !important;
     }
 }
