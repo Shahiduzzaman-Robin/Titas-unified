@@ -64,16 +64,33 @@ export class SMSService {
 
             // Store log in database
             try {
-                // If it's a single student, log it to sms_logs table
-                if (studentId) {
+                // Determine status
+                const logStatus = data.status === 'success' ? 'sent' : 'failed'
+                const smsId = data.smsid || null
+
+                // If it's a single phone number (not comma separated list)
+                if (phone && !phone.includes(',')) {
                     await prisma.sms_logs.create({
                         data: {
                             studentId: studentId || null,
                             phone,
                             message,
-                            smsId: data.smsid,
-                            status: data.status === 'success' ? 'sent' : 'failed'
+                            smsId: smsId,
+                            status: logStatus
                         }
+                    })
+                } else if (phone && phone.includes(',')) {
+                    // It's a bulk/list of numbers, log each one
+                    const numbers = phone.split(',')
+                    await prisma.sms_logs.createMany({
+                        data: numbers.map(num => ({
+                            phone: num.trim().substring(0, 15),
+                            message,
+                            smsId: smsId,
+                            status: logStatus,
+                            studentId: null // We don't easily map in bulk unless passed
+                        })),
+                        skipDuplicates: true
                     })
                 }
             } catch (logError) {
