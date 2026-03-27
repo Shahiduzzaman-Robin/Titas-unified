@@ -244,7 +244,7 @@ export default function StudentDirectoryClient({
                                         }))
                                     ]}
                                     placeholder={isBengali ? 'বিভাগ বাছাই করুন' : 'Select Department'}
-                                    className="w-full sm:w-[200px] h-10 rounded-xl"
+                                    className="w-full sm:w-[220px] h-10 rounded-xl"
                                 />
                             </div>
 
@@ -280,7 +280,7 @@ export default function StudentDirectoryClient({
                                         }))
                                     ]}
                                     placeholder={isBengali ? 'হল বাছাই করুন' : 'Select Hall'}
-                                    className="w-full sm:w-[180px] h-10 rounded-xl"
+                                    className="w-full sm:w-[240px] h-10 rounded-xl"
                                 />
                             </div>
 
