@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth-options"
 import { prisma } from "@/lib/prisma"
+import { DiscordService } from "@/lib/discord"
 
 export async function GET(request: NextRequest) {
     const session = await getServerSession(authOptions)
@@ -41,6 +42,10 @@ export async function POST(request: NextRequest) {
         const msg = await prisma.contact_messages.create({
             data: { name, email, subject: subject || 'General Enquiry', message }
         })
+
+        // Notify Discord (Silently handle if webhook not configured)
+        DiscordService.sendContactNotification({ name, email, subject, message }).catch(console.error)
+
         return NextResponse.json({ success: true, id: msg.id })
     } catch (error) {
         return NextResponse.json({ error: 'Failed to send message' }, { status: 500 })

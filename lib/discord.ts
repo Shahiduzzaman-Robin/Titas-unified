@@ -30,6 +30,7 @@ const WEBHOOK_URLS = {
     approval: process.env.DISCORD_WEBHOOK_APPROVAL,
     rejection: process.env.DISCORD_WEBHOOK_REJECTION,
     studentEdit: process.env.DISCORD_WEBHOOK_STUDENT_EDIT,
+    contact: process.env.DISCORD_WEBHOOK_CONTACT,
 }
 
 // Discord embed colors
@@ -40,6 +41,7 @@ const COLORS = {
     EDIT_NEW: 0xFFD700,     // Gold - New edit request
     EDIT_APPROVED: 0x00FF00, // Green - Edit approved
     EDIT_REJECTED: 0xFF0000, // Red - Edit rejected
+    CONTACT: 0x3B82F6,      // Blue - Contact message
 }
 
 export class DiscordService {
@@ -466,6 +468,51 @@ export class DiscordService {
                 {
                     name: '❌ Common Reason',
                     value: reason,
+                    inline: false
+                }
+            ],
+            timestamp: new Date().toISOString(),
+            footer: {
+                text: 'TITAS System'
+            }
+        }
+
+        return this.sendWebhook(webhookUrl, { embeds: [embed] })
+    }
+
+    /**
+     * Send contact form notification
+     */
+    static async sendContactNotification(data: { name: string, email: string, subject?: string, message: string }): Promise<boolean> {
+        const webhookUrl = WEBHOOK_URLS.contact
+        if (!webhookUrl) {
+            console.log('Discord contact webhook URL not configured')
+            return false
+        }
+
+        const embed: DiscordEmbed = {
+            title: '📩 New Contact Message',
+            description: `A new message has been submitted via the contact form.`,
+            color: COLORS.CONTACT,
+            fields: [
+                {
+                    name: '👤 Name',
+                    value: data.name,
+                    inline: true
+                },
+                {
+                    name: '📧 Email',
+                    value: data.email,
+                    inline: true
+                },
+                {
+                    name: '📄 Subject',
+                    value: data.subject || 'General Enquiry',
+                    inline: false
+                },
+                {
+                    name: '💬 Message',
+                    value: data.message.length > 1000 ? data.message.substring(0, 997) + '...' : data.message,
                     inline: false
                 }
             ],
