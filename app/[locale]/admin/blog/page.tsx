@@ -242,16 +242,93 @@ export default function AdminBlogPage() {
                                 </div>
                             </div>
                         </CardHeader>
-                        <CardContent className="p-0">
-                            <div className="overflow-x-auto no-scrollbar scroll-smooth">
-                                <Table className="min-w-[950px]">
+                        <CardContent className="p-0 bg-white">
+                            {/* Mobile View: List of Cards */}
+                            <div className="grid grid-cols-1 md:hidden divide-y divide-slate-50">
+                                {loading ? (
+                                    <div className="p-16 text-center">
+                                        <Loader2 className="h-8 w-8 animate-spin text-slate-300 mx-auto" />
+                                    </div>
+                                ) : posts.length === 0 ? (
+                                    <div className="p-16 text-center flex flex-col items-center gap-3">
+                                        <FileText className="h-10 w-10 text-slate-100" />
+                                        <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">{t('noPosts')}</p>
+                                    </div>
+                                ) : (
+                                    posts.map((post: any) => (
+                                        <div key={post.id} className="p-4 bg-white active:bg-slate-50 transition-colors">
+                                            <div className="flex gap-4">
+                                                <div className="h-20 w-24 rounded-2xl bg-slate-50 overflow-hidden border border-slate-100 flex-shrink-0 shadow-sm">
+                                                    {post.featuredImage ? (
+                                                        <img src={post.featuredImage} alt="" className="h-full w-full object-cover" />
+                                                    ) : (
+                                                        <div className="h-full w-full flex items-center justify-center">
+                                                            <FileText className="h-6 w-6 text-slate-200" />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                                                    <div>
+                                                        <div className="flex justify-between items-start gap-2">
+                                                            <h3 className="font-bold text-sm text-slate-900 line-clamp-2 leading-tight">{post.title}</h3>
+                                                            <DropdownMenu>
+                                                                <DropdownMenuTrigger asChild>
+                                                                    <Button variant="ghost" size="icon" className="h-8 w-8 -mt-2 -mr-2 rounded-full text-slate-300">
+                                                                        <MoreVertical className="h-4 w-4" />
+                                                                    </Button>
+                                                                </DropdownMenuTrigger>
+                                                                <DropdownMenuContent align="end" className="w-52 rounded-xl p-2 shadow-xl border-slate-100">
+                                                                    <DropdownMenuItem onClick={() => router.push(`/${locale}/blog/${post.slug}`)} className="rounded-lg font-bold uppercase tracking-widest text-[10px] p-3">
+                                                                        <Eye className="mr-3 h-4 w-4 text-slate-400" /> View Public
+                                                                    </DropdownMenuItem>
+                                                                    <DropdownMenuItem onClick={() => router.push(`/${locale}/admin/blog/${post.slug}`)} className="rounded-lg font-bold uppercase tracking-widest text-[10px] p-3">
+                                                                        <Edit className="mr-3 h-4 w-4 text-slate-400" /> Edit Post
+                                                                    </DropdownMenuItem>
+                                                                    <DropdownMenuSeparator className="my-1 bg-slate-50" />
+                                                                    <DropdownMenuItem 
+                                                                        className="rounded-lg text-red-600 focus:text-red-700 focus:bg-red-50 font-bold uppercase tracking-widest text-[10px] p-3"
+                                                                        onClick={() => setDeleteId(post.slug)}
+                                                                    >
+                                                                        <Trash2 className="mr-3 h-4 w-4" /> Delete Permanently
+                                                                    </DropdownMenuItem>
+                                                                </DropdownMenuContent>
+                                                            </DropdownMenu>
+                                                        </div>
+                                                        <div className="flex flex-wrap gap-1.5 mt-2">
+                                                            <Badge variant="secondary" className="text-[9px] font-black uppercase rounded-full bg-slate-100 text-slate-500 border-none px-2 py-0.5">
+                                                                {post.category?.name}
+                                                            </Badge>
+                                                            <Badge className={cn(
+                                                                "text-[9px] font-black uppercase border-none px-2 py-0.5 rounded-full",
+                                                                post.status === 'published' ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-400"
+                                                            )}>
+                                                                {post.status}
+                                                            </Badge>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-50">
+                                                        <div className="flex items-center gap-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                                            <span className="flex items-center gap-1.5"><Eye className="h-3 w-3" /> {post.views}</span>
+                                                            <span>{new Date(post.updatedAt).toLocaleDateString(locale === 'bn' ? 'bn-BD' : 'en-GB')}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+
+                            {/* Desktop View: Table */}
+                            <div className="hidden md:block overflow-hidden">
+                                <Table>
                                     <TableHeader className="bg-slate-50/50">
                                         <TableRow className="border-slate-100 hover:bg-transparent">
                                             <TableHead className="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400 h-10">Post Detail</TableHead>
                                             <TableHead className="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400 h-10">Category</TableHead>
                                             <TableHead className="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400 h-10">Status</TableHead>
                                             <TableHead className="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400 h-10 text-center">Views</TableHead>
-                                            <TableHead className="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400 h-10">Date</TableHead>
+                                            <TableHead className="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400 h-10 whitespace-nowrap">Updated At</TableHead>
                                             <TableHead className="px-6 py-4 text-right h-10"></TableHead>
                                         </TableRow>
                                     </TableHeader>
@@ -333,19 +410,19 @@ export default function AdminBlogPage() {
                                                                     <MoreVertical className="h-4 w-4" />
                                                                 </Button>
                                                             </DropdownMenuTrigger>
-                                                            <DropdownMenuContent align="end" className="w-48">
-                                                                <DropdownMenuItem onClick={() => router.push(`/${locale}/blog/${post.slug}`)} className="font-bold uppercase tracking-widest text-[10px]">
-                                                                    <Eye className="mr-2 h-3.5 w-3.5" /> View Public
+                                                            <DropdownMenuContent align="end" className="w-52 rounded-xl p-2 shadow-xl border-slate-100">
+                                                                <DropdownMenuItem onClick={() => router.push(`/${locale}/blog/${post.slug}`)} className="rounded-lg font-bold uppercase tracking-widest text-[10px] p-3">
+                                                                    <Eye className="mr-3 h-4 w-4 text-slate-400" /> View Public
                                                                 </DropdownMenuItem>
-                                                                <DropdownMenuItem onClick={() => router.push(`/${locale}/admin/blog/${post.slug}`)} className="font-bold uppercase tracking-widest text-[10px]">
-                                                                    <Edit className="mr-2 h-3.5 w-3.5" /> Edit Details
+                                                                <DropdownMenuItem onClick={() => router.push(`/${locale}/admin/blog/${post.slug}`)} className="rounded-lg font-bold uppercase tracking-widest text-[10px] p-3">
+                                                                    <Edit className="mr-3 h-4 w-4 text-slate-400" /> Edit Post
                                                                 </DropdownMenuItem>
-                                                                <DropdownMenuSeparator />
+                                                                <DropdownMenuSeparator className="my-1 bg-slate-50" />
                                                                 <DropdownMenuItem 
-                                                                    className="text-red-600 focus:text-red-600 focus:bg-red-50 font-bold uppercase tracking-widest text-[10px]"
+                                                                    className="rounded-lg text-red-600 focus:text-red-700 focus:bg-red-50 font-bold uppercase tracking-widest text-[10px] p-3"
                                                                     onClick={() => setDeleteId(post.slug)}
                                                                 >
-                                                                    <Trash2 className="mr-2 h-3.5 w-3.5" /> Permanently Delete
+                                                                    <Trash2 className="mr-3 h-4 w-4" /> Delete Permanently
                                                                 </DropdownMenuItem>
                                                             </DropdownMenuContent>
                                                         </DropdownMenu>
