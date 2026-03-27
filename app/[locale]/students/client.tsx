@@ -229,9 +229,9 @@ export default function StudentDirectoryClient({
                             ? "max-h-[800px] mt-6 opacity-100" 
                             : "max-h-0 opacity-0"
                     )}>
-                        <div className="flex flex-wrap lg:flex-nowrap items-center gap-2 lg:gap-4">
+                        <div className="flex flex-wrap lg:flex-nowrap items-center gap-2 lg:gap-3">
                             {/* Department */}
-                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0 shrink-0">
+                            <div className="filter-group flex items-center gap-1.5 w-full sm:w-auto min-w-0">
                                 <Building2 className="h-4 w-4 text-slate-400 shrink-0" />
                                 <Combobox
                                     value={currentFilters.department || ''}
@@ -244,12 +244,12 @@ export default function StudentDirectoryClient({
                                         }))
                                     ]}
                                     placeholder={isBengali ? 'বিভাগ বাছাই করুন' : 'Select Department'}
-                                    className="w-full sm:w-[210px] h-10 rounded-xl"
+                                    className="w-full sm:w-[180px] h-10 rounded-xl"
                                 />
                             </div>
 
                             {/* Session */}
-                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0 shrink-0">
+                            <div className="filter-group flex items-center gap-1.5 w-full sm:w-auto min-w-0">
                                 <Calendar className="h-4 w-4 text-slate-400 shrink-0" />
                                 <Combobox
                                     value={currentFilters.session || ''}
@@ -262,12 +262,12 @@ export default function StudentDirectoryClient({
                                         }))
                                     ]}
                                     placeholder={isBengali ? 'সেশন বাছাই করুন' : 'Select Session'}
-                                    className="w-full sm:w-[130px] h-10 rounded-xl"
+                                    className="w-full sm:w-[120px] h-10 rounded-xl"
                                 />
                             </div>
 
                             {/* Hall */}
-                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0 shrink-0">
+                            <div className="filter-group flex items-center gap-1.5 w-full sm:w-auto min-w-0">
                                 <Home className="h-4 w-4 text-slate-400 shrink-0" />
                                 <Combobox
                                     value={currentFilters.hall || ''}
@@ -280,12 +280,12 @@ export default function StudentDirectoryClient({
                                         }))
                                     ]}
                                     placeholder={isBengali ? 'হল বাছাই করুন' : 'Select Hall'}
-                                    className="w-full sm:w-[190px] h-10 rounded-xl"
+                                    className="w-full sm:w-[160px] h-10 rounded-xl"
                                 />
                             </div>
 
                             {/* Blood Group */}
-                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0 shrink-0">
+                            <div className="filter-group flex items-center gap-1.5 w-full sm:w-auto min-w-0">
                                 <Droplets className="h-4 w-4 text-rose-500 shrink-0" />
                                 <Combobox
                                     value={currentFilters.blood_group || ''}
@@ -295,12 +295,12 @@ export default function StudentDirectoryClient({
                                         ...filters.bloodGroups.map(bg => ({ label: bg, value: bg }))
                                     ]}
                                     placeholder={isBengali ? 'রক্তের গ্রুপ' : 'Blood Group'}
-                                    className="w-full sm:w-[130px] h-10 rounded-xl"
+                                    className="w-full sm:w-[120px] h-10 rounded-xl"
                                 />
                             </div>
 
                             {/* Gender */}
-                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0 shrink-0">
+                            <div className="filter-group flex items-center gap-1.5 w-full sm:w-auto min-w-0">
                                 <Users className="h-4 w-4 text-slate-400 shrink-0" />
                                 <Combobox
                                     value={currentFilters.gender || ''}
@@ -311,12 +311,12 @@ export default function StudentDirectoryClient({
                                         { label: isBengali ? 'মহিলা' : 'Female', value: 'female' }
                                     ]}
                                     placeholder={isBengali ? 'লিঙ্গ' : 'Gender'}
-                                    className="w-full sm:w-[110px] h-10 rounded-xl"
+                                    className="w-full sm:w-[100px] h-10 rounded-xl"
                                 />
                             </div>
 
                             {/* Upazila */}
-                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0 shrink-0">
+                            <div className="filter-group flex items-center gap-1.5 w-full sm:w-auto min-w-0">
                                 <MapPin className="h-4 w-4 text-slate-400 shrink-0" />
                                 <Combobox
                                     value={currentFilters.upazila || ''}
@@ -329,7 +329,7 @@ export default function StudentDirectoryClient({
                                         }))
                                     ]}
                                     placeholder={isBengali ? 'উপজেলা বাছাই করুন' : 'Select Upazila'}
-                                    className="w-full sm:w-[150px] h-10 rounded-xl"
+                                    className="w-full sm:w-[140px] h-10 rounded-xl"
                                 />
                             </div>
 
@@ -337,9 +337,9 @@ export default function StudentDirectoryClient({
                             {hasActiveFilters && (
                                 <button
                                     onClick={clearFilters}
-                                    className="h-10 px-4 rounded-xl flex items-center gap-2 text-rose-500 bg-rose-50 hover:bg-rose-100 transition-all font-bold text-sm lg:ml-auto animate-in fade-in zoom-in duration-200 shrink-0"
+                                    className="h-10 px-3 rounded-xl flex items-center gap-2 text-rose-500 bg-rose-50 hover:bg-rose-100 transition-all font-bold text-xs shrink-0 lg:ml-auto animate-in fade-in zoom-in duration-200"
                                 >
-                                    <X size={16} />
+                                    <X size={14} />
                                     {isBengali ? 'সব রিমুভ করুন' : 'Clear All'}
                                 </button>
                             )}
