@@ -72,7 +72,7 @@ const StatsPage = () => {
         </div>
     );
 
-    const renderCard = (title: string, items: StatItem[] = [], icon: React.ReactNode, total: number) => (
+    const renderCard = (title: string, items: StatItem[] = [], icon: React.ReactNode, total: number, noScroll: boolean = false) => (
         <motion.div 
             className="stats-card" 
             initial={{ opacity: 0, y: 20 }}
@@ -83,7 +83,7 @@ const StatsPage = () => {
                 <div className="stats-card-icon-box">{icon}</div>
                 <h3>{title}</h3>
             </div>
-            <div className="stats-table-wrapper">
+            <div className={`stats-table-wrapper ${noScroll ? 'no-scroll-wrapper' : ''}`}>
                 <table className="stats-table">
                     <tbody>
                         {(items || []).map((item, i) => {
@@ -183,7 +183,7 @@ const StatsPage = () => {
                     </motion.div>
 
                     {/* Blood Registry */}
-                    {renderCard("রক্তের গ্রুপ", data.bloodGroups, <Droplets size={22} />, data.total)}
+                    {renderCard("রক্তের গ্রুপ", data.bloodGroups, <Droplets size={22} />, data.total, true)}
                 </div>
             </div>
             </div>

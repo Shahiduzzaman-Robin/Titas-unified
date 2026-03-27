@@ -131,7 +131,14 @@
 
 .stats-table-wrapper {
     overflow-x: auto;
+    max-height: 420px;
+    overflow-y: auto;
     padding-right: 0.5rem;
+}
+
+.no-scroll-wrapper {
+    max-height: none !important;
+    overflow-y: visible !important;
 }
 
 /* Custom Scrollbar for better UX */
