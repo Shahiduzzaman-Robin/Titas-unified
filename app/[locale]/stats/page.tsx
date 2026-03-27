@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { PublicNav } from '@/components/PublicNav';
 import Footer from '@/components/home/Footer';
-import './Stats.css';
+import '@/styles/Stats.css';
 
 const BrahmanbariaMap = dynamic(() => import('@/components/BrahmanbariaMap'), { ssr: false });
 const GenderDist = dynamic(() => import('@/components/GenderDist'), { ssr: false });

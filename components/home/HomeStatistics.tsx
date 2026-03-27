@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, TrendingUp, MapPin } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import '@/styles/Stats.css';
 
 const BrahmanbariaMap = dynamic(() => import('@/components/BrahmanbariaMap'), { ssr: false });
 
@@ -27,11 +28,11 @@ export default function HomeStatistics() {
     if (loading || !data) return null;
 
     return (
-        <section className="home-stats-section py-24 bg-slate-50 overflow-hidden relative">
+        <section className="home-stats-section py-16 bg-slate-50 overflow-hidden relative">
             <div className="absolute top-0 right-0 w-1/3 h-full bg-blue-600/5 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2"></div>
             
             <div className="container mx-auto px-4 relative z-10">
-                <div className="flex flex-col lg:flex-row gap-16 items-center">
+                <div className="flex flex-col lg:flex-row gap-12 items-center">
                     
                     {/* Left: Content */}
                     <div className="lg:w-1/2">
@@ -49,20 +50,20 @@ export default function HomeStatistics() {
                                 ব্রাহ্মণবাড়িয়ার ৯টি উপজেলা থেকে আসা ঢাকা বিশ্ববিদ্যালয়ের মেধাবী শিক্ষার্থীদের এই সুবিশাল নেটওয়ার্ক। আমাদের বৈচিত্র্যই আমাদের শক্তি।
                             </p>
 
-                            <div className="grid grid-cols-2 gap-6 mb-10">
-                                <div className="p-6 bg-white rounded-2xl shadow-sm border border-slate-100 group hover:border-blue-200 transition-all">
-                                    <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 mb-4 group-hover:scale-110 transition-transform">
-                                        <TrendingUp size={24} />
+                            <div className="grid grid-cols-2 gap-4 mb-8">
+                                <div className="p-4 bg-white rounded-2xl shadow-sm border border-slate-100 group hover:border-blue-200 transition-all">
+                                    <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 mb-3 group-hover:scale-110 transition-transform">
+                                        <TrendingUp size={20} />
                                     </div>
-                                    <h4 className="text-3xl font-extrabold text-slate-900 mb-1">{data.total}</h4>
-                                    <p className="text-slate-500 font-semibold bn-text">সক্রিয় সদস্য</p>
+                                    <h4 className="text-2xl font-extrabold text-slate-900 mb-0.5">{data.total}</h4>
+                                    <p className="text-[11px] text-slate-500 font-bold bn-text">সক্রিয় সদস্য</p>
                                 </div>
-                                <div className="p-6 bg-white rounded-2xl shadow-sm border border-slate-100 group hover:border-blue-200 transition-all">
-                                    <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 mb-4 group-hover:scale-110 transition-transform">
-                                        <MapPin size={24} />
+                                <div className="p-4 bg-white rounded-2xl shadow-sm border border-slate-100 group hover:border-blue-200 transition-all">
+                                    <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 mb-3 group-hover:scale-110 transition-transform">
+                                        <MapPin size={20} />
                                     </div>
-                                    <h4 className="text-3xl font-extrabold text-slate-900 mb-1">৯টি</h4>
-                                    <p className="text-slate-500 font-semibold bn-text">উপজেলা</p>
+                                    <h4 className="text-2xl font-extrabold text-slate-900 mb-0.5">৯টি</h4>
+                                    <p className="text-[11px] text-slate-500 font-bold bn-text">উপজেলা</p>
                                 </div>
                             </div>
 
@@ -74,13 +75,13 @@ export default function HomeStatistics() {
                     </div>
 
                     {/* Right: Interactive Map */}
-                    <div className="lg:w-1/2 w-full">
+                    <div className="lg:w-1/2 w-full lg:max-w-[700px]">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.8 }}
                             viewport={{ once: true }}
-                            className="glass-panel p-6 md:p-10 rounded-[40px] border border-white/80 shadow-2xl shadow-blue-900/5 bg-white/40 backdrop-blur-md"
+                            className="glass-panel p-6 md:p-8 rounded-[40px] border border-white/80 shadow-2xl shadow-blue-900/5 bg-white/40 backdrop-blur-md home-compact-map"
                         >
                             <BrahmanbariaMap upazilas={data.upazilas} total={data.total} />
                         </motion.div>
