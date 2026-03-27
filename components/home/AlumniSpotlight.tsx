@@ -1,57 +1,47 @@
-'use client';
 import React from 'react';
-import { motion } from 'framer-motion';
+import { Users, Award, BookOpen } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 
 const AlumniSpotlight = () => {
-    // We'll use hardcoded values based on the user's reference photo for a perfect match
-    const stats = [
-        { value: '500+', bn: 'বর্তমান শিক্ষার্থী', en: 'CURRENT STUDENTS' },
-        { value: '50+', bn: 'ইভেন্ট আয়োজিত', en: 'EVENTS ORGANIZED' },
-        { value: '6+', bn: 'বছর সক্রিয়', en: 'YEARS ACTIVE' },
-        { value: '800+', bn: 'রক্তদান', en: 'BLOOD DONATIONS' }
-    ];
+    const t = useTranslations('home.spotlight');
 
     return (
-        <section className="alumni-impact-section" id="alumni">
-            <div className="container mx-auto px-4 text-center">
-                {/* Badge Label */}
-                <motion.div 
-                    initial={{ opacity: 0, y: -20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="impact-badge"
-                >
-                    BY THE NUMBERS
-                </motion.div>
-
-                {/* Main Title */}
-                <motion.h2 
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    className="impact-title bn-text"
-                >
-                    সংখ্যায় তিতাস
-                </motion.h2>
-
-                {/* Stats Grid */}
-                <div className="impact-grid">
-                    {stats.map((stat, index) => (
-                        <motion.div
-                            key={index}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1 }}
-                            viewport={{ once: true }}
-                            className="impact-item"
-                        >
-                            <div className="impact-value">{stat.value}</div>
-                            <div className="impact-label-bn bn-text">{stat.bn}</div>
-                            <div className="impact-label-en">{stat.en}</div>
-                        </motion.div>
-                    ))}
-                </div>
+        <section className="spotlight-modern section-bg-dark" id="alumni">
+            <div className="container">
+                    <div className="spotlight-content !max-w-3xl mx-auto text-center animate-in">
+                        <div className="section-label light mx-auto">Alumni Spotlight</div>
+                        <h2 className="section-title text-white bn-text text-center">আমাদের গর্ব</h2>
+                        <p className="section-desc spotlight-desc bn-text text-center mx-auto !max-w-2xl">
+                            ঢাকা বিশ্ববিদ্যালয় থেকে পড়াশোনা শেষে আমাদের ব্রাহ্মণবাড়িয়ার সন্তানেরা আজ দেশ-বিদেশের বিভিন্ন গুরুত্বপূর্ণ স্থানে নেতৃত্ব দিচ্ছেন। তাদের সাফল্য আমাদের অনুপ্রেরণা।
+                        </p>
+                        <div className="spotlight-stats justify-center">
+                            <div className="spotlight-stat-item" style={{ animationDelay: '0.1s' }}>
+                                <Users size={20} className="text-blue-400" />
+                                <div className="flex flex-col">
+                                    <span className="value">1200+</span>
+                                    <span className="label">Active Alumni</span>
+                                </div>
+                            </div>
+                            <div className="spotlight-stat-item" style={{ animationDelay: '0.2s' }}>
+                                <Award size={20} className="text-cyan-400" />
+                                <div className="flex flex-col">
+                                    <span className="value">25+</span>
+                                    <span className="label">Public Leaders</span>
+                                </div>
+                            </div>
+                            <div className="spotlight-stat-item" style={{ animationDelay: '0.3s' }}>
+                                <BookOpen size={20} className="text-indigo-400" />
+                                <div className="flex flex-col">
+                                    <span className="value">40+</span>
+                                    <span className="label">Mentors</span>
+                                </div>
+                            </div>
+                        </div>
+                        <Link href="/students" className="btn-modern-primary white mx-auto mt-8">
+                            <Award size={18} /> Explore Alumni Directory
+                        </Link>
+                    </div>
             </div>
         </section>
     );
