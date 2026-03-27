@@ -642,7 +642,12 @@
     border-radius: 12px;
 }
 
-.home-compact-map .bb-legend-dot { display: block; width: 8px; height: 8px; }
+.home-compact-map .bb-legend-dot { 
+    display: block; 
+    width: 10px; 
+    height: 10px; 
+    border-radius: 3px; 
+}
 .home-compact-map .bb-legend-label { font-size: 0.8rem; font-weight: 700; min-width: 80px; color: #475569; }
 .home-compact-map .bb-legend-num { font-size: 0.8rem; font-weight: 800; color: #1e293b; min-width: 30px; text-align: right; background: transparent; padding: 0; }
 .home-compact-map .bb-legend-pct { display: block; font-size: 0.75rem; color: #94a3b8; min-width: 40px; text-align: right; }
