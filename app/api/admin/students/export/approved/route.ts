@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import ExcelJS from 'exceljs';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth-options';
+import { logAdminActivity, getAdminIdFromSession, getIpAddress, getUserAgent } from '@/lib/admin-activity';
 
 export async function GET(req: NextRequest) {
     try {
@@ -42,25 +43,17 @@ export async function GET(req: NextRequest) {
         });
 
         // --- AUDIT LOGGING ---
-        try {
-            await prisma.admin_activity_logs.create({
-                data: {
-                    adminId: (session.user as any).id,
-                    action: 'export_excel',
-                    description: `Exported student directory to Excel (${students.length} records)`,
-                    metadata: JSON.stringify({
-                        filters: { sessions, departments, upazilas, statuses, fields },
-                        count: students.length,
-                        timestamp: new Date().toISOString()
-                    }),
-                    ipAddress: req.headers.get('x-forwarded-for')?.split(',')[0] || '127.0.0.1',
-                    userAgent: req.headers.get('user-agent') || 'Unknown'
-                }
-            });
-        } catch (logError) {
-            console.error('Failed to create audit log for export:', logError);
-            // We don't block the export if logging fails, but we record the error
-        }
+        await logAdminActivity({
+            adminId: getAdminIdFromSession(session),
+            action: 'export_data',
+            description: `Exported student directory to Excel (${students.length} records)`,
+            metadata: {
+                filters: { sessions, departments, upazilas, statuses, fields },
+                record_count: students.length
+            },
+            ipAddress: getIpAddress(req),
+            userAgent: getUserAgent(req)
+        });
 
         // 5. Initialize Workbook
         const workbook = new ExcelJS.Workbook();
