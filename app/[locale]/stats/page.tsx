@@ -55,15 +55,15 @@ const StatsPage = () => {
             >
                 <Activity size={40} color="#2563eb" />
             </motion.div>
-            <span>Analyzing our community...</span>
+            <span>তথ্য বিশ্লেষণ করা হচ্ছে...</span>
         </div>
     );
 
     if (!data || data.error) return (
         <div className="stats-error">
             <Users size={48} color="#94a3b8" />
-            <h3>Transparency is coming</h3>
-            <p>We're currently processing official records. Please check back shortly.</p>
+            <h3>তথ্য হালনাগাদ করা হচ্ছে</h3>
+            <p>আমরা বর্তমানে প্রয়োজনীয় তথ্য যাচাই করছি। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।</p>
         </div>
     );
 
@@ -88,7 +88,7 @@ const StatsPage = () => {
                                     <td className="td-label">{item.label}</td>
                                     <td className="td-count">
                                         <span className="count-num">{item.count}</span>
-                                        <span className="count-unit">members</span>
+                                        <span className="count-unit">জন</span>
                                     </td>
                                     <td className="td-percent">
                                         <div className="percent-row">
@@ -123,7 +123,7 @@ const StatsPage = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.6 }}
                     >
-                        Collective Impact <span>Dashboard</span>
+                        শিক্ষার্থীদের <span>পরিসংখ্যান ড্যাশবোর্ড</span>
                     </motion.h1>
                     <motion.div 
                         className="total-badge" 
@@ -132,22 +132,22 @@ const StatsPage = () => {
                         transition={{ delay: 0.3 }}
                     >
                         <div className="growth-icon"><TrendingUp size={16} color="#16a34a" /></div>
-                        <span>Total Members: <strong>{data.total}</strong> active students</span>
+                        <span>মোট সদস্য: <strong>{data.total}</strong> জন সক্রিয় শিক্ষার্থী</span>
                     </motion.div>
                 </header>
 
                 <div className="stats-grid">
                     {/* By Session */}
-                    {renderCard("Academic Sessions", data.sessions, <Calendar size={22} />, data.total)}
+                    {renderCard("একাডেমিক সেশন", data.sessions, <Calendar size={22} />, data.total)}
                     
                     {/* By Upazila */}
                     {renderCard("Roots & Origins", data.upazilas, <MapPin size={22} />, data.total)}
 
                     {/* By Hall */}
-                    {renderCard("Shared Residence", data.halls, <Building2 size={22} />, data.total)}
+                    {renderCard("আবাসিক হলসমূহ", data.halls, <Building2 size={22} />, data.total)}
 
                     {/* By Department */}
-                    {renderCard("Knowledge Hub", data.departments, <GraduationCap size={22} />, data.total)}
+                    {renderCard("বিভাগ ও অনুষদ", data.departments, <GraduationCap size={22} />, data.total)}
 
                     {/* Gender Distribution */}
                     <motion.div 
@@ -158,15 +158,15 @@ const StatsPage = () => {
                     >
                         <div className="stats-card-header">
                             <div className="stats-card-icon-box"><PieChart size={22} /></div>
-                            <h3>Gender Diversity</h3>
+                            <h3>লিঙ্গভিত্তিক বিভাজন</h3>
                         </div>
                         <div className="stats-table-wrapper">
                             <table className="stats-table">
                                 <tbody>
                                     <tr style={{ height: '60px' }}>
-                                        <td className="td-label">Male</td>
+                                        <td className="td-label">পুরুষ</td>
                                         <td className="td-count">
-                                            <span className="count-num">{data.males}</span>
+                                            <span className="count-num">{data.males}</span><span className="count-unit">জন</span>
                                         </td>
                                         <td className="td-percent">
                                             <div className="percent-row">
@@ -183,9 +183,9 @@ const StatsPage = () => {
                                         </td>
                                     </tr>
                                     <tr style={{ height: '60px' }}>
-                                        <td className="td-label">Female</td>
+                                        <td className="td-label">নারী</td>
                                         <td className="td-count">
-                                            <span className="count-num">{data.females}</span>
+                                            <span className="count-num">{data.females}</span><span className="count-unit">জন</span>
                                         </td>
                                         <td className="td-percent">
                                             <div className="percent-row">
@@ -207,7 +207,7 @@ const StatsPage = () => {
                     </motion.div>
 
                     {/* Blood Registry */}
-                    {renderCard("Lifesaving Support", data.bloodGroups, <Droplets size={22} />, data.total)}
+                    {renderCard("রক্তের গ্রুপ", data.bloodGroups, <Droplets size={22} />, data.total)}
                 </div>
             </div>
         </div>

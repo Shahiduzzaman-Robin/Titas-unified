@@ -23,17 +23,34 @@ export async function GET() {
             hallRaw,
             departmentRaw,
             sessionRaw,
-        ] = await Promise.all(queries)
+            // Fetch reference tables for Bengali names
+            sessionMap,
+            upazilaMap,
+            hallMap,
+            deptMap
+        ] = await Promise.all([
+            ...queries,
+            prisma.sessions.findMany({ select: { name: true, name_bn: true } }),
+            prisma.upazilas.findMany({ select: { name: true, name_bn: true } }),
+            prisma.halls.findMany({ select: { name: true, name_bn: true } }),
+            prisma.departments.findMany({ select: { name: true, name_bn: true } }),
+        ])
+
+        // Helper to get BN label if available
+        const getBn = (list: any[], val: string) => {
+            const item = list.find(i => i.name === val);
+            return (item && item.name_bn) ? item.name_bn : val;
+        }
 
         return NextResponse.json({
             total: totalApproved,
             males,
             females,
             bloodGroups: bloodGroupRaw.map((b: any) => ({ label: b.blood_group, count: b._count.blood_group })),
-            upazilas: upazilaRaw.map((u: any) => ({ label: u.upazila, count: u._count.upazila })),
-            halls: hallRaw.map((h: any) => ({ label: h.hall, count: h._count.hall })),
-            departments: departmentRaw.map((d: any) => ({ label: d.department, count: d._count.department })),
-            sessions: sessionRaw.map((s: any) => ({ label: s.student_session, count: s._count.student_session })),
+            upazilas: upazilaRaw.map((u: any) => ({ label: getBn(upazilaMap, u.upazila), count: u._count.upazila })),
+            halls: hallRaw.map((h: any) => ({ label: getBn(hallMap, h.hall), count: h._count.hall })),
+            departments: departmentRaw.map((d: any) => ({ label: getBn(deptMap, d.department), count: d._count.department })),
+            sessions: sessionRaw.map((s: any) => ({ label: getBn(sessionMap, s.student_session), count: s._count.student_session })),
         })
     } catch (error) {
         console.error('Public stats error:', error)
