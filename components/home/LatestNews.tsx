@@ -6,7 +6,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Calendar, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { optimizeImage } from "@/lib/utils"
+import { cn, optimizeImage } from "@/lib/utils"
 
 interface Post {
     id: number
@@ -61,12 +61,18 @@ export default function LatestNews() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-end mb-12">
                     <div>
-                        <h2 className="text-3xl font-bold text-slate-900 mb-2">Latest News & Updates</h2>
-                        <p className="text-slate-500">Stay informed about our latest activities and announcements</p>
+                        <h2 className={cn("text-3xl font-bold text-slate-900 mb-2", locale === 'bn' && "bn-text")}>
+                            {locale === 'bn' ? 'সর্বশেষ সংবাদ ও আপডেট' : 'Latest News & Updates'}
+                        </h2>
+                        <p className={cn("text-slate-500", locale === 'bn' && "bn-text")}>
+                            {locale === 'bn' 
+                                ? 'আমাদের সর্বশেষ কার্যক্রম এবং ঘোষণা সম্পর্কে নিয়মিত আপডেট পেতে আমাদের সাথে থাকুন।' 
+                                : 'Stay informed about our latest activities and announcements'}
+                        </p>
                     </div>
-                    <Link href="/blog">
-                        <Button variant="ghost" className="group gap-2 hover:bg-primary/5 hover:text-primary">
-                            View All News
+                    <Link href={`/${locale}/blog`}>
+                        <Button variant="ghost" className={cn("group gap-2 hover:bg-primary/5 hover:text-primary", locale === 'bn' && "bn-text")}>
+                            {locale === 'bn' ? 'সব খবর দেখুন' : 'View All News'}
                             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                         </Button>
                     </Link>
