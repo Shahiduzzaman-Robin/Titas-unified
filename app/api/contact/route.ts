@@ -43,8 +43,8 @@ export async function POST(request: NextRequest) {
             data: { name, email, subject: subject || 'General Enquiry', message }
         })
 
-        // Notify Discord (Silently handle if webhook not configured)
-        DiscordService.sendContactNotification({ name, email, subject, message }).catch(console.error)
+        // Notify Discord
+        await DiscordService.sendContactNotification({ name, email, subject, message }).catch(console.error)
 
         return NextResponse.json({ success: true, id: msg.id })
     } catch (error) {
