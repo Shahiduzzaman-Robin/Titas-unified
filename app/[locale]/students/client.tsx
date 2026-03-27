@@ -229,9 +229,9 @@ export default function StudentDirectoryClient({
                             ? "max-h-[800px] mt-6 opacity-100" 
                             : "max-h-0 opacity-0"
                     )}>
-                        <div className="flex flex-wrap lg:flex-nowrap items-center gap-2 sm:gap-3">
+                        <div className="flex flex-wrap lg:flex-nowrap items-center gap-2 lg:gap-4">
                             {/* Department */}
-                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0">
+                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0 shrink-0">
                                 <Building2 className="h-4 w-4 text-slate-400 shrink-0" />
                                 <Combobox
                                     value={currentFilters.department || ''}
@@ -249,7 +249,7 @@ export default function StudentDirectoryClient({
                             </div>
 
                             {/* Session */}
-                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0">
+                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0 shrink-0">
                                 <Calendar className="h-4 w-4 text-slate-400 shrink-0" />
                                 <Combobox
                                     value={currentFilters.session || ''}
@@ -267,7 +267,7 @@ export default function StudentDirectoryClient({
                             </div>
 
                             {/* Hall */}
-                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0">
+                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0 shrink-0">
                                 <Home className="h-4 w-4 text-slate-400 shrink-0" />
                                 <Combobox
                                     value={currentFilters.hall || ''}
@@ -285,7 +285,7 @@ export default function StudentDirectoryClient({
                             </div>
 
                             {/* Blood Group */}
-                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0">
+                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0 shrink-0">
                                 <Droplets className="h-4 w-4 text-rose-500 shrink-0" />
                                 <Combobox
                                     value={currentFilters.blood_group || ''}
@@ -300,7 +300,7 @@ export default function StudentDirectoryClient({
                             </div>
 
                             {/* Gender */}
-                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0">
+                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0 shrink-0">
                                 <Users className="h-4 w-4 text-slate-400 shrink-0" />
                                 <Combobox
                                     value={currentFilters.gender || ''}
@@ -316,7 +316,7 @@ export default function StudentDirectoryClient({
                             </div>
 
                             {/* Upazila */}
-                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0">
+                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0 shrink-0">
                                 <MapPin className="h-4 w-4 text-slate-400 shrink-0" />
                                 <Combobox
                                     value={currentFilters.upazila || ''}
@@ -337,7 +337,7 @@ export default function StudentDirectoryClient({
                             {hasActiveFilters && (
                                 <button
                                     onClick={clearFilters}
-                                    className="h-10 px-4 rounded-xl flex items-center gap-2 text-rose-500 bg-rose-50 hover:bg-rose-100 transition-all font-bold text-sm lg:ml-auto animate-in fade-in zoom-in duration-200"
+                                    className="h-10 px-4 rounded-xl flex items-center gap-2 text-rose-500 bg-rose-50 hover:bg-rose-100 transition-all font-bold text-sm lg:ml-auto animate-in fade-in zoom-in duration-200 shrink-0"
                                 >
                                     <X size={16} />
                                     {isBengali ? 'সব রিমুভ করুন' : 'Clear All'}
