@@ -167,7 +167,7 @@ export default function AdminBlogPage() {
             </div>
 
             <Tabs defaultValue="posts" className="space-y-6">
-                <TabsList className="bg-slate-50/80 p-1.5 border border-slate-100 h-14 rounded-2xl shadow-inner inline-flex">
+                <TabsList className="bg-slate-50/80 p-1.5 border border-slate-100 h-14 rounded-2xl shadow-inner flex w-full overflow-x-auto overflow-y-hidden justify-start no-scrollbar scroll-smooth">
                     <TabsTrigger value="posts" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm font-bold uppercase tracking-widest text-xs px-8 h-10 transition-all text-slate-500">
                         <FileText className="h-4 w-4 mr-2" />
                         Posts
