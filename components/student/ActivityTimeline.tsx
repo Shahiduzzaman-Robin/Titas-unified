@@ -100,8 +100,8 @@ export default function ActivityTimeline({ edits }: ActivityTimelineProps) {
     }
 
     return (
-        <Card className="dashboard-card h-full flex flex-col">
-            <CardHeader className="border-b border-slate-100/60 pb-6">
+        <Card className="dashboard-card flex flex-col h-auto">
+            <CardHeader className="border-b border-slate-100/60 pb-6 shrink-0">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500">
@@ -136,8 +136,8 @@ export default function ActivityTimeline({ edits }: ActivityTimelineProps) {
                     )}
                 </div>
             </CardHeader>
-            <CardContent className="pt-8 flex-1 flex flex-col min-h-0">
-                <div className="space-y-0 flex-1 relative overflow-y-auto pr-2 max-h-[500px] scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
+            <CardContent className="pt-8 flex-1 flex flex-col min-h-0 overflow-hidden">
+                <div className="space-y-0 flex-1 relative overflow-y-auto pr-2 max-h-[420px] scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={currentPage}
