@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { Users, Droplets, Building2, GraduationCap, Calendar, PieChart, Activity, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
+import { PublicNav } from '@/components/PublicNav';
+import Footer from '@/components/home/Footer';
 import './Stats.css';
 
 const BrahmanbariaMap = dynamic(() => import('@/components/BrahmanbariaMap'), { ssr: false });
@@ -115,7 +117,9 @@ const StatsPage = () => {
     );
 
     return (
-        <div className="public-stats-page">
+        <>
+            <PublicNav />
+            <div className="public-stats-page">
             <div 
                 className="stats-container"
             >
@@ -225,7 +229,9 @@ const StatsPage = () => {
                     {renderCard("রক্তের গ্রুপ", data.bloodGroups, <Droplets size={22} />, data.total)}
                 </div>
             </div>
-        </div>
+            </div>
+            <Footer />
+        </>
     );
 };
 
