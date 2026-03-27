@@ -84,7 +84,7 @@ export default function ContactPage() {
                                     </div>
                                     <div>
                                         <h4 className="bn-text text-xl font-bold text-slate-900">{t('emailTitle')}</h4>
-                                        <p className="text-slate-500 font-bold">rakibulhasan.du7480@gmail.com</p>
+                                        <p className="text-slate-500 font-bold">admin@titasdu.com</p>
                                     </div>
                                 </div>
 
