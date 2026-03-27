@@ -257,4 +257,170 @@
     .stats-header h1 { font-size: 2.5rem; }
     .stats-card { grid-column: span 12 !important; padding: 1.5rem; }
     .public-stats-page { padding: 3rem 1rem; }
+    .bb-map-wrapper { flex-direction: column; }
+    .bb-legend { max-height: 250px; }
+}
+
+/* === Interactive Brahmanbaria Map === */
+.bb-map-card {
+    grid-column: span 8 !important;
+}
+
+.bb-map-wrapper {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    flex: 1;
+    min-height: 0;
+}
+
+.bb-map-container {
+    position: relative;
+    flex: 0 0 55%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bb-map-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 8px 24px rgba(37,99,235,0.12));
+}
+
+.bb-upazila {
+    cursor: pointer;
+    transition: filter 0.2s ease, opacity 0.2s ease;
+}
+
+.bb-upazila:hover, .bb-upazila.bb-active {
+    filter: brightness(0.82) saturate(1.4);
+    stroke: #2563eb !important;
+    stroke-width: 4px !important;
+}
+
+.bb-tooltip {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(12px);
+    color: #fff;
+    border-radius: 16px;
+    padding: 1rem 1.5rem;
+    pointer-events: none;
+    text-align: center;
+    min-width: 140px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.1);
+    z-index: 20;
+}
+
+.bb-tooltip-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    color: #93c5fd;
+}
+
+.bb-tooltip-count {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.bb-tooltip-count span {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #94a3b8;
+    margin-left: 0.25rem;
+}
+
+.bb-tooltip-pct {
+    font-size: 0.9rem;
+    color: #60a5fa;
+    font-weight: 600;
+}
+
+.bb-legend {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    overflow-y: auto;
+    max-height: 380px;
+    padding-right: 0.25rem;
+}
+
+.bb-legend::-webkit-scrollbar { width: 4px; }
+.bb-legend::-webkit-scrollbar-track { background: transparent; }
+.bb-legend::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 8px; }
+
+.bb-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.bb-legend-item:hover, .bb-legend-active {
+    background: rgba(37, 99, 235, 0.06);
+}
+
+.bb-legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.bb-legend-label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #374151;
+    flex: 1;
+    min-width: 80px;
+}
+
+.bb-legend-num {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #0f172a;
+    min-width: 30px;
+    text-align: right;
+}
+
+.bb-legend-bar-bg {
+    flex: 1;
+    height: 6px;
+    background: #f1f5f9;
+    border-radius: 6px;
+    overflow: hidden;
+    max-width: 80px;
+}
+
+.bb-legend-bar {
+    height: 100%;
+    border-radius: 6px;
+}
+
+.bb-legend-pct {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #3b82f6;
+    min-width: 38px;
+    text-align: right;
+}
+
+.bb-map-loading {
+    color: #94a3b8;
+    font-size: 1rem;
+    padding: 3rem;
+    text-align: center;
 }

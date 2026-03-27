@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { Users, Droplets, MapPin, Building2, GraduationCap, Calendar, PieChart, Activity, TrendingUp } from 'lucide-react';
+import { Users, Droplets, Building2, GraduationCap, Calendar, PieChart, Activity, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
 import './Stats.css';
+
+const BrahmanbariaMap = dynamic(() => import('@/components/BrahmanbariaMap'), { ssr: false });
 
 interface StatItem {
     label: string;
@@ -140,8 +142,21 @@ const StatsPage = () => {
                     {/* By Session */}
                     {renderCard("একাডেমিক সেশন", data.sessions, <Calendar size={22} />, data.total)}
                     
-                    {/* By Upazila */}
-                    {renderCard("Roots & Origins", data.upazilas, <MapPin size={22} />, data.total)}
+                    {/* By Upazila - Interactive Map */}
+                    <motion.div
+                        className="stats-card bb-map-card"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <div className="stats-card-header">
+                            <div className="stats-card-icon-box" style={{ background: 'linear-gradient(135deg,#ecfdf5,#d1fae5)', color: '#059669' }}>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+                            </div>
+                            <h3>জন্মস্থান ও এলাকা</h3>
+                        </div>
+                        <BrahmanbariaMap upazilas={data.upazilas} total={data.total} />
+                    </motion.div>
 
                     {/* By Hall */}
                     {renderCard("আবাসিক হলসমূহ", data.halls, <Building2 size={22} />, data.total)}
