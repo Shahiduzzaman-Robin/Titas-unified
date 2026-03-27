@@ -14,6 +14,7 @@ import EventsSection from "@/components/home/EventsSection";
 import GallerySection from "@/components/home/GallerySection";
 import LeadershipSection from "@/components/home/LeadershipSection";
 import LatestNews from "@/components/home/LatestNews";
+import HomeStatistics from "@/components/home/HomeStatistics";
 import Footer from "@/components/home/Footer";
 
 // Import Main CSS
@@ -79,7 +80,6 @@ export default function Home() {
                 {/* ACTIVE NOTICE BOARD */}
                 <NoticeBoard />
 
-                {/* 2. ABOUT SECTION */}
                 <section className="about-modern py-24 bg-white" id="about">
                     <div className="container mx-auto px-4">
                         <div className="grid md:grid-cols-2 gap-16 items-center">
@@ -124,6 +124,9 @@ export default function Home() {
                         </div>
                     </div>
                 </section>
+
+                {/* 2.5 LIVE STATS SECTION */}
+                <HomeStatistics />
 
                 {/* 3. EVENTS SECTION */}
                 <EventsSection />
