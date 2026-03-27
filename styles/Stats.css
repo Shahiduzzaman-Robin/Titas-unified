@@ -624,22 +624,19 @@
     flex: 1;
     display: flex !important;
     flex-direction: column !important;
-    gap: 0.6rem;
-    max-height: 380px;
-    padding: 0.5rem;
-    overflow-y: auto;
-    background: rgba(255,255,255,0.3);
-    border-radius: 24px;
+    gap: 0.5rem;
+    max-height: none; /* No scroll */
+    padding: 0;
+    overflow: visible;
+    background: transparent;
 }
 
 .home-compact-map .bb-legend-item {
     display: flex !important;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.4rem 0.6rem;
+    gap: 0.5rem;
+    padding: 0.25rem 0.5rem;
     background: transparent !important;
-    border: none;
-    border-radius: 12px;
 }
 
 .home-compact-map .bb-legend-dot { 
@@ -648,15 +645,15 @@
     height: 10px; 
     border-radius: 3px; 
 }
-.home-compact-map .bb-legend-label { font-size: 0.8rem; font-weight: 700; min-width: 80px; color: #475569; }
-.home-compact-map .bb-legend-num { font-size: 0.8rem; font-weight: 800; color: #1e293b; min-width: 30px; text-align: right; background: transparent; padding: 0; }
-.home-compact-map .bb-legend-pct { display: block; font-size: 0.75rem; color: #94a3b8; min-width: 40px; text-align: right; }
-.home-compact-map .bb-legend-bar-bg { display: block; flex: 1; height: 6px; background: #f1f5f9; border-radius: 10px; overflow: hidden; }
+.home-compact-map .bb-legend-label { font-size: 0.8rem; font-weight: 700; color: #475569; min-width: 65px; margin: 0; }
+.home-compact-map .bb-legend-num { font-size: 0.8rem; font-weight: 800; color: #1e293b; min-width: 25px; text-align: right; background: transparent; padding: 0; }
+.home-compact-map .bb-legend-pct { display: block; font-size: 0.75rem; color: #94a3b8; min-width: 35px; text-align: right; }
+.home-compact-map .bb-legend-bar-bg { display: block; flex: none; width: 60px; height: 5px; background: #f1f5f9; border-radius: 10px; overflow: hidden; }
 .home-compact-map .bb-legend-bar-fill { height: 100%; border-radius: 10px; }
 
 @media (max-width: 768px) {
     .home-stats-section { padding-top: 3rem !important; padding-bottom: 3rem !important; }
-    .home-compact-map .bb-map-wrapper { flex-direction: column !important; }
+    .home-compact-map .bb-map-wrapper { flex-direction: column !important; gap: 1.5rem; }
     .home-compact-map .bb-legend { width: 100%; max-height: none; }
 }
 
