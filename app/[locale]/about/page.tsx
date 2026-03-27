@@ -182,19 +182,15 @@ export default function AboutUsPage() {
                         height={90} 
                     />
                     <h1 className="about-hero-title bn-text text-white">তিতাস</h1>
-                    <div className="flex flex-wrap justify-center gap-3 md:gap-4 mt-6 mb-8">
-                        {[
-                            { label: 'শিক্ষা', Icon: GraduationCap, glow: 'bg-blue-400/20' },
-                            { label: 'সহযোগিতা', Icon: HeartHandshake, glow: 'bg-emerald-400/20' },
-                            { label: 'সংস্কৃতি', Icon: Music, glow: 'bg-purple-400/20' },
-                            { label: 'ভ্রাতৃত্ব', Icon: Users, glow: 'bg-orange-400/20' }
-                        ].map((item, idx) => (
-                            <div key={idx} className="group relative flex items-center gap-2.5 px-5 py-2 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 transition-all duration-300 hover:bg-white/15 hover:-translate-y-1 hover:border-white/20">
-                                <item.Icon size={16} className="text-white/70 group-hover:text-white transition-colors" />
-                                <span className="bn-text text-[13px] md:text-[15px] font-bold text-white/90 tracking-wide group-hover:text-white">
-                                    {item.label}
+                    <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-4 mt-8 mb-10">
+                        {['শিক্ষা', 'সহযোগিতা', 'সংস্কৃতি', 'ভ্রাতৃত্ব'].map((label, idx) => (
+                            <div key={label} className="flex items-center gap-4 md:gap-6">
+                                <span className="bn-text text-3xl md:text-5xl font-black text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] transition-all hover:scale-105">
+                                    {label}
                                 </span>
-                                <div className={`absolute inset-0 blur-xl ${item.glow} -z-10 opacity-0 group-hover:opacity-100 transition-opacity`}></div>
+                                {idx < 3 && (
+                                    <div className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-[0_0_20px_rgba(59,130,246,1)] hidden md:block"></div>
+                                )}
                             </div>
                         ))}
                     </div>
