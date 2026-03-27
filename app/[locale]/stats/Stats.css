@@ -257,41 +257,6 @@
     .stats-header h1 { font-size: 2.5rem; }
     .stats-card { grid-column: span 12 !important; padding: 1.25rem; }
     .public-stats-page { padding: 3rem 1rem; }
-
-    /* Map card mobile */
-    .bb-map-wrapper {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    .bb-map-container {
-        flex: none;
-        width: 100%;
-        max-height: 260px;
-        overflow: hidden;
-    }
-    .bb-map-svg {
-        max-height: 260px;
-        width: auto;
-        margin: 0 auto;
-    }
-    .bb-legend {
-        max-height: none;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.4rem;
-        width: 100%;
-        overflow-y: visible;
-    }
-    .bb-legend-item {
-        padding: 0.4rem 0.5rem;
-        gap: 0.35rem;
-    }
-    .bb-legend-label { font-size: 0.78rem; min-width: unset; }
-    .bb-legend-num { font-size: 0.78rem; min-width: unset; }
-    .bb-legend-pct { font-size: 0.72rem; min-width: unset; }
-    .bb-legend-bar-bg { display: none; }
-
-    /* Fix header wrapping */
     .stats-card-header h3 { font-size: 1.15rem; }
 }
 
@@ -457,4 +422,56 @@
     font-size: 1rem;
     padding: 3rem;
     text-align: center;
+}
+
+/* === Map Mobile Responsive (must be AFTER base map CSS) === */
+@media (max-width: 768px) {
+    .bb-map-wrapper {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .bb-map-container {
+        flex: none;
+        width: 100%;
+        max-height: 260px;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+    }
+    .bb-map-svg {
+        max-height: 260px;
+        width: auto;
+        height: 260px;
+    }
+    .bb-legend {
+        flex: none;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.35rem;
+        width: 100%;
+        max-height: none;
+        overflow-y: visible;
+        padding-right: 0;
+    }
+    .bb-legend-item {
+        padding: 0.4rem 0.5rem;
+        gap: 0.3rem;
+        border-radius: 8px;
+    }
+    .bb-legend-label {
+        font-size: 0.78rem;
+        min-width: unset;
+        flex: 1;
+    }
+    .bb-legend-num {
+        font-size: 0.78rem;
+        min-width: unset;
+    }
+    .bb-legend-pct {
+        font-size: 0.72rem;
+        min-width: unset;
+    }
+    .bb-legend-bar-bg { display: none; }
+    .bb-tooltip { min-width: 110px; padding: 0.7rem 1rem; }
+    .bb-tooltip-count { font-size: 1.5rem; }
 }
