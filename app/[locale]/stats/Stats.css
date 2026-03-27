@@ -131,8 +131,6 @@
 
 .stats-table-wrapper {
     overflow-x: auto;
-    max-height: 420px;
-    overflow-y: auto;
     padding-right: 0.5rem;
 }
 
