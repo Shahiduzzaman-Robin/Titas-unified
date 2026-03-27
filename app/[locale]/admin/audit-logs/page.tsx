@@ -171,9 +171,100 @@ export default function AdminAuditLogsPage() {
                 </div>
             </div>
 
-            {/* Logs Table */}
-            <div className="admin-card overflow-hidden">
-                <div className="admin-table-wrapper">
+            {/* Logs Table / Cards */}
+            <div className="admin-card overflow-hidden bg-white">
+                {/* Mobile View: Cards */}
+                <div className="md:hidden divide-y divide-slate-100">
+                    {loading ? (
+                        <div className="p-16 text-center">
+                            <RefreshCw className="h-8 w-8 animate-spin text-slate-200 mx-auto" />
+                        </div>
+                    ) : logs.length === 0 ? (
+                        <div className="p-16 text-center">
+                            <Info className="h-8 w-8 text-slate-100 mx-auto mb-2" />
+                            <span className="bn-text text-slate-400">কোনো রেকর্ড পাওয়া যায়নি</span>
+                        </div>
+                    ) : (
+                        logs.map(log => {
+                            const config = getActionConfig(log.action)
+                            const Icon = config.icon
+                            const isExpanded = expandedRows.has(log.id)
+                            return (
+                                <div key={log.id} className="p-4 active:bg-slate-50 transition-colors">
+                                    <div className="flex items-start gap-4">
+                                        <div 
+                                            className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                                            style={{ background: config.color + '15', color: config.color }}
+                                        >
+                                            <Icon size={20} />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex justify-between items-start">
+                                                <div className="flex flex-col">
+                                                    <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: config.color }}>{log.action}</span>
+                                                    <span className="bn-text font-bold text-slate-900 leading-tight">{config.label_bn}</span>
+                                                </div>
+                                                <button 
+                                                    onClick={() => toggleRow(log.id)}
+                                                    className="p-1 text-slate-300"
+                                                >
+                                                    {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                                                </button>
+                                            </div>
+                                            <p className="text-xs text-slate-500 bn-text mt-1.5 line-clamp-2 leading-relaxed">{log.description || '—'}</p>
+                                            
+                                            <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-50 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                                <div className="flex items-center gap-1.5 min-w-0">
+                                                    <User size={12} className="text-slate-300 flex-shrink-0" />
+                                                    <span className="truncate">{log.admin?.name || 'System'}</span>
+                                                </div>
+                                                <div className="flex items-center gap-1.5 flex-shrink-0">
+                                                    <Calendar size={12} className="text-slate-300" />
+                                                    {new Date(log.createdAt).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {isExpanded && (
+                                        <div className="mt-4 pt-4 border-t border-slate-100 space-y-4">
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <div className="p-3 bg-slate-50/50 rounded-xl">
+                                                    <div className="text-[9px] uppercase text-slate-400 font-bold mb-1">IP Address</div>
+                                                    <div className="font-mono text-[10px] text-slate-600">{log.ipAddress || '—'}</div>
+                                                </div>
+                                                <div className="p-3 bg-slate-50/50 rounded-xl">
+                                                    <div className="text-[9px] uppercase text-slate-400 font-bold mb-1">Time</div>
+                                                    <div className="text-[10px] text-slate-600">
+                                                        {new Date(log.createdAt).toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' })}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {log.student && (
+                                                <div className="p-3 bg-blue-50/30 border border-blue-100/50 rounded-xl">
+                                                    <div className="text-[9px] uppercase text-blue-400 font-bold mb-1">Target Student</div>
+                                                    <div className="bn-text text-sm font-bold text-blue-900">{log.student.name_bn || log.student.name_en}</div>
+                                                </div>
+                                            )}
+                                            {log.metadata && (
+                                                <div>
+                                                    <div className="text-[9px] uppercase text-slate-400 font-bold mb-1 ml-1">Metadata</div>
+                                                    <div className="bg-slate-900 rounded-xl p-4 overflow-x-auto shadow-inner">
+                                                        <pre className="text-[10px] text-emerald-400 font-mono leading-relaxed">
+                                                            {JSON.stringify(log.metadata, null, 2)}
+                                                        </pre>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            )
+                        })
+                    )}
+                </div>
+
+                {/* Desktop View: Table */}
+                <div className="hidden md:block admin-table-wrapper">
                     <table className="admin-table">
                         <thead>
                             <tr>
