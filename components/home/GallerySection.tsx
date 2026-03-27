@@ -64,7 +64,7 @@ const GallerySection = () => {
                                     style={{ minHeight: idx === 0 ? '360px' : '180px' }}
                                 >
                                     <Image
-                                        src={idx === 0 ? optimizeImage(img.url, 800) : optimizeImage(img.url, 400)}
+                                        src={idx === 0 ? optimizeImage(img.url, 1200) : optimizeImage(img.url, 800)}
                                         alt={img.title || 'Gallery Image'}
                                         fill
                                         sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
