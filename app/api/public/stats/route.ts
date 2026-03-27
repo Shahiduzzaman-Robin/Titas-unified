@@ -11,7 +11,7 @@ export async function GET() {
             prisma.students.groupBy({ by: ['upazila'], _count: { upazila: true }, where: { upazila: { not: null }, approval: 1 }, orderBy: { _count: { upazila: 'desc' } } }),
             prisma.students.groupBy({ by: ['hall'], _count: { hall: true }, where: { hall: { not: null }, approval: 1 }, orderBy: { _count: { hall: 'desc' } } }),
             prisma.students.groupBy({ by: ['department'], _count: { department: true }, where: { department: { not: null }, approval: 1 }, orderBy: { _count: { department: 'desc' } } }),
-            prisma.students.groupBy({ by: ['session'], _count: { session: true }, where: { session: { not: null }, approval: 1 }, orderBy: { session: 'desc' } }),
+            prisma.students.groupBy({ by: ['student_session'], _count: { student_session: true }, where: { student_session: { not: null }, approval: 1 }, orderBy: { student_session: 'desc' } }),
         ] as any[]
 
         const [
@@ -33,7 +33,7 @@ export async function GET() {
             upazilas: upazilaRaw.map((u: any) => ({ label: u.upazila, count: u._count.upazila })),
             halls: hallRaw.map((h: any) => ({ label: h.hall, count: h._count.hall })),
             departments: departmentRaw.map((d: any) => ({ label: d.department, count: d._count.department })),
-            sessions: sessionRaw.map((s: any) => ({ label: s.session, count: s._count.session })),
+            sessions: sessionRaw.map((s: any) => ({ label: s.student_session, count: s._count.student_session })),
         })
     } catch (error) {
         console.error('Public stats error:', error)

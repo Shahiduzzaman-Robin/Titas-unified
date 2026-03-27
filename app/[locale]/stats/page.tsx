@@ -19,6 +19,8 @@ interface StatsData {
     halls: StatItem[];
     departments: StatItem[];
     sessions: StatItem[];
+    error?: string;
+    status?: number;
 }
 
 const StatsPage = () => {
