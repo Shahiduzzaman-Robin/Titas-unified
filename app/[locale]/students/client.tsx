@@ -176,7 +176,7 @@ export default function StudentDirectoryClient({
                                 )}
                             >
                                 <Filter size={18} />
-                                <span className="hidden sm:inline">{isBengali ? 'ফিল্টার' : 'Filters'}</span>
+                                <span className={isBengali ? 'bn-text text-sm' : 'text-sm'}>{isBengali ? 'ফিল্টার' : 'Filters'}</span>
                                 {hasActiveFilters && (
                                     <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] ml-1 animate-pulse" />
                                 )}
