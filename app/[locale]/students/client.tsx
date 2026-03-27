@@ -229,7 +229,7 @@ export default function StudentDirectoryClient({
                             ? "max-h-[800px] mt-6 opacity-100" 
                             : "max-h-0 opacity-0"
                     )}>
-                        <div className="flex flex-wrap items-center gap-3">
+                        <div className="flex flex-wrap lg:flex-nowrap items-center gap-2 sm:gap-3">
                             {/* Department */}
                             <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0">
                                 <Building2 className="h-4 w-4 text-slate-400 shrink-0" />
@@ -244,7 +244,7 @@ export default function StudentDirectoryClient({
                                         }))
                                     ]}
                                     placeholder={isBengali ? 'বিভাগ বাছাই করুন' : 'Select Department'}
-                                    className="w-full sm:w-[260px] h-10 rounded-xl"
+                                    className="w-full sm:w-[210px] h-10 rounded-xl"
                                 />
                             </div>
 
@@ -262,7 +262,7 @@ export default function StudentDirectoryClient({
                                         }))
                                     ]}
                                     placeholder={isBengali ? 'সেশন বাছাই করুন' : 'Select Session'}
-                                    className="w-full sm:w-[160px] h-10 rounded-xl"
+                                    className="w-full sm:w-[130px] h-10 rounded-xl"
                                 />
                             </div>
 
@@ -280,40 +280,39 @@ export default function StudentDirectoryClient({
                                         }))
                                     ]}
                                     placeholder={isBengali ? 'হল বাছাই করুন' : 'Select Hall'}
-                                    className="w-full sm:w-[240px] h-10 rounded-xl"
+                                    className="w-full sm:w-[190px] h-10 rounded-xl"
                                 />
                             </div>
 
                             {/* Blood Group */}
-                            <div className="w-full sm:w-auto min-w-0">
-                                <Select value={currentFilters.blood_group || 'all'} onValueChange={(val) => handleFilterChange('blood_group', val)}>
-                                    <SelectTrigger className="w-full sm:w-[140px] h-10 border-gray-100 bg-gray-50/50 hover:bg-white rounded-xl pl-3 transition-all shrink-0">
-                                        <div className="flex items-center gap-2 truncate">
-                                            <Droplets className="h-4 w-4 text-rose-500 shrink-0" />
-                                            <SelectValue placeholder="Blood" />
-                                        </div>
-                                    </SelectTrigger>
-                                    <SelectContent className="rounded-xl">
-                                        <SelectItem value="all">{isBengali ? 'রক্তের গ্রুপ' : 'Blood Group'}</SelectItem>
-                                        {filters.bloodGroups.map(bg => (
-                                            <SelectItem key={bg} value={bg}>{bg}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
+                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0">
+                                <Droplets className="h-4 w-4 text-rose-500 shrink-0" />
+                                <Combobox
+                                    value={currentFilters.blood_group || ''}
+                                    onChange={(val) => handleFilterChange('blood_group', val)}
+                                    options={[
+                                        { label: isBengali ? 'রক্তের গ্রুপ' : 'Blood Group', value: '' },
+                                        ...filters.bloodGroups.map(bg => ({ label: bg, value: bg }))
+                                    ]}
+                                    placeholder={isBengali ? 'রক্তের গ্রুপ' : 'Blood Group'}
+                                    className="w-full sm:w-[130px] h-10 rounded-xl"
+                                />
                             </div>
 
                             {/* Gender */}
-                            <div className="w-full sm:w-auto min-w-0">
-                                <Select value={currentFilters.gender || 'all'} onValueChange={(val) => handleFilterChange('gender', val)}>
-                                    <SelectTrigger className="w-full sm:w-[120px] h-10 border-gray-100 bg-gray-50/50 hover:bg-white rounded-xl pl-3 transition-all shrink-0">
-                                        <SelectValue placeholder="Gender" />
-                                    </SelectTrigger>
-                                    <SelectContent className="rounded-xl">
-                                        <SelectItem value="all">{isBengali ? 'লিঙ্গ' : 'Gender'}</SelectItem>
-                                        <SelectItem value="male">{isBengali ? 'পুরুষ' : 'Male'}</SelectItem>
-                                        <SelectItem value="female">{isBengali ? 'মহিলা' : 'Female'}</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                            <div className="filter-group flex items-center gap-2 w-full sm:w-auto min-w-0">
+                                <Users className="h-4 w-4 text-slate-400 shrink-0" />
+                                <Combobox
+                                    value={currentFilters.gender || ''}
+                                    onChange={(val) => handleFilterChange('gender', val)}
+                                    options={[
+                                        { label: isBengali ? 'লিঙ্গ' : 'Gender', value: '' },
+                                        { label: isBengali ? 'পুরুষ' : 'Male', value: 'male' },
+                                        { label: isBengali ? 'মহিলা' : 'Female', value: 'female' }
+                                    ]}
+                                    placeholder={isBengali ? 'লিঙ্গ' : 'Gender'}
+                                    className="w-full sm:w-[110px] h-10 rounded-xl"
+                                />
                             </div>
 
                             {/* Upazila */}
@@ -330,7 +329,7 @@ export default function StudentDirectoryClient({
                                         }))
                                     ]}
                                     placeholder={isBengali ? 'উপজেলা বাছাই করুন' : 'Select Upazila'}
-                                    className="w-full sm:w-[180px] h-10 rounded-xl"
+                                    className="w-full sm:w-[150px] h-10 rounded-xl"
                                 />
                             </div>
 
@@ -338,7 +337,7 @@ export default function StudentDirectoryClient({
                             {hasActiveFilters && (
                                 <button
                                     onClick={clearFilters}
-                                    className="h-10 px-4 rounded-xl flex items-center gap-2 text-rose-500 bg-rose-50 hover:bg-rose-100 transition-all font-bold text-sm ml-auto animate-in fade-in zoom-in duration-200"
+                                    className="h-10 px-4 rounded-xl flex items-center gap-2 text-rose-500 bg-rose-50 hover:bg-rose-100 transition-all font-bold text-sm lg:ml-auto animate-in fade-in zoom-in duration-200"
                                 >
                                     <X size={16} />
                                     {isBengali ? 'সব রিমুভ করুন' : 'Clear All'}
