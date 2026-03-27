@@ -426,6 +426,9 @@
 
 /* === Map Mobile Responsive (must be AFTER base map CSS) === */
 @media (max-width: 768px) {
+    .bb-map-card {
+        grid-column: span 12 !important;
+    }
     .bb-map-wrapper {
         flex-direction: column;
         gap: 1rem;
