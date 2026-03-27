@@ -8,7 +8,7 @@ const Footer = () => {
     return (
         <footer className="footer-modern bg-slate-900 pt-20 pb-10 overflow-hidden relative">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600"></div>
-            
+
             <div className="container mx-auto px-4 relative z-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
 
@@ -16,10 +16,10 @@ const Footer = () => {
                     <div className="footer-brand">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center p-0.5 shadow-md shrink-0">
-                                <Image 
-                                    src="https://res.cloudinary.com/dwybib7hh/image/upload/v1774173529/titas/brand/logo.png" 
-                                    alt="Titas Logo" 
-                                    width={44} 
+                                <Image
+                                    src="https://res.cloudinary.com/dwybib7hh/image/upload/v1774173529/titas/brand/logo.png"
+                                    alt="Titas Logo"
+                                    width={44}
                                     height={44}
                                     className="object-contain"
                                 />
@@ -68,7 +68,7 @@ const Footer = () => {
                         <ul className="footer-links space-y-4">
                             <li><Link href="/constitution" className="bn-text text-slate-400 hover:text-white hover:translate-x-1 transition-all inline-block">গঠনতন্ত্র</Link></li>
                             <li><Link href="/gallery" className="bn-text text-slate-400 hover:text-white hover:translate-x-1 transition-all inline-block">ফটো গ্যালারি</Link></li>
-                            <li><Link href="/events" className="bn-text text-slate-400 hover:text-white hover:translate-x-1 transition-all inline-block">ইভেন্ট ক্যালেন্ডার</Link></li>
+                            <li><Link href="/#events" className="bn-text text-slate-400 hover:text-white hover:translate-x-1 transition-all inline-block">ইভেন্ট ক্যালেন্ডার</Link></li>
                             <li><Link href="/about" className="bn-text text-slate-400 hover:text-white hover:translate-x-1 transition-all inline-block">সংগঠন ও নেতৃত্ব</Link></li>
                         </ul>
                     </div>
@@ -108,7 +108,7 @@ const Footer = () => {
                         &copy; {new Date().getFullYear()} <span className="text-slate-300 font-bold">Titas (DU)</span>. All rights reserved.
                     </p>
                     <p className="dev-credit en-text text-slate-600 text-[10px] tracking-wider opacity-80">
-                        Developed with ❤️ by <a href="https://joynalbokhsho.vercel.app" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-blue-400 transition-colors">Joynal Bokhsho</a>
+                        Developed by <a href="https://joynalbokhsho.vercel.app" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-blue-400 transition-colors">Joynal Bokhsho</a>
                     </p>
                 </div>
             </div>
