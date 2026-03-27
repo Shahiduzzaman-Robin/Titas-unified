@@ -136,15 +136,15 @@ export default function ActivityTimeline({ edits }: ActivityTimelineProps) {
                     )}
                 </div>
             </CardHeader>
-            <CardContent className="pt-8 flex-1 flex flex-col">
-                <div className="space-y-0 flex-1 relative">
+            <CardContent className="pt-8 flex-1 flex flex-col min-h-0">
+                <div className="space-y-0 flex-1 relative overflow-y-auto pr-2 max-h-[500px] scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={currentPage}
                             initial={{ opacity: 0, x: 10 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -10 }}
-                            className="space-y-0"
+                            className="space-y-0 pb-4"
                         >
                             {currentEdits.map((edit) => (
                                 <div key={edit.id} className="timeline-item group">
