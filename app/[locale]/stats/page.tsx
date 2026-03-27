@@ -92,12 +92,12 @@ const StatsPage = () => {
                             return (
                                 <tr key={i}>
                                     <td className="td-label">{item.label}</td>
-                                    <td className="td-count">{item.count}</td>
+                                    <td className="td-count">
+                                        <span className="count-num">{item.count}</span>
+                                        <span className="count-unit">members</span>
+                                    </td>
                                     <td className="td-percent">
-                                        <div className="percent-cell">
-                                            <div className="percent-meta">
-                                                <span>{percent}%</span>
-                                            </div>
+                                        <div className="percent-row">
                                             <div className="percent-bar-bg">
                                                 <motion.div 
                                                     className="percent-bar-fill" 
@@ -106,6 +106,7 @@ const StatsPage = () => {
                                                     transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
                                                 />
                                             </div>
+                                            <span className="percent-text">{percent}%</span>
                                         </div>
                                     </td>
                                 </tr>
