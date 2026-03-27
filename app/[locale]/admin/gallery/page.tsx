@@ -81,6 +81,11 @@ export default function AdminGalleryPage() {
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if (file) {
+            // Vercel limit is 4.5MB
+            if (file.size > 4.5 * 1024 * 1024) {
+                toast.error(locale === 'bn' ? 'ছবির সাইজ ৪.৫ এমবির বেশি হওয়া যাবে না' : 'Image size must be less than 4.5MB (Vercel Limit)')
+                return
+            }
             setSelectedFile(file)
             setPreviewUrl(URL.createObjectURL(file))
         }
@@ -108,8 +113,16 @@ export default function AdminGalleryPage() {
                 setPreviewUrl(null)
                 setUploadData({ title: "", category: "General" })
             } else {
-                const error = await res.json()
-                toast.error(error.error || tCommon('error'))
+                let errorMsg = tCommon('error')
+                try {
+                    const error = await res.json()
+                    errorMsg = error.error || errorMsg
+                } catch (e) {
+                    if (res.status === 413) {
+                        errorMsg = locale === 'bn' ? 'ছবির সাইজ বড় হয়েছে (সর্বোচ্চ ৪.৫ এমবি)' : 'File size too large (Max 4.5MB)'
+                    }
+                }
+                toast.error(errorMsg)
             }
         } catch (error) {
             toast.error(tCommon('error'))

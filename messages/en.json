@@ -12,6 +12,9 @@
         "page": "Page",
         "searchPlaceholder": "Search...",
         "noOptions": "No options found",
+        "error": "An error occurred. Please try again.",
+        "success": "Action completed successfully",
+        "unknownError": "Something went wrong",
         "settings": {
             "profile": "Profile Overview",
             "details": "Student Details"
