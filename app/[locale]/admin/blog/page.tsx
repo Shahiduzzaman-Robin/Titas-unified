@@ -151,15 +151,19 @@ export default function AdminBlogPage() {
 
     return (
         <div className="space-y-8 max-w-6xl mx-auto pb-12">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                <div>
-                    <h1 className="text-2xl font-black tracking-tight text-slate-900">{t('title')}</h1>
-                    <p className="text-sm text-slate-500 font-medium mt-1">{t('subtitle')}</p>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 mb-2">
+                <div className="flex-1">
+                    <h1 className="text-2xl md:text-3xl font-black bg-gradient-to-br from-slate-900 via-slate-700 to-indigo-950 bg-clip-text text-transparent">
+                        {t('title')}
+                    </h1>
+                    <p className="text-slate-500 font-medium mt-1 leading-relaxed">
+                        {t('subtitle')}
+                    </p>
                 </div>
-                <div className="flex items-center gap-2">
-                    <Link href={`/${locale}/admin/blog/new`}>
-                        <Button className="bg-slate-900 hover:bg-black text-white shadow-none font-bold uppercase tracking-widest text-xs px-6 h-11 rounded-xl transition-all active:scale-95">
-                            <Plus className="w-4 h-4 mr-2" />
+                <div className="w-full sm:w-auto">
+                    <Link href={`/${locale}/admin/blog/new`} className="block w-full">
+                        <Button className="w-full bg-slate-900 hover:bg-black text-white shadow-xl shadow-slate-900/10 font-bold uppercase tracking-widest text-xs px-8 h-12 rounded-xl transition-all active:scale-95 group">
+                            <Plus className="w-4 h-4 mr-2 group-hover:rotate-90 transition-transform" />
                             {t('addPost') || "New Post"}
                         </Button>
                     </Link>
@@ -187,56 +191,60 @@ export default function AdminBlogPage() {
                 </TabsList>
 
                 <TabsContent value="posts" className="space-y-6">
-                    <Card className="border-slate-100 shadow-sm overflow-hidden rounded-3xl bg-white focus-within:ring-2 ring-slate-100 transition-all">
-                        <CardHeader className="bg-white border-b border-slate-50 p-5">
-                            <div className="flex flex-wrap items-center gap-4">
-                                <div className="flex-1 min-w-[200px] relative">
-                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                    <Card className="border-slate-100 shadow-sm overflow-hidden rounded-3xl bg-white focus-within:ring-2 ring-slate-100/50 transition-all">
+                        <CardHeader className="bg-white border-b border-slate-50 p-4 md:p-6">
+                            <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-4 w-full">
+                                <div className="flex-1 relative group">
+                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
                                     <Input 
                                         placeholder={tCommon('searchPlaceholder')} 
-                                        className="pl-11 h-11 rounded-xl bg-slate-50 border-transparent focus:bg-white focus:ring-2 focus:ring-slate-200 transition-all"
+                                        className="pl-11 h-12 rounded-xl bg-slate-50/80 border-transparent focus:bg-white focus:ring-4 focus:ring-slate-100 transition-all w-full"
                                         value={search}
                                         onChange={(e) => setSearch(e.target.value)}
                                         onKeyDown={(e) => e.key === 'Enter' && fetchPosts()}
                                     />
                                 </div>
-                                <div className="flex items-center gap-2">
+                                <div className="flex flex-col sm:flex-row items-stretch gap-3">
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
-                                            <Button variant="outline" size="sm" className="bg-white border-slate-200 font-bold uppercase tracking-widest text-xs h-11 px-5 rounded-xl hover:bg-slate-50 transition-colors">
+                                            <Button variant="outline" className="bg-white border-slate-200 font-bold uppercase tracking-widest text-[10px] sm:text-xs h-12 px-5 rounded-xl hover:bg-slate-50 transition-all shadow-sm">
                                                 <Filter className="w-3.5 h-3.5 mr-2 text-slate-400" />
-                                                Category: {categoryFilter === 'all' ? 'All' : categories.find((c: any) => c.slug === categoryFilter)?.name}
+                                                Category: <span className="ml-1 text-slate-900">{categoryFilter === 'all' ? 'All' : categories.find((c: any) => c.slug === categoryFilter)?.name}</span>
                                             </Button>
                                         </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end" className="w-48 rounded-xl p-2">
-                                            <DropdownMenuItem onClick={() => setCategoryFilter('all')} className="rounded-lg cursor-pointer">All Categories</DropdownMenuItem>
+                                        <DropdownMenuContent align="end" className="w-56 rounded-xl p-2">
+                                            <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-3 py-2">Filter by Category</DropdownMenuLabel>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem onClick={() => setCategoryFilter('all')} className="rounded-lg cursor-pointer font-medium p-3">All Categories</DropdownMenuItem>
                                             {categories.map((cat: any) => (
-                                                <DropdownMenuItem key={cat.id} onClick={() => setCategoryFilter(cat.slug)} className="rounded-lg cursor-pointer">
+                                                <DropdownMenuItem key={cat.id} onClick={() => setCategoryFilter(cat.slug)} className="rounded-lg cursor-pointer font-medium p-3">
                                                     {cat.name}
                                                 </DropdownMenuItem>
                                             ))}
                                         </DropdownMenuContent>
                                     </DropdownMenu>
-
+                                    
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
-                                            <Button variant="outline" size="sm" className="bg-white border-slate-200 font-bold uppercase tracking-widest text-xs h-11 px-5 rounded-xl hover:bg-slate-50 transition-colors">
+                                            <Button variant="outline" className="bg-white border-slate-200 font-bold uppercase tracking-widest text-[10px] sm:text-xs h-12 px-5 rounded-xl hover:bg-slate-50 transition-all shadow-sm">
                                                 <Layers className="w-3.5 h-3.5 mr-2 text-slate-400" />
-                                                Status: {statusFilter}
+                                                Status: <span className="ml-1 text-slate-900 capitalize">{statusFilter}</span>
                                             </Button>
                                         </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end" className="rounded-xl p-2">
-                                            <DropdownMenuItem onClick={() => setStatusFilter('all')} className="rounded-lg cursor-pointer">All Status</DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => setStatusFilter('published')} className="rounded-lg cursor-pointer">Published</DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => setStatusFilter('draft')} className="rounded-lg cursor-pointer">Draft</DropdownMenuItem>
+                                        <DropdownMenuContent align="end" className="w-48 rounded-xl p-2">
+                                            <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-3 py-2">Filter by Status</DropdownMenuLabel>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem onClick={() => setStatusFilter('all')} className="rounded-lg cursor-pointer font-medium p-3">All Status</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => setStatusFilter('published')} className="rounded-lg cursor-pointer font-medium p-3">Published</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => setStatusFilter('draft')} className="rounded-lg cursor-pointer font-medium p-3">Draft</DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </div>
                             </div>
                         </CardHeader>
                         <CardContent className="p-0">
-                            <div className="overflow-x-auto">
-                                <Table>
+                            <div className="overflow-x-auto no-scrollbar scroll-smooth">
+                                <Table className="min-w-[950px]">
                                     <TableHeader className="bg-slate-50/50">
                                         <TableRow className="border-slate-100 hover:bg-transparent">
                                             <TableHead className="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400 h-10">Post Detail</TableHead>
