@@ -93,50 +93,77 @@ export default function AdminMessagesPage() {
                 </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: selected ? '1fr 1fr' : '1fr', gap: '1.5rem' }}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="admin-card">
                     {loading ? (
                         <div style={{ padding: '3rem', textAlign: 'center', color: '#94a3b8' }} className="bn-text">লোডিং...</div>
                     ) : messages.length === 0 ? (
                         <div style={{ padding: '3rem', textAlign: 'center', color: '#94a3b8' }} className="bn-text">কোনো বার্তা পাওয়া যায়নি</div>
                     ) : (
-                        <div className="admin-table-wrapper">
-                            <table className="admin-table">
-                                <thead>
-                                    <tr>
-                                        <th>প্রেরক</th>
-                                        <th>বিষয়</th>
-                                        <th>তারিখ</th>
-                                        <th>স্ট্যাটাস</th>
-                                        <th>অ্যাকশন</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {messages.map(msg => (
-                                        <tr key={msg.id} style={{ cursor: 'pointer', background: selected?.id === msg.id ? '#f8fafc' : '' }}>
-                                            <td onClick={() => { setSelected(msg); updateStatus(msg.id, msg.status === 'unread' ? 'read' : msg.status) }}>
-                                                <div style={{ fontWeight: 600, color: '#1e293b' }}>{msg.name}</div>
-                                                <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{msg.email}</div>
-                                            </td>
-                                            <td onClick={() => setSelected(msg)} style={{ fontSize: '0.875rem' }}>{msg.subject}</td>
-                                            <td style={{ fontSize: '0.75rem', color: '#64748b', whiteSpace: 'nowrap' }}>
-                                                {new Date(msg.createdAt).toLocaleDateString('bn-BD')}
-                                            </td>
-                                            <td>{statusBadge(msg.status)}</td>
-                                            <td>
-                                                <div style={{ display: 'flex', gap: '0.25rem' }}>
-                                                    <button className="action-btn" title="রিপ্লাই হিসেবে চিহ্নিত করুন" onClick={() => updateStatus(msg.id, 'replied')}>
-                                                        <CheckCircle size={14} />
-                                                    </button>
-                                                    <button className="action-btn reject" title="মুছুন" onClick={() => deleteMsg(msg.id)}>
-                                                        <Trash2 size={14} />
-                                                    </button>
-                                                </div>
-                                            </td>
+                        <div>
+                            {/* Mobile View: Cards */}
+                            <div className="md:hidden divider divide-y divide-slate-100">
+                                {messages.map(msg => (
+                                    <div key={msg.id} className={`p-4 transition-colors ${selected?.id === msg.id ? 'bg-slate-50' : 'bg-white'}`} onClick={() => { setSelected(msg); updateStatus(msg.id, msg.status === 'unread' ? 'read' : msg.status) }}>
+                                        <div className="flex justify-between items-start mb-2">
+                                            <div className="font-bold text-slate-800">{msg.name}</div>
+                                            <div>{statusBadge(msg.status)}</div>
+                                        </div>
+                                        <div className="text-sm text-slate-600 mb-2 truncate">{msg.subject}</div>
+                                        <div className="flex justify-between items-center text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+                                            <span>{new Date(msg.createdAt).toLocaleDateString(locale === 'bn' ? 'bn-BD' : 'en-GB')}</span>
+                                            <div className="flex gap-2" onClick={e => e.stopPropagation()}>
+                                                <button className="p-1.5 bg-slate-50 text-slate-400 rounded-lg" onClick={() => updateStatus(msg.id, 'replied')}>
+                                                    <CheckCircle size={14} />
+                                                </button>
+                                                <button className="p-1.5 bg-red-50 text-red-400 rounded-lg" onClick={() => deleteMsg(msg.id)}>
+                                                    <Trash2 size={14} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Desktop View: Table */}
+                            <div className="hidden md:block admin-table-wrapper">
+                                <table className="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>প্রেরক</th>
+                                            <th>বিষয়</th>
+                                            <th>তারিখ</th>
+                                            <th>স্ট্যাটাস</th>
+                                            <th>অ্যাকশন</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {messages.map(msg => (
+                                            <tr key={msg.id} style={{ cursor: 'pointer', background: selected?.id === msg.id ? '#f8fafc' : '' }}>
+                                                <td onClick={() => { setSelected(msg); updateStatus(msg.id, msg.status === 'unread' ? 'read' : msg.status) }}>
+                                                    <div style={{ fontWeight: 600, color: '#1e293b' }}>{msg.name}</div>
+                                                    <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{msg.email}</div>
+                                                </td>
+                                                <td onClick={() => setSelected(msg)} style={{ fontSize: '0.875rem' }}>{msg.subject}</td>
+                                                <td style={{ fontSize: '0.75rem', color: '#64748b', whiteSpace: 'nowrap' }}>
+                                                    {new Date(msg.createdAt).toLocaleDateString('bn-BD')}
+                                                </td>
+                                                <td>{statusBadge(msg.status)}</td>
+                                                <td>
+                                                    <div style={{ display: 'flex', gap: '0.25rem' }}>
+                                                        <button className="action-btn" title="রিপ্লাই হিসেবে চিহ্নিত করুন" onClick={() => updateStatus(msg.id, 'replied')}>
+                                                            <CheckCircle size={14} />
+                                                        </button>
+                                                        <button className="action-btn reject" title="মুছুন" onClick={() => deleteMsg(msg.id)}>
+                                                            <Trash2 size={14} />
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     )}
                 </div>
