@@ -96,14 +96,14 @@ export default function Home() {
                                 <div className="about-stats grid grid-cols-3 gap-8">
                                     <div className="stat-box">
                                         <h4 className="stat-number text-3xl font-bold text-slate-900">৫০০+</h4>
-                                        <p className="stat-label text-slate-500">সদস্য</p>
+                                        <p className="stat-label text-slate-500">বর্তমান শিক্ষার্থী</p>
                                     </div>
                                     <div className="stat-box">
                                         <h4 className="stat-number text-3xl font-bold text-slate-900">৫০+</h4>
                                         <p className="stat-label text-slate-500">ইভেন্ট</p>
                                     </div>
                                     <div className="stat-box">
-                                        <h4 className="stat-number text-3xl font-bold text-slate-900">১৯৯৪</h4>
+                                        <h4 className="stat-number text-3xl font-bold text-slate-900">২০২১</h4>
                                         <p className="stat-label text-slate-500">প্রতিষ্ঠিত</p>
                                     </div>
                                 </div>
