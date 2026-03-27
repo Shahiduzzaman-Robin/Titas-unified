@@ -5,16 +5,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface UpazilaData { label: string; count: number; }
 interface Props { upazilas: UpazilaData[]; total: number; }
 
+// API returns these exact Unicode codepoints (verified via hex dump)
 const ID_TO_BN: Record<string, string> = {
-  Sadar: 'সদর',
-  Kasba: 'কসবা',
-  Nabinagar: 'নবীনগর',
-  Nasirnagar: 'নাসিরনগর',
-  Sarail: 'সরাইল',
-  Ashuganj: 'আশুগঞ্জ',
-  Akhaura: 'আখাউড়া',
-  Bancharampur: 'বাঞ্ছারামপুর',
-  Bijoynagar: 'বিজয়নগর',
+  Sadar:        '\u09b8\u09a6\u09b0',                               // সদর
+  Kasba:        '\u0995\u09b8\u09ac\u09be',                         // কসবা
+  Nabinagar:    '\u09a8\u09ac\u09c0\u09a8\u0997\u09b0',             // নবীনগর
+  Nasirnagar:   '\u09a8\u09be\u09b8\u09bf\u09b0\u09a8\u0997\u09b0', // নাসিরনগর
+  Sarail:       '\u09b8\u09b0\u09be\u0987\u09b2',                   // সরাইল
+  Ashuganj:     '\u0986\u09b6\u09c1\u0997\u099e\u09cd\u099c',       // আশুগঞ্জ
+  Akhaura:      '\u0986\u0996\u09be\u0989\u09dc\u09be',             // আখাউড়া  (ড় = single 0x09dc)
+  Bancharampur: '\u09ac\u09be\u099e\u09cd\u099b\u09be\u09b0\u09be\u09ae\u09aa\u09c1\u09b0', // বাঞ্ছারামপুর
+  Bijoynagar:   '\u09ac\u09bf\u099c\u09df\u09a8\u0997\u09b0',       // বিজয়নগর (য় = single 0x09df)
 };
 
 export default function BrahmanbariaMap({ upazilas, total }: Props) {
