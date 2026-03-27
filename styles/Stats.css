@@ -621,11 +621,12 @@
 }
 
 .home-compact-map .bb-legend {
-    flex: 1;
+    flex: 0 0 auto; /* Don't stretch */
+    width: 280px; /* Narrower legend area */
     display: flex !important;
     flex-direction: column !important;
-    gap: 0.5rem;
-    max-height: none; /* No scroll */
+    gap: 0.4rem;
+    max-height: none;
     padding: 0;
     overflow: visible;
     background: transparent;
@@ -635,7 +636,7 @@
     display: flex !important;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.25rem 0.5rem;
+    padding: 0.2rem 0;
     background: transparent !important;
 }
 
@@ -645,9 +646,16 @@
     height: 10px; 
     border-radius: 3px; 
 }
-.home-compact-map .bb-legend-label { font-size: 0.8rem; font-weight: 700; color: #475569; min-width: 65px; margin: 0; }
-.home-compact-map .bb-legend-num { font-size: 0.8rem; font-weight: 800; color: #1e293b; min-width: 25px; text-align: right; background: transparent; padding: 0; }
-.home-compact-map .bb-legend-pct { display: block; font-size: 0.75rem; color: #94a3b8; min-width: 35px; text-align: right; }
+.home-compact-map .bb-legend-label { 
+    font-size: 0.8rem; 
+    font-weight: 700; 
+    color: #475569; 
+    flex: none !important; /* FIXED: Stop stretching */
+    width: 80px; 
+    margin: 0; 
+}
+.home-compact-map .bb-legend-num { font-size: 0.8rem; font-weight: 800; color: #1e293b; width: 30px; text-align: left; }
+.home-compact-map .bb-legend-pct { display: block; font-size: 0.75rem; color: #94a3b8; width: 40px; text-align: right; }
 .home-compact-map .bb-legend-bar-bg { display: block; flex: none; width: 60px; height: 5px; background: #f1f5f9; border-radius: 10px; overflow: hidden; }
 .home-compact-map .bb-legend-bar-fill { height: 100%; border-radius: 10px; }
 
