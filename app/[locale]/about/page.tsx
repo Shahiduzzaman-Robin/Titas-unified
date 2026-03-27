@@ -150,10 +150,10 @@ const LEADERS = [
 ];
 
 const STATS = [
-    { value: 200, suffix: '+', label: 'সদস্য', labelEn: 'Members' },
-    { value: 25, suffix: '+', label: 'ইভেন্ট আয়োজিত', labelEn: 'Events Organized' },
-    { value: 4, suffix: '+', label: 'বছর সক্রিয়', labelEn: 'Years Active' },
-    { value: 50, suffix: '+', label: 'রক্তদান', labelEn: 'Blood Donations' },
+    { value: 500, suffix: '+', label: 'বর্তমান শিক্ষার্থী', labelEn: 'Current Students' },
+    { value: 50, suffix: '+', label: 'ইভেন্ট আয়োজিত', labelEn: 'Events Organized' },
+    { value: 6, suffix: '+', label: 'বছর সক্রিয়', labelEn: 'Years Active' },
+    { value: 800, suffix: '+', label: 'রক্তদান', labelEn: 'Blood Donations' },
 ];
 
 const TIMELINE = [
