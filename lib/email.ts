@@ -5,6 +5,9 @@ const APP_NAME = 'TitasDU'
 const ORG_FULL_NAME = 'তিতাস-ঢাকা বিশ্ববিদ্যালয়স্থ ব্রাহ্মণবাড়িয়া জেলা ছাত্রকল্যাণ পরিষদ'
 const EMAIL_FONT_STACK = "'Hind Siliguri','Noto Sans Bengali','Inter',Arial,sans-serif"
 
+// SAFETY TOGGLE: Set to TRUE to prevent ANY bulk emails from being sent to all students
+const DISALLOW_BULK_EMAILS = true 
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 const isEmailConfigured = () =>
@@ -368,8 +371,8 @@ export async function sendStudentLoginAlert(
 
 /** Bulk notify all approved students about a new notice */
 export async function notifyStudentsAboutNewNotice(notice: { text: string; link?: string | null }) {
-    if (!(await isNotificationEnabled('noticePublished'))) {
-        return { sentCount: 0, total: 0, disabled: true }
+    if (DISALLOW_BULK_EMAILS || !(await isNotificationEnabled('noticePublished'))) {
+        return { sentCount: 0, total: 0, disabled: true, reason: DISALLOW_BULK_EMAILS ? 'safety-switch-on' : 'disabled' }
     }
 
     const students = await prisma.students.findMany({
@@ -399,8 +402,8 @@ export async function notifyStudentsAboutNewNotice(notice: { text: string; link?
 
 /** Bulk remind all approved students about an upcoming event */
 export async function notifyStudentsEventReminder(event: { title: string; date: Date; location: string; link?: string | null }) {
-    if (!(await isNotificationEnabled('eventReminders'))) {
-        return { sentCount: 0, total: 0, disabled: true }
+    if (DISALLOW_BULK_EMAILS || !(await isNotificationEnabled('eventReminders'))) {
+        return { sentCount: 0, total: 0, disabled: true, reason: DISALLOW_BULK_EMAILS ? 'safety-switch-on' : 'disabled' }
     }
 
     const students = await prisma.students.findMany({
