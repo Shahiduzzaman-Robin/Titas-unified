@@ -20,9 +20,12 @@ export function SMSStatusCards({ lastUpdated }: { lastUpdated?: number }) {
         setLoading(true)
         try {
             const res = await fetch(`/api/sms/balance?t=${Date.now()}`)
-            if (res.ok) {
-                const data = await res.json()
+            const data = await res.json()
+            if (res.ok && data.success) {
                 setBalance(data)
+            } else {
+                console.error("Failed to fetch balance:", data.msg)
+                // We show 0 as fallback but could also show error state
             }
         } catch (error) {
             console.error("Failed to fetch balance")

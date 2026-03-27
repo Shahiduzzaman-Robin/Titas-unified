@@ -1,8 +1,6 @@
 import { prisma } from "./prisma"
 
-const SMS_API_TOKEN = process.env.SMS_API_TOKEN
-const SMS_SENDER_ID = process.env.SMS_SENDER_ID
-const SMS_API_URL = process.env.SMS_API_URL || 'https://api.smsinbd.com/sms-api'
+const DEFAULT_SMS_API_URL = 'https://api.smsinbd.com/sms-api'
 
 interface SMSResponse {
     status: string
@@ -34,6 +32,10 @@ export class SMSService {
      * Send SMS to a single number
      */
     static async sendSMS(phone: string, message: string, studentId?: number, studentName?: string) {
+        const SMS_API_TOKEN = process.env.SMS_API_TOKEN
+        const SMS_SENDER_ID = process.env.SMS_SENDER_ID
+        const SMS_API_URL = process.env.SMS_API_URL || DEFAULT_SMS_API_URL
+
         if (!SMS_API_TOKEN || !SMS_SENDER_ID) {
             console.error('SMS credentials not configured')
             return { success: false, message: 'SMS credentials not configured' }
@@ -104,6 +106,9 @@ export class SMSService {
      * Check SMS Balance
      */
     static async checkBalance() {
+        const SMS_API_TOKEN = process.env.SMS_API_TOKEN
+        const SMS_API_URL = process.env.SMS_API_URL || DEFAULT_SMS_API_URL
+
         if (!SMS_API_TOKEN) {
             return { success: false, message: 'API Token not configured' }
         }
@@ -139,6 +144,9 @@ export class SMSService {
      * Get Delivery Status
      */
     static async checkDeliveryStatus(smsId: string) {
+        const SMS_API_TOKEN = process.env.SMS_API_TOKEN
+        const SMS_API_URL = process.env.SMS_API_URL || DEFAULT_SMS_API_URL
+
         if (!SMS_API_TOKEN) {
             return { success: false, message: 'API Token not configured' }
         }

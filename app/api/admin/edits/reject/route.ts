@@ -49,21 +49,11 @@ export async function POST(req: Request) {
             }
         })
 
-        // NEW: Email Notification
+        // Fetch student info for notification and logging
         const student = await prisma.students.findUnique({
             where: { id: edit.studentId },
             select: { email: true, name_en: true, name_bn: true }
         })
-
-        if (student && student.email) {
-            try {
-                const { sendEditRejectedEmail } = await import("@/lib/email")
-                const adminName = session?.user?.name || 'Admin'
-                await sendEditRejectedEmail(student.email, student.name_en || 'Student', reason || 'Details provided by admin', adminName)
-            } catch (emailError) {
-                console.error("Failed to send rejection email:", emailError)
-            }
-        }
 
         // Fetch student info for notification and logging
         const studentForLogging = await prisma.students.findUnique({

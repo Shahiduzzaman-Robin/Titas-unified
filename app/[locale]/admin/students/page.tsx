@@ -42,8 +42,8 @@ import { Search, Eye, Check, X, Download, Trash2, Loader2, Filter, Settings, Col
 import { useTranslations } from 'next-intl'
 import Link from "next/link"
 import { useLocale } from 'next-intl'
-import { getStudentImageUrl } from "@/lib/utils"
-import { useSearchParams } from 'next/navigation'
+import { cn, getStudentImageUrl } from "@/lib/utils"
+import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 
 export default function StudentsPage() {
     const t = useTranslations('admin.students')
@@ -56,16 +56,31 @@ export default function StudentsPage() {
     const [loading, setLoading] = useState(false)
     const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || "")
     const [isExporting, setIsExporting] = useState(false)
+    const [showFilters, setShowFilters] = useState(false)
 
     // Pagination State
     const [page, setPage] = useState(parseInt(searchParams.get('page') || "1"))
     const [hasMore, setHasMore] = useState(true)
     const observer = useRef<IntersectionObserver | null>(null)
+    const router = useRouter()
+    const pathname = usePathname()
 
     // Rejection Dialog State
     const [rejectDialogOpen, setRejectDialogOpen] = useState(false)
     const [selectedStudentId, setSelectedStudentId] = useState<number | null>(null)
     const [rejectReason, setRejectReason] = useState("")
+
+    const clearFilters = () => {
+        setSearchTerm("")
+        setSessionFilter("all")
+        setDeptFilter("all")
+        setHallFilter("all")
+        setUpazilaFilter("all")
+        setStatusFilter("all")
+        setPage(1)
+        router.push(pathname)
+        setShowFilters(false)
+    }
     const [sendRejectionSMS, setSendRejectionSMS] = useState(true)
 
     // Export Selection State
@@ -448,37 +463,75 @@ export default function StudentsPage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
-                    <p className="text-gray-600 mt-2">{t('subtitle')}</p>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div className="flex-1 w-full">
+                    <h1 className="text-3xl font-black bg-gradient-to-r from-gray-900 via-gray-700 to-indigo-950 bg-clip-text text-transparent">
+                        {t('title')}
+                    </h1>
+                    <p className="text-slate-500 font-medium mt-1 leading-relaxed">
+                        {t('subtitle')}
+                    </p>
                 </div>
-                <div className="flex gap-2">
-                    <Button variant="outline" onClick={() => {
-                        setActiveExportTab('format');
-                        setIsExportModalOpen(true);
-                    }}>
-                        <Download className="w-4 h-4 mr-2" />
-                        Export
-                    </Button>
-                </div>
-            </div>
-
-            <Card>
-                <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-0 gap-4 pb-4">
-                    <CardTitle>{t('filters')}</CardTitle>
-                    <div className="relative w-full sm:max-w-sm">
-                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                
+                <div className="flex items-stretch gap-2.5 w-full md:w-auto">
+                    <div className="relative flex-1 md:w-80 group">
+                        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
                         <Input
                             placeholder={t('searchPlaceholder')}
-                            className="pl-8 bg-gray-50/50 border-gray-100 focus:bg-white focus:border-indigo-300 transition-all w-full"
+                            className="pl-11 h-12 bg-white border-slate-200/80 hover:border-slate-300 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50 transition-all rounded-xl shadow-sm font-medium"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
+                    
+                    <Button 
+                        variant="outline" 
+                        onClick={() => setShowFilters(!showFilters)}
+                        className={cn(
+                            "flex md:hidden items-center justify-center w-12 h-12 rounded-xl transition-all border-slate-200/80",
+                            showFilters ? "bg-indigo-600 border-indigo-600 text-white" : "bg-white text-slate-600"
+                        )}
+                    >
+                        <Filter className={cn("h-5 w-5", showFilters && "stroke-[2.5]")} />
+                    </Button>
+
+                    <Button 
+                        variant="default"
+                        onClick={() => {
+                            setActiveExportTab('format');
+                            setIsExportModalOpen(true);
+                        }}
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white flex items-center gap-2.5 px-6 h-12 rounded-xl shadow-xl shadow-indigo-600/20 font-bold transition-all hover:scale-[1.02] active:scale-[0.98] border-none"
+                    >
+                        <Download className="h-5 w-5" />
+                        <span className="hidden sm:inline">Export</span>
+                    </Button>
+                </div>
+            </div>
+
+            <Card className={cn(
+                "border-slate-200/70 shadow-sm overflow-hidden rounded-2xl transition-all duration-300",
+                !showFilters ? "hidden md:block" : "block"
+            )}>
+                <CardHeader className="flex flex-row items-center justify-between pb-3 bg-slate-50/50">
+                    <div className="flex items-center gap-2">
+                        <div className="h-2 w-2 rounded-full bg-indigo-500" />
+                        <CardTitle className="text-sm font-bold uppercase tracking-widest text-slate-600">{t('filters')}</CardTitle>
+                    </div>
+                    {(sessionFilter !== 'all' || upazilaFilter !== 'all' || hallFilter !== 'all' || deptFilter !== 'all' || statusFilter !== 'all') && (
+                        <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={clearFilters}
+                            className="h-8 text-[11px] font-bold uppercase tracking-wider text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                        >
+                            <X className="w-3.5 h-3.5 mr-1" />
+                            Clear All
+                        </Button>
+                    )}
                 </CardHeader>
-                <CardContent>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                <CardContent className="p-5 md:p-6 bg-white">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-5">
 
                         <Select value={sessionFilter} onValueChange={setSessionFilter}>
                             <SelectTrigger>
