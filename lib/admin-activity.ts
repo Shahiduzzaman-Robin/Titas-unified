@@ -33,6 +33,12 @@ export type AdminAction =
     | 'delete_comment'
     | 'admin_login'
     | 'admin_logout'
+    | 'create_admin'
+    | 'delete_admin'
+    | 'update_profile'
+    | 'update_message_status'
+    | 'delete_message'
+    | 'update_notification_settings'
     | 'other'
 
 interface LogActivityParams {
