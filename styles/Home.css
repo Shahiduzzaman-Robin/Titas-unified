@@ -809,12 +809,15 @@
 
 .spotlight-modern .section-title {
     color: #fff;
-    text-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
-    background: linear-gradient(to bottom, #ffffff 30%, #93c5fd 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
     font-size: 3.2rem;
+    font-weight: 800;
+}
+
+.alumni-impact-section .btn-modern-primary:hover {
+    transform: none !important;
+    box-shadow: none !important;
+    background: #fff !important; /* Keep static white */
+    opacity: 1 !important;
 }
 
 .spotlight-cards {
