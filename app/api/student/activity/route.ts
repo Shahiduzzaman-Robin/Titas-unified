@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
              FROM student_activity_logs 
              WHERE studentId = ? 
              ORDER BY createdAt DESC 
-             LIMIT 30`,
+             LIMIT 100`,
             studentId
         )
 
