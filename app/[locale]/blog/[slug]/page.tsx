@@ -41,15 +41,15 @@ export async function generateMetadata(
     const canonicalUrl = `${baseUrl}/${locale}/blog/${post.slug}`
     
     // Determine the ideal social image
-    let ogImage = post.featuredImage || `${baseUrl}/og-default.png`
+    let sourceImage = post.featuredImage || `${baseUrl}/og-default.png`
     
-    if (ogImage && ogImage.includes('cloudinary.com')) {
-        if (ogImage.includes('/upload/')) {
-            ogImage = ogImage.replace('/upload/', '/upload/c_fill,ar_1.91,w_1200,h_630,g_auto,f_auto,q_auto/')
-        }
-    } else if (ogImage && !ogImage.startsWith('http')) {
-        ogImage = `${baseUrl}${ogImage.startsWith('/') ? '' : '/'}${ogImage}`
+    // Ensure image is absolute URL before passing to our OG Generator
+    if (sourceImage && !sourceImage.startsWith('http')) {
+        sourceImage = `${baseUrl}${sourceImage.startsWith('/') ? '' : '/'}${sourceImage}`
     }
+    
+    // The Magical Branded URL Overlay
+    const ogImage = `${baseUrl}/api/og?image=${encodeURIComponent(sourceImage)}`
     
     // Sharpening the title for social
     const socialTitle = `${post.title} | Titas`
