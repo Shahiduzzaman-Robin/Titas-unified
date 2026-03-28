@@ -11,6 +11,7 @@ interface Activity {
     action: string;
     description: string;
     ipAddress: string;
+    location: string;
     userAgent: string;
     createdAt: string;
 }
@@ -108,7 +109,7 @@ const SecurityActivity = () => {
                                         </div>
                                         <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500">
                                             <Globe className="w-3.5 h-3.5" />
-                                            {activity.ipAddress || 'Unknown IP'}
+                                            {activity.location || activity.ipAddress || 'Unknown Location'}
                                         </div>
                                     </div>
                                 </div>

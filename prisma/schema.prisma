@@ -399,6 +399,7 @@ model student_activity_logs {
   description String?  @db.Text
   metadata    String?  @db.LongText
   ipAddress   String?  @db.VarChar(45)
+  location    String?  @db.VarChar(255)
   userAgent   String?  @db.Text
   createdAt   DateTime @default(now())
   student     students @relation(fields: [studentId], references: [id], onDelete: Cascade)
