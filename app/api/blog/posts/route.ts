@@ -5,6 +5,7 @@ import { authOptions } from '@/lib/auth-options'
 import { slugify, generateUniqueSlug, calculateReadingTime, buildExcerpt } from '@/lib/blog-utils'
 import { uploadImage } from '@/lib/upload'
 import { logAdminActivity, getAdminIdFromSession, getIpAddress, getUserAgent } from '@/lib/admin-activity'
+import { revalidatePath } from 'next/cache'
 
 export async function GET(request: NextRequest) {
     try {
@@ -148,6 +149,10 @@ export async function POST(request: NextRequest) {
             ipAddress: getIpAddress(request),
             userAgent: getUserAgent(request)
         })
+
+        // Revalidate blog pages for instant mode
+        revalidatePath('/blog', 'layout')
+        revalidatePath('/[locale]/blog', 'layout')
 
         return NextResponse.json(post, { status: 201 })
     } catch (error: any) {

@@ -5,6 +5,7 @@ import { authOptions } from '@/lib/auth-options'
 import { slugify, generateUniqueSlug, calculateReadingTime, buildExcerpt } from '@/lib/blog-utils'
 import { uploadImage, deleteImage } from '@/lib/upload'
 import { logAdminActivity, getAdminIdFromSession, getIpAddress, getUserAgent } from '@/lib/admin-activity'
+import { revalidatePath } from 'next/cache'
 
 export async function GET(
     request: NextRequest,
@@ -177,6 +178,11 @@ export async function PUT(
             userAgent: getUserAgent(request)
         })
 
+        // Revalidate blog pages for instant mode
+        revalidatePath('/blog', 'layout')
+        revalidatePath('/[locale]/blog', 'layout')
+        revalidatePath(`/[locale]/blog/${updated.slug}`)
+
         return NextResponse.json(updated)
     } catch (error: any) {
         console.error('Post update error:', error)
@@ -230,6 +236,10 @@ export async function DELETE(
             ipAddress: getIpAddress(request),
             userAgent: getUserAgent(request)
         })
+
+        // Revalidate blog pages
+        revalidatePath('/blog', 'layout')
+        revalidatePath('/[locale]/blog', 'layout')
 
         return NextResponse.json({ message: 'Post deleted' })
     } catch (error: any) {
