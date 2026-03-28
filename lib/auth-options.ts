@@ -164,9 +164,6 @@ export const authOptions: NextAuthOptions = {
             if (user.role === 'admin') {
                 try {
                     const { logAdminActivity } = await import('@/lib/admin-activity')
-                    // Capture as much context as possible
-                    // Note: next/headers might not always be available in this context depending on the provider flow,
-                    // but for Credentials provider it usually is. 
                     let ip = undefined
                     let ua = undefined
                     try {
@@ -174,9 +171,7 @@ export const authOptions: NextAuthOptions = {
                         const headerList = headers()
                         ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || undefined
                         ua = headerList.get('user-agent') || undefined
-                    } catch (hError) {
-                        // headers() might fail if not in a request context
-                    }
+                    } catch (hError) { }
 
                     await logAdminActivity({
                         adminId: parseInt(user.id),
@@ -188,6 +183,29 @@ export const authOptions: NextAuthOptions = {
                     })
                 } catch (e) {
                     console.error('Failed to log admin login:', e)
+                }
+            } else if (user.role === 'student') {
+                try {
+                    const { logStudentActivity } = await import('@/lib/student-activity')
+                    let ip = undefined
+                    let ua = undefined
+                    try {
+                        const { headers } = await import('next/headers')
+                        const headerList = headers()
+                        ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || undefined
+                        ua = headerList.get('user-agent') || undefined
+                    } catch (hError) { }
+
+                    await logStudentActivity({
+                        studentId: parseInt(user.id),
+                        action: 'login',
+                        description: `Student logged in: ${user.name || user.email}`,
+                        metadata: { email: user.email },
+                        ipAddress: ip,
+                        userAgent: ua
+                    })
+                } catch (e) {
+                    console.error('Failed to log student login:', e)
                 }
             }
         },
@@ -214,6 +232,29 @@ export const authOptions: NextAuthOptions = {
                     })
                 } catch (e) {
                     console.error('Failed to log admin logout:', e)
+                }
+            } else if (token?.role === 'student') {
+                try {
+                    const { logStudentActivity } = await import('@/lib/student-activity')
+                    let ip = undefined
+                    let ua = undefined
+                    try {
+                        const { headers } = await import('next/headers')
+                        const headerList = headers()
+                        ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || undefined
+                        ua = headerList.get('user-agent') || undefined
+                    } catch (hError) { }
+
+                    await logStudentActivity({
+                        studentId: parseInt(token.id as string),
+                        action: 'logout',
+                        description: `Student logged out: ${token.name || token.email}`,
+                        metadata: { email: token.email },
+                        ipAddress: ip,
+                        userAgent: ua
+                    })
+                } catch (e) {
+                    console.error('Failed to log student logout:', e)
                 }
             }
         }

@@ -15,6 +15,7 @@ import ChangePasswordDialog from "@/components/student/ChangePasswordDialog"
 import { PublicNav } from "@/components/PublicNav"
 import ProfileCompletionMeter from "@/components/student/ProfileCompletionMeter"
 import ActivityTimeline from "@/components/student/ActivityTimeline"
+import SecurityActivity from "@/components/student/SecurityActivity"
 import "@/styles/StudentDashboard.css"
 
 export default async function StudentProfilePage() {
@@ -218,6 +219,8 @@ export default async function StudentProfilePage() {
                         )}
 
                         <ProfileClient student={student} locale={locale} />
+                        
+                        <SecurityActivity />
                         
                         <div className="lg:hidden">
                             <ProfileCompletionMeter student={student} />

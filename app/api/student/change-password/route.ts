@@ -62,6 +62,25 @@ export async function POST(request: NextRequest) {
             data: { password: hashedPassword }
         })
 
+        // Log activity
+        try {
+            const { logStudentActivity } = await import('@/lib/student-activity')
+            const { headers } = await import('next/headers')
+            const headerList = headers()
+            const ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || undefined
+            const ua = headerList.get('user-agent') || undefined
+
+            await logStudentActivity({
+                studentId: student.id,
+                action: 'password_change',
+                description: 'User changed their password from the profile dashboard',
+                ipAddress: ip,
+                userAgent: ua
+            })
+        } catch (logError) {
+            console.error('Failed to log student password change:', logError)
+        }
+
         return NextResponse.json({
             success: true,
             message: 'Password changed successfully'

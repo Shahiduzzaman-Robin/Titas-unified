@@ -36,9 +36,10 @@ model students {
   district          String?               @db.VarChar(100)
   createdAt         DateTime              @default(now())
   updatedAt         DateTime              @default(now()) @updatedAt
-  activity_logs     admin_activity_logs[]
-  sms_logs          sms_logs[]
-  edits             student_edits[]
+  admin_activity_logs admin_activity_logs[] @relation("AdminToStudent")
+  sms_logs            sms_logs[]
+  edits               student_edits[]
+  student_logs        student_activity_logs[]
   approver          admins?               @relation("StudentApprover", fields: [approvedBy], references: [id])
   department_rel    departments?          @relation(fields: [department], references: [name])
   hall_rel          halls?                @relation(fields: [hall], references: [name])
@@ -198,7 +199,7 @@ model admin_activity_logs {
   userAgent   String?   @db.Text
   createdAt   DateTime  @default(now())
   admin       admins?   @relation(fields: [adminId], references: [id])
-  student     students? @relation(fields: [studentId], references: [id])
+  student     students? @relation("AdminToStudent", fields: [studentId], references: [id])
 
   @@index([adminId])
   @@index([studentId])
@@ -389,4 +390,21 @@ model notification_settings {
   createdAt           DateTime @default(now())
 
   @@map("notification_settings")
+}
+
+model student_activity_logs {
+  id          Int      @id @default(autoincrement())
+  studentId   Int
+  action      String   @db.VarChar(100)
+  description String?  @db.Text
+  metadata    String?  @db.LongText
+  ipAddress   String?  @db.VarChar(45)
+  userAgent   String?  @db.Text
+  createdAt   DateTime @default(now())
+  student     students @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("student_activity_logs")
 }
