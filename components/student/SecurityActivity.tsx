@@ -20,7 +20,7 @@ interface Activity {
 
 const actionConfig: Record<string, { icon: any, color: string, dotColor: string }> = {
     login: { icon: LogIn, color: 'text-emerald-500', dotColor: 'border-emerald-500' },
-    logout: { icon: LogOut, color: 'text-slate-400', dotColor: 'border-slate-400' },
+    logout: { icon: LogOut, color: 'text-rose-500', dotColor: 'border-rose-500' },
     password_change: { icon: KeyRound, color: 'text-amber-500', dotColor: 'border-amber-500' },
     default: { icon: Shield, color: 'text-indigo-500', dotColor: 'border-indigo-500' }
 };
