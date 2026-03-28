@@ -76,8 +76,10 @@ async function resolveLocationAndNotify(
             )
         }
 
+        const securityWebhook = process.env.DISCORD_WEBHOOK_SECURITY
+        
         // Send Discord notification for security events
-        if (action !== 'profile_update' && SECURITY_WEBHOOK) {
+        if (action !== 'profile_update' && securityWebhook) {
             const student = await prisma.students.findUnique({
                 where: { id: studentId },
                 select: { id: true, name_en: true, department: true, image_path: true }
@@ -101,7 +103,13 @@ async function sendSecurityDiscord(
     action: string,
     details: { ip: string, location: string, userAgent: string }
 ) {
-    if (!SECURITY_WEBHOOK) return
+    const webhookUrls = [
+        process.env.DISCORD_WEBHOOK_SECURITY,
+        process.env.DISCORD_WEBHOOK_STUDENT_EDIT // Fallback
+    ].filter(Boolean)
+    
+    const webhookUrl = webhookUrls[0]
+    if (!webhookUrl) return
 
     const colorMap: Record<string, number> = {
         login: 0x10B981,      // Emerald
@@ -133,7 +141,7 @@ async function sendSecurityDiscord(
     }
 
     try {
-        const res = await fetch(SECURITY_WEBHOOK, {
+        const res = await fetch(webhookUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ embeds: [embed] })
