@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
                         select: { name: true, email: true }
                     }
                 },
-                orderBy: isFeatured ? { views: { sort: 'desc' } as any } : { publishedAt: 'desc' },
+                orderBy: isFeatured ? { views: 'desc' } : { publishedAt: 'desc' },
                 skip,
                 take: limit
             }),
