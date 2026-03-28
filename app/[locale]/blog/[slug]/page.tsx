@@ -123,6 +123,14 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
 
     const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://titaas.vercel.app'}/${locale}/blog/${post.slug}`
 
+    // DEEP CLEAN: Wash the content of any non-breaking spaces or invisible characters that sabotage wrapping
+    const cleanedContent = post.content
+        .replace(/&nbsp;/g, ' ')
+        .replace(/\u00A0/g, ' ')
+        .replace(/\u200B/g, '') // Zero-width spaces
+        .replace(/\r\n/g, '\n')
+        .replace(/\n\s*\n/g, '</p><p>');
+
     return (
         <div className="min-h-screen bg-[#FDFDFD]">
             <PublicNav />
@@ -218,7 +226,8 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                                 <div className="p-6 sm:p-12 sm:pt-0">
                                     <div 
                                         className="bn-content bn-text"
-                                        dangerouslySetInnerHTML={{ __html: post.content }}
+                                        style={{ wordBreak: 'keep-all', overflowWrap: 'break-word' }}
+                                        dangerouslySetInnerHTML={{ __html: cleanedContent }}
                                     />
 
                                     <div className="flex items-center justify-between gap-6 mt-20 pt-10 border-t border-slate-50">
