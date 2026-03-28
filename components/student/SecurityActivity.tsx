@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Shield, Clock, Monitor, Globe, ChevronRight, ChevronLeft } from "lucide-react";
+import { Shield, Clock, Monitor, Globe, ChevronRight, ChevronLeft, LogIn, LogOut, KeyRound } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,13 @@ interface Activity {
     userAgent: string;
     createdAt: string;
 }
+
+const actionConfig: Record<string, { icon: any, color: string, dotColor: string }> = {
+    login: { icon: LogIn, color: 'text-emerald-500', dotColor: 'border-emerald-500' },
+    logout: { icon: LogOut, color: 'text-slate-400', dotColor: 'border-slate-400' },
+    password_change: { icon: KeyRound, color: 'text-amber-500', dotColor: 'border-amber-500' },
+    default: { icon: Shield, color: 'text-indigo-500', dotColor: 'border-indigo-500' }
+};
 
 const SecurityActivity = () => {
     const [activities, setActivities] = useState<Activity[]>([]);
@@ -54,14 +61,7 @@ const SecurityActivity = () => {
         if (currentPage > 0) setCurrentPage(currentPage - 1);
     };
 
-    const getActionIcon = (action: string) => {
-        switch (action) {
-            case 'login': return <Shield className="w-5 h-5 text-emerald-500" />;
-            case 'logout': return <Clock className="w-5 h-5 text-slate-400" />;
-            case 'password_change': return <Shield className="w-5 h-5 text-amber-500" />;
-            default: return <Clock className="w-5 h-5 text-indigo-500" />;
-        }
-    };
+    const getConfig = (action: string) => actionConfig[action] || actionConfig.default;
 
     const getDeviceType = (ua: string) => {
         if (!ua) return 'Unknown Device';
@@ -138,31 +138,38 @@ const SecurityActivity = () => {
                                     <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">No recent security activity found.</p>
                                 </div>
                             ) : (
-                                currentActivities.map((activity) => (
-                                    <div key={activity.id} className="timeline-item group">
-                                        <div className="timeline-dot group-hover:scale-125 transition-transform border-orange-500" />
-                                        <div className="bg-white/50 border border-slate-100/80 p-5 rounded-2xl group-hover:bg-white group-hover:shadow-lg group-hover:shadow-orange-500/5 transition-all">
-                                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
-                                                <p className="text-sm font-black text-slate-900 capitalize">
-                                                    {activity.action.replace('_', ' ')}
-                                                </p>
-                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                                                    {formatDistanceToNow(new Date(activity.createdAt), { addSuffix: true })}
-                                                </span>
-                                            </div>
-                                            <div className="flex flex-wrap items-center gap-4">
-                                                <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500">
-                                                    <Monitor className="w-3.5 h-3.5" />
-                                                    {getDeviceType(activity.userAgent)}
+                                currentActivities.map((activity) => {
+                                    const config = getConfig(activity.action);
+                                    const Icon = config.icon;
+                                    return (
+                                        <div key={activity.id} className="timeline-item group">
+                                            <div className={cn("timeline-dot group-hover:scale-125 transition-transform", config.dotColor)} />
+                                            <div className="bg-white/50 border border-slate-100/80 p-5 rounded-2xl group-hover:bg-white group-hover:shadow-lg group-hover:shadow-indigo-500/5 transition-all">
+                                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
+                                                    <div className="flex items-center gap-2">
+                                                        <Icon className={cn("w-4 h-4", config.color)} />
+                                                        <p className="text-sm font-black text-slate-900 capitalize">
+                                                            {activity.action.replace('_', ' ')}
+                                                        </p>
+                                                    </div>
+                                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                                        {formatDistanceToNow(new Date(activity.createdAt), { addSuffix: true })}
+                                                    </span>
                                                 </div>
-                                                <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500">
-                                                    <Globe className="w-3.5 h-3.5" />
-                                                    {activity.location || activity.ipAddress || 'Unknown Location'}
+                                                <div className="flex flex-wrap items-center gap-4">
+                                                    <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500">
+                                                        <Monitor className="w-3.5 h-3.5" />
+                                                        {getDeviceType(activity.userAgent)}
+                                                    </div>
+                                                    <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500">
+                                                        <Globe className="w-3.5 h-3.5" />
+                                                        {activity.location || activity.ipAddress || 'Unknown Location'}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))
+                                    );
+                                })
                             )}
                         </motion.div>
                     </AnimatePresence>
