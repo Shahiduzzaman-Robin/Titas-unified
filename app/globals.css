@@ -123,15 +123,16 @@
 .en-text {
   font-family: var(--font-inter), sans-serif !important;
 }
+.blog-content,
 .blog-content * {
-  /* Enforce natural flow: No mid-word slicing, no accidental hard breaks */
+  /* Universal Rule: No mid-word slicing, no accidental hard breaks anywhere */
   word-break: normal !important;
   overflow-wrap: break-word !important;
   white-space: normal !important;
   font-family: 'LalSabuj', var(--font-bangla), sans-serif !important;
 }
 
-/* Ignore accidental single line breaks inside paragraphs - as requested */
+/* Universally hide any middle-man line breaks to force continuous flow */
 .blog-content br {
   display: none !important;
 }
