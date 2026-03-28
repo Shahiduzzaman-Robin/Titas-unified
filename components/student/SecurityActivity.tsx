@@ -2,9 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Shield, ShieldAlert, Clock, Monitor, Globe, ChevronRight } from "lucide-react";
+import { Shield, Clock, Monitor, Globe, ChevronRight, ChevronLeft } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Activity {
     id: number;
@@ -19,6 +21,8 @@ interface Activity {
 const SecurityActivity = () => {
     const [activities, setActivities] = useState<Activity[]>([]);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(0);
+    const itemsPerPage = 3;
 
     useEffect(() => {
         const fetchActivity = async () => {
@@ -38,11 +42,23 @@ const SecurityActivity = () => {
         fetchActivity();
     }, []);
 
+    const totalPages = Math.ceil(activities.length / itemsPerPage);
+    const startIndex = currentPage * itemsPerPage;
+    const currentActivities = activities.slice(startIndex, startIndex + itemsPerPage);
+
+    const goToNextPage = () => {
+        if (currentPage < totalPages - 1) setCurrentPage(currentPage + 1);
+    };
+
+    const goToPreviousPage = () => {
+        if (currentPage > 0) setCurrentPage(currentPage - 1);
+    };
+
     const getActionIcon = (action: string) => {
         switch (action) {
             case 'login': return <Shield className="w-5 h-5 text-emerald-500" />;
             case 'logout': return <Clock className="w-5 h-5 text-slate-400" />;
-            case 'password_change': return <ShieldAlert className="w-5 h-5 text-amber-500" />;
+            case 'password_change': return <Shield className="w-5 h-5 text-amber-500" />;
             default: return <Clock className="w-5 h-5 text-indigo-500" />;
         }
     };
@@ -68,65 +84,92 @@ const SecurityActivity = () => {
     }
 
     return (
-        <Card className="dashboard-card overflow-hidden">
-            <CardHeader className="border-b border-slate-100 bg-slate-50/30">
+        <Card className="dashboard-card flex flex-col h-auto">
+            <CardHeader className="border-b border-slate-100/60 pb-6 shrink-0">
                 <div className="flex items-center justify-between">
-                    <CardTitle className="text-xl font-black flex items-center gap-2">
-                        <ShieldCheckIcon className="w-6 h-6 text-indigo-600" />
-                        Account Security & Activity
-                    </CardTitle>
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest px-3 py-1 bg-white rounded-full border border-slate-100">
-                        {activities.length} Recent Events
-                    </span>
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500">
+                            <Shield className="w-5 h-5" />
+                        </div>
+                        <CardTitle className="text-xl font-black text-slate-900">Account Security & Activity</CardTitle>
+                    </div>
+                    {totalPages > 1 && (
+                        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={goToPreviousPage}
+                                disabled={currentPage === 0}
+                                className="h-8 w-8 rounded-md"
+                            >
+                                <ChevronLeft className="w-4 h-4" />
+                            </Button>
+                            <span className="text-[10px] font-black w-8 text-center text-slate-500">
+                                {currentPage + 1}/{totalPages}
+                            </span>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={goToNextPage}
+                                disabled={currentPage === totalPages - 1}
+                                className="h-8 w-8 rounded-md"
+                            >
+                                <ChevronRight className="w-4 h-4" />
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </CardHeader>
-            <CardContent className="p-0">
-                <div className="divide-y divide-slate-100">
-                    {activities.length === 0 ? (
-                        <div className="p-12 text-center text-slate-400">
-                            <Clock className="w-12 h-12 mx-auto mb-3 opacity-20" />
-                            <p className="font-medium">No recent security activity found.</p>
-                        </div>
-                    ) : (
-                        activities.map((activity) => (
-                            <div key={activity.id} className="p-4 hover:bg-slate-50/80 transition-all group flex items-start gap-4">
-                                <div className="w-10 h-10 rounded-xl bg-white border border-slate-100 shadow-sm flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                                    {getActionIcon(activity.action)}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center justify-between mb-1">
-                                        <p className="font-bold text-slate-900 truncate capitalize">
-                                            {activity.action.replace('_', ' ')}
-                                        </p>
-                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">
-                                            {formatDistanceToNow(new Date(activity.createdAt), { addSuffix: true })}
-                                        </span>
+            <CardContent className="pt-8 flex-1 flex flex-col min-h-[300px]">
+                <div className="space-y-0 flex-1 relative">
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={currentPage}
+                            initial={{ opacity: 0, x: 10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -10 }}
+                            className="space-y-0 pb-4"
+                        >
+                            {activities.length === 0 ? (
+                                <div className="text-center py-12">
+                                    <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <Clock className="w-8 h-8 text-slate-200" />
                                     </div>
-                                    <div className="flex flex-wrap gap-x-4 gap-y-1">
-                                        <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500">
-                                            <Monitor className="w-3.5 h-3.5" />
-                                            {getDeviceType(activity.userAgent)}
-                                        </div>
-                                        <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500">
-                                            <Globe className="w-3.5 h-3.5" />
-                                            {activity.location || activity.ipAddress || 'Unknown Location'}
+                                    <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">No recent security activity found.</p>
+                                </div>
+                            ) : (
+                                currentActivities.map((activity) => (
+                                    <div key={activity.id} className="timeline-item group">
+                                        <div className="timeline-dot group-hover:scale-125 transition-transform border-orange-500" />
+                                        <div className="bg-white/50 border border-slate-100/80 p-5 rounded-2xl group-hover:bg-white group-hover:shadow-lg group-hover:shadow-orange-500/5 transition-all">
+                                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
+                                                <p className="text-sm font-black text-slate-900 capitalize">
+                                                    {activity.action.replace('_', ' ')}
+                                                </p>
+                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                                    {formatDistanceToNow(new Date(activity.createdAt), { addSuffix: true })}
+                                                </span>
+                                            </div>
+                                            <div className="flex flex-wrap items-center gap-4">
+                                                <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500">
+                                                    <Monitor className="w-3.5 h-3.5" />
+                                                    {getDeviceType(activity.userAgent)}
+                                                </div>
+                                                <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500">
+                                                    <Globe className="w-3.5 h-3.5" />
+                                                    {activity.location || activity.ipAddress || 'Unknown Location'}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <ChevronRight className="w-4 h-4 text-slate-300 self-center opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
-                            </div>
-                        ))
-                    )}
+                                ))
+                            )}
+                        </motion.div>
+                    </AnimatePresence>
                 </div>
             </CardContent>
         </Card>
     );
 };
-
-const ShieldCheckIcon = ({ className }: { className?: string }) => (
-    <div className={cn("w-6 h-6 rounded-lg bg-indigo-100 flex items-center justify-center", className)}>
-        <Shield className="w-4 h-4" />
-    </div>
-);
 
 export default SecurityActivity;
