@@ -51,42 +51,58 @@ const GallerySection = () => {
                     </div>
                 ) : images.length > 0 ? (
                     <>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-                            {/* First image larger - spans 2 cols only on sm screens and up */}
-                            {images.map((img, idx) => (
-                                <div
-                                    key={img.id}
-                                    className={`relative group overflow-hidden rounded-2xl bg-slate-100 ${
-                                        idx === 0
-                                            ? 'sm:col-span-2 sm:row-span-2 aspect-square md:aspect-auto'
-                                            : 'aspect-square sm:aspect-[4/3]'
-                                    }`}
-                                >
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                            {/* Feature Image (The big one) */}
+                            {images.length > 0 && (
+                                <div className="relative group overflow-hidden rounded-2xl bg-slate-100 aspect-square md:aspect-auto">
                                     <Image
-                                        src={img.url}
-                                        alt={img.title || 'Gallery Image'}
+                                        src={images[0].url}
+                                        alt={images[0].title || 'Gallery Image'}
                                         fill
-                                        sizes={
-                                            idx === 0 
-                                                ? "(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 50vw"
-                                                : "(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                                        }
+                                        sizes="(max-width: 768px) 100vw, 50vw"
                                         style={{ objectFit: 'cover' }}
                                         className="transition-transform duration-700 group-hover:scale-110"
                                     />
                                     {/* Overlay */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                                         <div className="translate-y-3 group-hover:translate-y-0 transition-transform duration-300">
-                                            {img.title && (
-                                                <span className="bn-text text-white font-bold block text-sm">{img.title}</span>
+                                            {images[0].title && (
+                                                <span className="bn-text text-white font-bold block text-lg">{images[0].title}</span>
                                             )}
-                                            {img.category && (
-                                                <span className="en-text text-slate-300 text-xs">{img.category}</span>
+                                            {images[0].category && (
+                                                <span className="en-text text-slate-300 text-sm">{images[0].category}</span>
                                             )}
                                         </div>
                                     </div>
                                 </div>
-                            ))}
+                            )}
+
+                            {/* Grid of smaller images (2x2) */}
+                            <div className="grid grid-cols-2 gap-3 md:gap-4">
+                                {images.slice(1, 5).map((img) => (
+                                    <div
+                                        key={img.id}
+                                        className="relative group overflow-hidden rounded-2xl bg-slate-100 aspect-square"
+                                    >
+                                        <Image
+                                            src={img.url}
+                                            alt={img.title || 'Gallery Image'}
+                                            fill
+                                            sizes="(max-width: 768px) 50vw, 25vw"
+                                            style={{ objectFit: 'cover' }}
+                                            className="transition-transform duration-700 group-hover:scale-110"
+                                        />
+                                        {/* Overlay */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
+                                            <div className="translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                                                {img.title && (
+                                                    <span className="bn-text text-white font-bold block text-xs truncate max-w-[150px]">{img.title}</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
 
                         {/* View All Button */}
