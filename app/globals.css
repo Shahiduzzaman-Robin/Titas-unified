@@ -125,10 +125,9 @@
 }
 .blog-content,
 .blog-content * {
-  /* Absolute Rule: Only break at spaces. Never slice words. */
-  word-break: keep-all !important;
-  overflow-wrap: normal !important;
-  word-wrap: normal !important;
+  /* Balanced Rule: Prefer whole words, but break if it hits the wall to prevent clipping */
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
   white-space: normal !important;
   max-width: none !important;
   font-family: 'LalSabuj', var(--font-bangla), sans-serif !important;

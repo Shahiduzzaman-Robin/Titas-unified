@@ -280,8 +280,8 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                                     prose-headings:text-[#1a1a1a] prose-headings:font-bold prose-headings:mt-12 prose-headings:mb-8
                                     prose-img:rounded-md prose-img:shadow-lg prose-img:my-8
                                     prose-strong:text-slate-900 prose-strong:font-bold
-                                    text-left break-normal overflow-hidden"
-                                    style={{ whiteSpace: 'normal', wordBreak: 'keep-all', overflowWrap: 'normal' }}
+                                    text-left break-normal overflow-visible"
+                                    style={{ whiteSpace: 'normal', wordBreak: 'normal', overflowWrap: 'break-word' }}
                                     dangerouslySetInnerHTML={{ __html: post.content }}
                                 />
 
