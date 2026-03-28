@@ -84,7 +84,7 @@
 .timeline-item {
     position: relative;
     padding-left: 2rem;
-    padding-bottom: 2.5rem;
+    padding-bottom: 1rem;
 }
 
 .timeline-item::before {
