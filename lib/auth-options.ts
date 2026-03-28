@@ -11,7 +11,7 @@ export const authOptions: NextAuthOptions = {
                 username: { label: "Email or Mobile", type: "text" },
                 password: { label: "Password", type: "password" }
             },
-            async authorize(credentials) {
+            async authorize(credentials, req) {
                 if (!credentials?.username || !credentials?.password) {
                     return null
                 }
@@ -19,18 +19,11 @@ export const authOptions: NextAuthOptions = {
                 const username = credentials.username
                 const password = credentials.password
 
-                // 1. Check Admin (Hardcoded) - REMOVED per user request
-                // if (
-                //     username === process.env.ADMIN_EMAIL &&
-                //     password === process.env.ADMIN_PASSWORD
-                // ) {
-                //     return {
-                //         id: "admin-static",
-                //         email: username,
-                //         name: "Admin",
-                //         role: "admin"
-                //     }
-                // }
+                // Extract IP and User Agent from the request
+                const ip = req?.headers?.['x-forwarded-for']?.toString().split(',')[0] 
+                         || req?.headers?.['x-real-ip']?.toString() 
+                         || 'Unknown'
+                const ua = req?.headers?.['user-agent']?.toString() || 'Unknown'
 
                 // 2. Check Admin (Database)
                 try {
@@ -78,6 +71,20 @@ export const authOptions: NextAuthOptions = {
                         if (student.password) {
                             const isValid = await verifyPassword(password, student.password)
                             if (isValid) {
+                                // Log login activity (non-blocking)
+                                try {
+                                    const { logStudentActivity } = await import('@/lib/student-activity')
+                                    logStudentActivity(
+                                        student.id,
+                                        'login',
+                                        `Student logged in: ${student.name_en || student.name_bn || student.email || student.mobile}`,
+                                        ip,
+                                        ua
+                                    ).catch(e => console.error('Login log error:', e))
+                                } catch (e) {
+                                    console.error('Import student-activity error:', e)
+                                }
+
                                 return {
                                     id: student.id.toString(),
                                     email: student.email || student.mobile,
@@ -90,45 +97,33 @@ export const authOptions: NextAuthOptions = {
                         }
 
                         // 2. Check legacy password (shadow migration)
+                        // @ts-ignore - legacy_password may exist in DB but not in generated types
                         if (student.legacy_password) {
+                            // @ts-ignore
                             const isLegacyValid = await verifyLegacyPassword(password, student.legacy_password)
                             if (isLegacyValid) {
                                 // UPGRADE! Re-hash to current format and remove legacy hash
                                 console.log(`🚀 Upgrading legacy password for ${student.email || student.mobile}`)
                                 const newHash = await hashPassword(password)
                                 
-                                await prisma.students.update({
-                                    where: { id: student.id },
-                                    data: {
-                                        password: newHash,
-                                        legacy_password: null
-                                    }
-                                })
+                                await prisma.$executeRawUnsafe(
+                                    `UPDATE students SET password = ?, legacy_password = NULL WHERE id = ?`,
+                                    newHash,
+                                    student.id
+                                )
 
-                                // Log security activity directly here to ensure it fires
+                                // Log login activity (non-blocking)
                                 try {
                                     const { logStudentActivity } = await import('@/lib/student-activity')
-                                    // Run in background
                                     logStudentActivity(
                                         student.id,
                                         'login',
-                                        `Student logged in: ${student.name_en || student.name_bn || student.email || student.mobile}`
-                                    ).catch(e => console.error('Failed to log student login (authorize):', e))
+                                        `Student logged in (legacy upgrade): ${student.name_en || student.name_bn || student.email || student.mobile}`,
+                                        ip,
+                                        ua
+                                    ).catch(e => console.error('Login log error:', e))
                                 } catch (e) {
-                                    console.error('Failed to import student-activity in authorize:', e)
-                                }
-
-                                // Log security activity directly here to ensure it fires
-                                try {
-                                    const { logStudentActivity } = await import('@/lib/student-activity')
-                                    // Run in background
-                                    logStudentActivity(
-                                        student.id,
-                                        'login',
-                                        `Student logged in: ${student.name_en || student.name_bn || student.email || student.mobile}`
-                                    ).catch(e => console.error('Failed to log student login (authorize-std):', e))
-                                } catch (e) {
-                                    console.error('Failed to import student-activity in authorize:', e)
+                                    console.error('Import student-activity error:', e)
                                 }
 
                                 return {
@@ -151,7 +146,7 @@ export const authOptions: NextAuthOptions = {
         })
     ],
     pages: {
-        signIn: "/login", // We might want separate login pages or a unified one. For now keeping /login
+        signIn: "/login",
     },
     session: {
         strategy: "jwt",
@@ -186,73 +181,17 @@ export const authOptions: NextAuthOptions = {
         },
     },
     events: {
-        async signIn({ user }) {
-            console.log('📝 NextAuth signIn Event:', JSON.stringify({ id: user.id, email: user.email, role: user.role }));
-            if (user.role === 'admin') {
-                try {
-                    const { logAdminActivity } = await import('@/lib/admin-activity')
-                    let ip = undefined
-                    let ua = undefined
-                    try {
-                        const { headers } = await import('next/headers')
-                        const headerList = await headers()
-                        ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || undefined
-                        ua = headerList.get('user-agent') || undefined
-                    } catch (hError) { }
-
-                    await logAdminActivity({
-                        adminId: parseInt(user.id),
-                        action: 'admin_login',
-                        description: `Admin logged in: ${user.name || user.email}`,
-                        metadata: { email: user.email },
-                        ipAddress: ip,
-                        userAgent: ua
-                    })
-                } catch (e) {
-                    console.error('Failed to log admin login:', e)
-                }
-            } else if (user.role === 'student') {
-                try {
-                    const { logStudentActivity } = await import('@/lib/student-activity')
-                    let ip = undefined
-                    let ua = undefined
-                    try {
-                        const { headers } = await import('next/headers')
-                        const headerList = await headers()
-                        ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || undefined
-                        ua = headerList.get('user-agent') || undefined
-                    } catch (hError) { }
-
-                    await logStudentActivity(
-                        parseInt(user.id),
-                        'login',
-                        `Student logged in: ${user.name || user.email}`
-                    )
-                } catch (e) {
-                    console.error('Failed to log student login:', e)
-                }
-            }
-        },
         async signOut({ token }) {
+            console.log('🚪 NextAuth signOut event triggered. Role:', token?.role)
+
             if (token?.role === 'admin') {
                 try {
                     const { logAdminActivity } = await import('@/lib/admin-activity')
-                    let ip = undefined
-                    let ua = undefined
-                    try {
-                        const { headers } = await import('next/headers')
-                        const headerList = await headers()
-                        ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || undefined
-                        ua = headerList.get('user-agent') || undefined
-                    } catch (hError) { }
-
                     await logAdminActivity({
                         adminId: parseInt(token.id as string),
                         action: 'admin_logout',
                         description: `Admin logged out: ${token.name || token.email}`,
                         metadata: { email: token.email },
-                        ipAddress: ip,
-                        userAgent: ua
                     })
                 } catch (e) {
                     console.error('Failed to log admin logout:', e)
@@ -265,8 +204,9 @@ export const authOptions: NextAuthOptions = {
                         'logout',
                         `Student logged out: ${token.name || token.email}`
                     )
+                    console.log('✅ Student logout logged successfully')
                 } catch (e) {
-                    console.error('Failed to log student logout:', e)
+                    console.error('❌ Failed to log student logout:', e)
                 }
             }
         }

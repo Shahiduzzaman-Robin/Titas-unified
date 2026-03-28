@@ -1,78 +1,145 @@
 import { prisma } from "./prisma"
-import { headers } from "next/headers"
-import { DiscordService } from "./discord"
+
+const SECURITY_WEBHOOK = process.env.DISCORD_WEBHOOK_SECURITY
 
 export async function logStudentActivity(
     studentId: number,
     action: "login" | "logout" | "password_change" | "profile_update",
-    description: string
+    description: string,
+    ipAddress?: string,
+    userAgent?: string
 ) {
     try {
-        const headersList = await headers()
-        const userAgent = headersList.get('user-agent') || 'Unknown'
-        const ipAddress = headersList.get('x-forwarded-for')?.split(',')[0] || 
-                         headersList.get('x-real-ip') || 
-                         'Unknown'
+        const ip = ipAddress || 'Unknown'
+        const ua = userAgent || 'Unknown'
 
-        // Log to database first
-        // @ts-ignore - Prisma type quirk with underscores
-        const log = await prisma.student_activity_logs.create({
-            data: {
-                studentId,
-                action,
-                description,
-                ipAddress,
-                userAgent,
-                location: 'Resolving...' // Initial placeholder
-            }
-        })
+        // Use raw SQL to bypass any Prisma type generation issues
+        const result = await prisma.$executeRawUnsafe(
+            `INSERT INTO student_activity_logs (studentId, action, description, ipAddress, userAgent, location, createdAt) VALUES (?, ?, ?, ?, ?, ?, NOW())`,
+            studentId,
+            action,
+            description,
+            ip,
+            ua,
+            'Resolving...'
+        )
 
-        // Resolve location and send Discord notification in background
-        // Using an immediately-invoked async function (IIFE) to avoid blocking the main thread
-        (async () => {
-            try {
-                let resolvedLocation = 'Unknown'
-                if (ipAddress !== 'Unknown' && ipAddress !== '::1' && ipAddress !== '127.0.0.1') {
-                    // Quick fetch to ip-api.com
-                    const res = await fetch(`http://ip-api.com/json/${ipAddress}?fields=status,city,country`, {
-                        signal: AbortSignal.timeout(2000) // 2 second timeout
-                    })
-                    const data = await res.json()
-                    if (data.status === 'success') {
-                        resolvedLocation = `${data.city}, ${data.country}`
-                    }
-                }
+        console.log(`✅ Student activity logged: ${action} for student ${studentId}, rows affected: ${result}`)
 
-                // Update database with location
-                // @ts-ignore - Prisma type quirk with underscores
-                await prisma.student_activity_logs.update({
-                    where: { id: log.id },
-                    data: { location: resolvedLocation }
-                })
+        // Get the inserted log ID for location update
+        const lastId = await prisma.$queryRawUnsafe<any[]>(
+            `SELECT LAST_INSERT_ID() as id`
+        )
+        const logId = lastId?.[0]?.id
 
-                // Send Discord Notification for high-priority security events
-                if (action !== 'profile_update') {
-                    const student = await prisma.students.findUnique({
-                        where: { id: studentId },
-                        select: { id: true, name_en: true, department: true, image_path: true }
-                    })
-                    
-                    if (student) {
-                        await DiscordService.sendSecurityNotification(student, action as any, {
-                            ip: ipAddress,
-                            location: resolvedLocation,
-                            userAgent
-                        })
-                    }
-                }
-            } catch (err) {
-                console.error("Async location/discord update failed:", err)
-            }
-        })()
+        // Background: Resolve location + send Discord notification
+        resolveLocationAndNotify(logId, studentId, action, description, ip, ua)
+            .catch(err => console.error("Background location/discord failed:", err))
 
-        return log
+        return { id: logId }
     } catch (error) {
-        console.error("Failed to log student activity:", error)
+        console.error("❌ Failed to log student activity:", error)
         return null
+    }
+}
+
+async function resolveLocationAndNotify(
+    logId: number | undefined,
+    studentId: number,
+    action: string,
+    description: string,
+    ipAddress: string,
+    userAgent: string
+) {
+    try {
+        let resolvedLocation = 'Unknown'
+
+        // Resolve IP to location
+        if (ipAddress !== 'Unknown' && ipAddress !== '::1' && ipAddress !== '127.0.0.1') {
+            try {
+                const res = await fetch(`http://ip-api.com/json/${ipAddress}?fields=status,city,country`, {
+                    signal: AbortSignal.timeout(2000)
+                })
+                const data = await res.json()
+                if (data.status === 'success') {
+                    resolvedLocation = `${data.city}, ${data.country}`
+                }
+            } catch { }
+        }
+
+        // Update log with resolved location
+        if (logId) {
+            await prisma.$executeRawUnsafe(
+                `UPDATE student_activity_logs SET location = ? WHERE id = ?`,
+                resolvedLocation,
+                logId
+            )
+        }
+
+        // Send Discord notification for security events
+        if (action !== 'profile_update' && SECURITY_WEBHOOK) {
+            const student = await prisma.students.findUnique({
+                where: { id: studentId },
+                select: { id: true, name_en: true, department: true, image_path: true }
+            })
+
+            if (student) {
+                await sendSecurityDiscord(student, action, {
+                    ip: ipAddress,
+                    location: resolvedLocation,
+                    userAgent
+                })
+            }
+        }
+    } catch (err) {
+        console.error("Background location/discord error:", err)
+    }
+}
+
+async function sendSecurityDiscord(
+    student: { id: number, name_en: string | null, department: string | null, image_path: string | null },
+    action: string,
+    details: { ip: string, location: string, userAgent: string }
+) {
+    if (!SECURITY_WEBHOOK) return
+
+    const colorMap: Record<string, number> = {
+        login: 0x10B981,      // Emerald
+        logout: 0x64748B,     // Slate
+        password_change: 0xF59E0B  // Amber
+    }
+
+    const iconMap: Record<string, string> = {
+        login: '🔐',
+        logout: '🚪',
+        password_change: '🔑'
+    }
+
+    const actionText = action.replace('_', ' ').toUpperCase()
+
+    const embed = {
+        title: `${iconMap[action] || '📝'} Student Security Event: ${actionText}`,
+        description: `Student **${student.name_en || 'Unknown'}** (TITAS-${student.id}) has performed a security action.`,
+        color: colorMap[action] || 0x3B82F6,
+        fields: [
+            { name: '👤 Student', value: `${student.name_en || 'Unknown'} (TITAS-${student.id})`, inline: true },
+            { name: '🏛️ Department', value: student.department || 'N/A', inline: true },
+            { name: '📍 IP Address', value: details.ip, inline: true },
+            { name: '🌍 Location', value: details.location || 'Unknown', inline: true },
+            { name: '🖥️ Device', value: details.userAgent.length > 100 ? details.userAgent.substring(0, 97) + '...' : details.userAgent, inline: false }
+        ],
+        timestamp: new Date().toISOString(),
+        footer: { text: 'TITAS Security Audit' }
+    }
+
+    try {
+        const res = await fetch(SECURITY_WEBHOOK, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embeds: [embed] })
+        })
+        console.log(`✅ Discord security notification sent: ${res.status}`)
+    } catch (err) {
+        console.error("❌ Discord security notification failed:", err)
     }
 }

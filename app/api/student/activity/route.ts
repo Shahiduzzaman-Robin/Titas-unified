@@ -13,13 +13,17 @@ export async function GET(request: NextRequest) {
     const studentId = parseInt(session.user.id)
 
     try {
-        const activities = await prisma.student_activity_logs.findMany({
-            where: { studentId },
-            orderBy: { createdAt: 'desc' },
-            take: 10 // Only show last 10 activities for simplicity
-        })
+        // Use raw SQL to bypass Prisma type issues
+        const activities = await prisma.$queryRawUnsafe<any[]>(
+            `SELECT id, studentId, action, description, metadata, ipAddress, userAgent, location, createdAt 
+             FROM student_activity_logs 
+             WHERE studentId = ? 
+             ORDER BY createdAt DESC 
+             LIMIT 10`,
+            studentId
+        )
 
-        // Filter/Format data if needed (e.g. parse metadata)
+        // Format data
         const formattedActivities = activities.map(activity => ({
             ...activity,
             metadata: activity.metadata ? JSON.parse(activity.metadata) : null
