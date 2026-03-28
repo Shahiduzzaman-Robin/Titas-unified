@@ -59,23 +59,16 @@ export default function LatestNews() {
     return (
         <section className="py-20 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-end mb-12">
-                    <div>
-                        <h2 className={cn("text-3xl font-bold text-slate-900 mb-2", locale === 'bn' && "bn-text")}>
-                            {locale === 'bn' ? 'সর্বশেষ সংবাদ ও আপডেট' : 'Latest News & Updates'}
-                        </h2>
-                        <p className={cn("text-slate-500", locale === 'bn' && "bn-text")}>
-                            {locale === 'bn' 
-                                ? 'আমাদের সর্বশেষ কার্যক্রম এবং ঘোষণা সম্পর্কে নিয়মিত আপডেট পেতে আমাদের সাথে থাকুন।' 
-                                : 'Stay informed about our latest activities and announcements'}
-                        </p>
-                    </div>
-                    <Link href={`/${locale}/blog`}>
-                        <Button variant="ghost" className={cn("group gap-2 hover:bg-primary/5 hover:text-primary", locale === 'bn' && "bn-text")}>
-                            {locale === 'bn' ? 'সব খবর দেখুন' : 'View All News'}
-                            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                        </Button>
-                    </Link>
+                <div className="section-header-center mb-12">
+                    <div className="section-label">News</div>
+                    <h2 className={cn("section-title bn-text text-3xl font-bold text-slate-900 mb-2", locale === 'bn' && "bn-text")}>
+                        {locale === 'bn' ? 'সর্বশেষ সংবাদ ও আপডেট' : 'Latest News & Updates'}
+                    </h2>
+                    <p className={cn("section-subtitle text-slate-500", locale === 'bn' && "bn-text")}>
+                        {locale === 'bn' 
+                            ? 'আমাদের সর্বশেষ কার্যক্রম এবং ঘোষণা সম্পর্কে নিয়মিত আপডেট পেতে আমাদের সাথে থাকুন।' 
+                            : 'Stay informed about our latest activities and announcements'}
+                    </p>
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-8">
@@ -122,6 +115,14 @@ export default function LatestNews() {
                             </div>
                         </Link>
                     ))}
+                </div>
+                <div className="flex justify-center mt-12">
+                    <Link href={`/${locale}/blog`}>
+                        <Button variant="outline" className={cn("group gap-2 px-8 py-6 rounded-full border-2 hover:bg-primary hover:text-white transition-all duration-300", locale === 'bn' && "bn-text")}>
+                            {locale === 'bn' ? 'সব খবর দেখুন' : 'View All News'}
+                            <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                        </Button>
+                    </Link>
                 </div>
             </div>
         </section>
