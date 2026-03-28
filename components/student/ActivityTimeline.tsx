@@ -12,7 +12,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 
@@ -25,8 +25,13 @@ interface ActivityTimelineProps {
 
 export default function ActivityTimeline({ edits, student }: ActivityTimelineProps) {
     const t = useTranslations('student.profile.timeline')
+    const [mounted, setMounted] = useState(false)
     const [selectedEdit, setSelectedEdit] = useState<any>(null)
     const [currentPage, setCurrentPage] = useState(0)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
     const itemsPerPage = 3
 
     const totalPages = Math.ceil(edits.length / itemsPerPage)
@@ -69,6 +74,7 @@ export default function ActivityTimeline({ edits, student }: ActivityTimelinePro
     }
 
     const formatDate = (date: Date) => {
+        if (!mounted) return ""
         return new Intl.DateTimeFormat('en-US', {
             month: 'long',
             day: 'numeric',
@@ -180,10 +186,12 @@ export default function ActivityTimeline({ edits, student }: ActivityTimelinePro
                                                         </Button>
                                                     </DialogTrigger>
                                                     <DialogContent className="max-w-2xl rounded-3xl p-0 overflow-hidden border-none shadow-2xl">
-                                                        <div className="p-8 bg-slate-900 text-white">
-                                                            <h2 className="text-2xl font-black mb-1">{t('changesRequested')}</h2>
-                                                            <p className="text-slate-400 text-sm font-medium">Submitted on {formatDate(edit.createdAt)}</p>
-                                                        </div>
+                                                        <DialogHeader className="p-8 bg-slate-900 text-white space-y-1">
+                                                            <DialogTitle className="text-2xl font-black text-white">{t('changesRequested')}</DialogTitle>
+                                                            <DialogDescription className="text-slate-400 text-sm font-medium">
+                                                                Submitted on {formatDate(edit.createdAt)}
+                                                            </DialogDescription>
+                                                        </DialogHeader>
                                                         <div className="p-6 md:p-8 space-y-4 max-h-[60vh] overflow-y-auto bg-slate-50">
                                                             {getChangedFields(edit, student).map((field: any) => (
                                                                 <div key={field.key} className="bg-white border border-slate-100 p-4 rounded-2xl shadow-sm">
