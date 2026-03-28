@@ -168,7 +168,7 @@ export const authOptions: NextAuthOptions = {
                     let ua = undefined
                     try {
                         const { headers } = await import('next/headers')
-                        const headerList = headers()
+                        const headerList = await headers()
                         ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || undefined
                         ua = headerList.get('user-agent') || undefined
                     } catch (hError) { }
@@ -191,7 +191,7 @@ export const authOptions: NextAuthOptions = {
                     let ua = undefined
                     try {
                         const { headers } = await import('next/headers')
-                        const headerList = headers()
+                        const headerList = await headers()
                         ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || undefined
                         ua = headerList.get('user-agent') || undefined
                     } catch (hError) { }
