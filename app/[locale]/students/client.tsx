@@ -388,18 +388,19 @@ export default function StudentDirectoryClient({
 
             {/* Bottom Pagination */}
             {pagination.totalPages > 1 && (
-                <div className="container mx-auto px-4 pb-20">
-                    <div className="flex items-center justify-center gap-4">
+                <div className="container mx-auto px-4 pb-20 mt-8">
+                    <div className="flex items-center justify-center gap-2 md:gap-4">
                         <button
                             onClick={() => handleFilterChange('page', (pagination.page - 1).toString())}
                             disabled={pagination.page <= 1 || isPending}
-                            className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-slate-900 text-white font-bold disabled:opacity-30 hover:scale-105 transition-all shadow-lg active:scale-95"
+                            className="flex items-center justify-center gap-2 px-4 md:px-6 py-3 rounded-2xl bg-slate-900 text-white font-bold disabled:opacity-30 hover:scale-105 transition-all shadow-lg active:scale-95"
+                            title={isBengali ? 'পূর্ববর্তী' : 'Previous'}
                         >
                             <ChevronLeft size={20} />
-                            {isBengali ? 'পূর্ববর্তী' : 'Previous'}
+                            <span className="hidden md:inline">{isBengali ? 'পূর্ববর্তী' : 'Previous'}</span>
                         </button>
                         
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5 md:gap-2">
                             {[...Array(Math.min(5, pagination.totalPages))].map((_, i) => {
                                 let pageNum = pagination.page <= 3 ? i + 1 : pagination.page - 2 + i;
                                 if (pagination.page > pagination.totalPages - 2) pageNum = pagination.totalPages - 4 + i;
@@ -410,24 +411,28 @@ export default function StudentDirectoryClient({
                                     <button
                                         key={pageNum}
                                         onClick={() => handleFilterChange('page', pageNum.toString())}
-                                        className={`w-12 h-12 rounded-2xl font-bold transition-all ${
+                                        className={cn(
+                                            "w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-2xl font-bold transition-all",
                                             pagination.page === pageNum 
-                                            ? 'bg-slate-900 text-white scale-110 shadow-md' 
-                                            : 'bg-gray-50 text-slate-600 hover:bg-gray-100'
-                                        }`}
+                                                ? 'bg-slate-900 text-white scale-110 shadow-md' 
+                                                : 'bg-gray-50 text-slate-600 hover:bg-gray-100',
+                                            // Hide first and last on mobile if we have 5 items
+                                            (i === 0 || i === 4) && pagination.totalPages > 3 && "hidden sm:flex"
+                                        )}
                                     >
                                         {pageNum}
                                     </button>
                                 );
                             })}
                         </div>
-
+ 
                         <button
                             onClick={() => handleFilterChange('page', (pagination.page + 1).toString())}
                             disabled={pagination.page >= pagination.totalPages || isPending}
-                            className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-slate-900 text-white font-bold disabled:opacity-30 hover:scale-105 transition-all shadow-lg active:scale-95"
+                            className="flex items-center justify-center gap-2 px-4 md:px-6 py-3 rounded-2xl bg-slate-900 text-white font-bold disabled:opacity-30 hover:scale-105 transition-all shadow-lg active:scale-95"
+                            title={isBengali ? 'পরবর্তী' : 'Next'}
                         >
-                            {isBengali ? 'পরবর্তী' : 'Next'}
+                            <span className="hidden md:inline">{isBengali ? 'পরবর্তী' : 'Next'}</span>
                             <ChevronRight size={20} />
                         </button>
                     </div>
