@@ -10,9 +10,18 @@ interface SignOutButtonProps extends ButtonProps {
 }
 
 export function SignOutButton({ className, variant, children, redirectUrl = "/login", ...props }: SignOutButtonProps) {
+    const handleSignOut = async () => {
+        try {
+            await fetch('/api/auth/logout', { method: 'POST' })
+        } catch (e) {
+            console.error('Logout log failed', e)
+        }
+        await signOut({ callbackUrl: redirectUrl })
+    }
+
     return (
         <Button
-            onClick={() => signOut({ callbackUrl: redirectUrl })}
+            onClick={handleSignOut}
             variant={variant || "ghost"}
             className={cn("text-red-600 hover:text-red-700 hover:bg-red-50", className)}
             {...props}

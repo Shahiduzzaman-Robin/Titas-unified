@@ -54,6 +54,11 @@ export function AdminNav({ userEmail, userName, userImage }: { userEmail: string
     }, [])
 
     const handleLogout = async () => {
+        try {
+            await fetch('/api/auth/logout', { method: 'POST' })
+        } catch (e) {
+            console.error('Logout log failed', e)
+        }
         await signOut({ callbackUrl: `/${locale}/login` })
     }
 

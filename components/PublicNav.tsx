@@ -60,6 +60,11 @@ export function PublicNav({ session: serverSession }: PublicNavProps) {
     }
 
     const handleSignOut = async () => {
+        try {
+            await fetch('/api/auth/logout', { method: 'POST' })
+        } catch (e) {
+            console.error('Logout log failed', e)
+        }
         await signOut({ callbackUrl: `${window.location.origin}/${locale}/login` })
     }
 
