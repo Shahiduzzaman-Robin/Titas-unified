@@ -190,7 +190,7 @@ export default function ActivityTimeline({ edits, student }: ActivityTimelinePro
                                                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">{field.label}</p>
                                                                     <div className="grid grid-cols-[1fr,auto,1fr] gap-3 items-center">
                                                                         <div className="text-right">
-                                                                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Current</p>
+                                                                            <p className="text-[9px] font-black text-red-500 uppercase tracking-widest mb-1">Old Value</p>
                                                                             <p className="text-sm font-medium text-slate-500 line-through opacity-70">{field.oldValue ?? 'N/A'}</p>
                                                                         </div>
                                                                         <div className="flex justify-center text-blue-500">
