@@ -90,11 +90,20 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "No changes detected" })
         }
 
+        // Build a snapshot of the original values for the changed fields
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const oldChanges: any = {}
+        for (const key of Object.keys(actualChanges)) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            oldChanges[key] = (currentStudent as any)[key] ?? null
+        }
+
         // Create edit record
         await prisma.student_edits.create({
             data: {
                 studentId: studentId,
                 changes: JSON.stringify(actualChanges),
+                old_changes: JSON.stringify(oldChanges),
                 status: "pending"
             }
         })

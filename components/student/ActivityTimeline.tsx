@@ -277,12 +277,19 @@ function getChangedFields(edit: any, student: any) {
     }
 
     const changes = typeof edit.changes === 'string' ? JSON.parse(edit.changes) : edit.changes
+    
+    // Prefer stored old_changes (accurate historical snapshot) over live student data
+    let oldData: any = null
+    if (edit.old_changes) {
+        oldData = typeof edit.old_changes === 'string' ? JSON.parse(edit.old_changes) : edit.old_changes
+    }
 
     if (changes && typeof changes === 'object') {
         for (const [key, label] of Object.entries(fieldLabels)) {
             if (changes[key] !== null && changes[key] !== undefined) {
-                const oldValue = student ? student[key] : null
-                fields.push({ key, label, newValue: changes[key], oldValue: oldValue ?? 'N/A' })
+                // Use stored old value if available, otherwise fall back to live student data
+                const oldValue = oldData ? (oldData[key] ?? 'N/A') : (student ? student[key] ?? 'N/A' : 'N/A')
+                fields.push({ key, label, newValue: changes[key], oldValue })
             }
         }
     }

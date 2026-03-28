@@ -148,16 +148,17 @@ model sms_logs {
 }
 
 model student_edits {
-  id         Int       @id @default(autoincrement())
-  studentId  Int
-  changes    String    @db.LongText
-  status     String    @default("pending")
-  adminId    Int?
-  reviewNote String?   @db.Text
-  createdAt  DateTime  @default(now())
-  reviewedAt DateTime?
-  admin      admins?   @relation(fields: [adminId], references: [id])
-  student    students  @relation(fields: [studentId], references: [id])
+  id          Int       @id @default(autoincrement())
+  studentId   Int
+  changes     String    @db.LongText
+  old_changes String?   @db.LongText
+  status      String    @default("pending")
+  adminId     Int?
+  reviewNote  String?   @db.Text
+  createdAt   DateTime  @default(now())
+  reviewedAt  DateTime?
+  admin       admins?   @relation(fields: [adminId], references: [id])
+  student     students  @relation(fields: [studentId], references: [id])
 
   @@index([studentId])
   @@index([status])
