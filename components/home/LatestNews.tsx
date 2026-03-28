@@ -73,7 +73,7 @@ export default function LatestNews() {
                     </div>
                     <Link href={`/${locale}/blog`} className="hidden md:block">
                         <Button variant="ghost" className={cn("group gap-2 hover:bg-primary/5 hover:text-primary", locale === 'bn' && "bn-text")}>
-                            {locale === 'bn' ? 'সব খবর দেখুন' : 'View All News'}
+                            {locale === 'bn' ? 'সব ব্লগ দেখুন' : 'View All News'}
                             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                         </Button>
                     </Link>
@@ -127,7 +127,7 @@ export default function LatestNews() {
                 <div className="flex justify-center mt-12 md:hidden">
                     <Link href={`/${locale}/blog`}>
                         <Button variant="outline" className={cn("group gap-2 px-8 py-6 rounded-full border-2 hover:bg-primary hover:text-white transition-all duration-300", locale === 'bn' && "bn-text")}>
-                            {locale === 'bn' ? 'সব খবর দেখুন' : 'View All News'}
+                            {locale === 'bn' ? 'সব ব্লগ দেখুন' : 'View All News'}
                             <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                         </Button>
                     </Link>
