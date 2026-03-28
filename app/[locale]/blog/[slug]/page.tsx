@@ -258,12 +258,12 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
 
                                 {/* Body Content */}
                                 <div className="blog-content bn-text prose prose-slate max-w-none md:prose-lg 
-                                    prose-p:text-slate-800 prose-p:leading-[2] md:prose-p:leading-[2.2] 
-                                    prose-p:mb-10 prose-p:text-[18px] md:prose-p:text-[20px]
+                                    whitespace-pre-line
+                                    [&_p]:mb-10 [&_p]:leading-[2.2] [&_p]:text-[18px] md:[&_p]:text-[20px] [&_p]:text-slate-800
+                                    [&_div]:mb-10 [&_div]:leading-[2.2] [&_div]:text-[18px] md:[&_div]:text-[20px] [&_div]:text-slate-800
                                     prose-headings:text-[#1a1a1a] prose-headings:font-bold prose-headings:mt-12 prose-headings:mb-8
-                                    prose-img:rounded-md prose-img:shadow-lg prose-img:my-12
+                                    prose-img:rounded-md prose-img:shadow-lg prose-img:my-10
                                     prose-strong:text-slate-900 prose-strong:font-bold
-                                    prose-ul:my-8 prose-li:mb-4
                                     text-left break-words overflow-hidden"
                                     dangerouslySetInnerHTML={{ __html: post.content }}
                                 />
