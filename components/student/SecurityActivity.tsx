@@ -7,6 +7,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import "@/styles/StudentDashboard.css";
 
 interface Activity {
     id: number;
