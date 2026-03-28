@@ -166,6 +166,7 @@ model student_edits {
 
   @@index([studentId])
   @@index([status])
+  @@index([createdAt])
   @@index([adminId], map: "student_edits_adminId_fkey")
   @@map("student_edits")
 }
@@ -191,6 +192,8 @@ model otp_verifications {
 
   @@index([mobile])
   @@index([email])
+  @@index([expiresAt])
+  @@index([createdAt])
 }
 
 model admin_activity_logs {
@@ -307,6 +310,8 @@ model gallery_images {
   uploadedBy admins?  @relation(fields: [adminId], references: [id])
 
   @@index([adminId], map: "gallery_images_adminId_fkey")
+  @@index([category])
+  @@index([createdAt])
   @@map("gallery_images")
 }
 
@@ -336,6 +341,7 @@ model events {
   rsvps       event_rsvps[]
 
   @@index([date])
+  @@index([createdAt])
   @@map("events")
 }
 
@@ -354,6 +360,7 @@ model event_rsvps {
   event            events    @relation(fields: [eventId], references: [id])
 
   @@index([eventId], map: "event_rsvps_eventId_fkey")
+  @@index([createdAt])
   @@map("event_rsvps")
 }
 
@@ -367,6 +374,8 @@ model contact_messages {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([status])
+  @@index([createdAt])
   @@map("contact_messages")
 }
 
