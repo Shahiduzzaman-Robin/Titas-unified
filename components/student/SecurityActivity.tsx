@@ -29,7 +29,7 @@ const SecurityActivity = () => {
     const [activities, setActivities] = useState<Activity[]>([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(0);
-    const itemsPerPage = 3;
+    const itemsPerPage = 30;
 
     useEffect(() => {
         const fetchActivity = async () => {

@@ -19,7 +19,7 @@ export default async function SecurityActivityPage() {
         <div className="min-h-screen bg-slate-50/50">
             <PublicNav session={session} />
             
-            <div className="max-w-4xl mx-auto px-4 pt-12 pb-24">
+            <div className="max-w-6xl mx-auto px-4 pt-12 pb-24">
                 <div className="mb-8">
                     <Link 
                         href={`/${locale}/student/profile`} 
@@ -37,7 +37,7 @@ export default async function SecurityActivityPage() {
                 </div>
                 
                 {/* Re-using the same solid component, but now it acts as the primary content of the page */}
-                <div className="max-w-3xl">
+                <div className="w-full">
                     <SecurityActivity />
                 </div>
             </div>
