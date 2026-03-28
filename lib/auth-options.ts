@@ -161,6 +161,7 @@ export const authOptions: NextAuthOptions = {
     },
     events: {
         async signIn({ user }) {
+            console.log('📝 NextAuth signIn Event:', JSON.stringify({ id: user.id, email: user.email, role: user.role }));
             if (user.role === 'admin') {
                 try {
                     const { logAdminActivity } = await import('@/lib/admin-activity')
