@@ -50,9 +50,7 @@ export default async function LocaleLayout({
     return (
         <html lang={locale} className="notranslate" translate="no" suppressHydrationWarning>
             <head>
-                {/* Preload Bengali Fonts to break the critical path latency chain */}
-                <link rel="preload" href="/fonts/Lal_Sabuj_Normal_31-08-2012.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
-                <link rel="preload" href="/fonts/LalSabuj%20Normal_Bold-04-09-2012.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
+                {/* Manual font preloads disabled to avoid Next.js caching conflicts and console warnings */}
             </head>
             <body className={`${bnFont.variable} ${inter.variable} ${inter.className} ${locale === 'bn' ? 'bn-text' : ''}`} suppressHydrationWarning>
                 <NextIntlClientProvider messages={messages}>
