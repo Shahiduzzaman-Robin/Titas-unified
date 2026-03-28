@@ -125,10 +125,12 @@
 }
 .blog-content,
 .blog-content * {
-  /* Universal Rule: No mid-word slicing, no accidental hard breaks anywhere */
-  word-break: normal !important;
-  overflow-wrap: break-word !important;
+  /* Absolute Rule: Only break at spaces. Never slice words. */
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+  word-wrap: normal !important;
   white-space: normal !important;
+  max-width: none !important;
   font-family: 'LalSabuj', var(--font-bangla), sans-serif !important;
 }
 
