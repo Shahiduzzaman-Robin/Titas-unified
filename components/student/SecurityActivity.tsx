@@ -162,7 +162,7 @@ const SecurityActivity = () => {
                                     return (
                                         <div key={activity.id} className="timeline-item group">
                                             <div className={cn("timeline-dot group-hover:scale-125 transition-transform", config.dotColor)} />
-                                            <div className="bg-white/50 border border-slate-100/80 p-5 rounded-2xl group-hover:bg-white group-hover:shadow-lg group-hover:shadow-indigo-500/5 transition-all">
+                                            <div className="bg-white/50 border border-slate-100/80 p-5 rounded-2xl group-hover:bg-white group-hover:shadow-xl group-hover:shadow-indigo-500/10 group-hover:-translate-y-1 group-hover:z-20 relative transition-all duration-300">
                                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
                                                     <div className="flex items-center gap-2">
                                                         <Icon className={cn("w-4 h-4", config.color)} />
