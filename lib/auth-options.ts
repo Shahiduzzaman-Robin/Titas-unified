@@ -196,14 +196,11 @@ export const authOptions: NextAuthOptions = {
                         ua = headerList.get('user-agent') || undefined
                     } catch (hError) { }
 
-                    await logStudentActivity({
-                        studentId: parseInt(user.id),
-                        action: 'login',
-                        description: `Student logged in: ${user.name || user.email}`,
-                        metadata: { email: user.email },
-                        ipAddress: ip,
-                        userAgent: ua
-                    })
+                    await logStudentActivity(
+                        parseInt(user.id),
+                        'login',
+                        `Student logged in: ${user.name || user.email}`
+                    )
                 } catch (e) {
                     console.error('Failed to log student login:', e)
                 }
@@ -217,7 +214,7 @@ export const authOptions: NextAuthOptions = {
                     let ua = undefined
                     try {
                         const { headers } = await import('next/headers')
-                        const headerList = headers()
+                        const headerList = await headers()
                         ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || undefined
                         ua = headerList.get('user-agent') || undefined
                     } catch (hError) { }
@@ -236,23 +233,11 @@ export const authOptions: NextAuthOptions = {
             } else if (token?.role === 'student') {
                 try {
                     const { logStudentActivity } = await import('@/lib/student-activity')
-                    let ip = undefined
-                    let ua = undefined
-                    try {
-                        const { headers } = await import('next/headers')
-                        const headerList = headers()
-                        ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || undefined
-                        ua = headerList.get('user-agent') || undefined
-                    } catch (hError) { }
-
-                    await logStudentActivity({
-                        studentId: parseInt(token.id as string),
-                        action: 'logout',
-                        description: `Student logged out: ${token.name || token.email}`,
-                        metadata: { email: token.email },
-                        ipAddress: ip,
-                        userAgent: ua
-                    })
+                    await logStudentActivity(
+                        parseInt(token.id as string),
+                        'logout',
+                        `Student logged out: ${token.name || token.email}`
+                    )
                 } catch (e) {
                     console.error('Failed to log student logout:', e)
                 }

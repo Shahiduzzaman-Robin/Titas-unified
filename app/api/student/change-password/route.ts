@@ -70,13 +70,11 @@ export async function POST(request: NextRequest) {
             const ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || undefined
             const ua = headerList.get('user-agent') || undefined
 
-            await logStudentActivity({
-                studentId: student.id,
-                action: 'password_change',
-                description: 'User changed their password from the profile dashboard',
-                ipAddress: ip,
-                userAgent: ua
-            })
+            await logStudentActivity(
+                student.id,
+                'password_change',
+                'User changed their password from the profile dashboard'
+            )
         } catch (logError) {
             console.error('Failed to log student password change:', logError)
         }

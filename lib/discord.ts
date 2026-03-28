@@ -31,6 +31,7 @@ const WEBHOOK_URLS = {
     rejection: process.env.DISCORD_WEBHOOK_REJECTION,
     studentEdit: process.env.DISCORD_WEBHOOK_STUDENT_EDIT,
     contact: process.env.DISCORD_WEBHOOK_CONTACT,
+    security: process.env.DISCORD_WEBHOOK_SECURITY,
 }
 
 // Discord embed colors
@@ -42,6 +43,9 @@ const COLORS = {
     EDIT_APPROVED: 0x00FF00, // Green - Edit approved
     EDIT_REJECTED: 0xFF0000, // Red - Edit rejected
     CONTACT: 0x3B82F6,      // Blue - Contact message
+    SECURITY_LOGIN: 0x10B981,   // Emerald - Login
+    SECURITY_LOGOUT: 0x94A3B8,  // Slate - Logout
+    SECURITY_SENSITIVE: 0xF59E0B, // Amber - Password change
 }
 
 export class DiscordService {
@@ -522,6 +526,76 @@ export class DiscordService {
             footer: {
                 text: 'TITAS System'
             }
+        }
+
+        return this.sendWebhook(webhookUrl, { embeds: [embed] })
+    }
+
+    /**
+     * Send student security notification (login, logout, password change)
+     */
+    static async sendSecurityNotification(
+        student: any,
+        action: 'login' | 'logout' | 'password_change',
+        details: { ip: string, location?: string, userAgent: string }
+    ): Promise<boolean> {
+        const webhookUrl = WEBHOOK_URLS.security || WEBHOOK_URLS.studentEdit // Fallback if specific security hook not set
+        if (!webhookUrl) return false
+
+        const colorMap = {
+            login: COLORS.SECURITY_LOGIN,
+            logout: COLORS.SECURITY_LOGOUT,
+            password_change: COLORS.SECURITY_SENSITIVE
+        }
+
+        const iconMap = {
+            login: '🔐',
+            logout: '🚪',
+            password_change: '🔑'
+        }
+
+        const actionText = action.replace('_', ' ').toUpperCase()
+        const imageUrl = getStudentImageUrl(student.image_path)
+
+        const embed: DiscordEmbed = {
+            title: `${iconMap[action]} Student Security Event: ${actionText}`,
+            description: `Student **${student.name_en}** (TITAS-${student.id}) has performed a security action.`,
+            color: colorMap[action],
+            fields: [
+                {
+                    name: '👤 Student',
+                    value: `${student.name_en} (TITAS-${student.id})`,
+                    inline: true
+                },
+                {
+                    name: '🏛️ Department',
+                    value: student.department || 'N/A',
+                    inline: true
+                },
+                {
+                    name: '📍 IP Address',
+                    value: details.ip,
+                    inline: true
+                },
+                {
+                    name: '🌍 Location',
+                    value: details.location || 'Unknown',
+                    inline: true
+                },
+                {
+                    name: '🖥️ Device',
+                    value: details.userAgent.length > 100 ? details.userAgent.substring(0, 97) + '...' : details.userAgent,
+                    inline: false
+                }
+            ],
+            timestamp: new Date().toISOString(),
+            footer: {
+                text: 'TITAS Security Audit'
+            }
+        }
+
+        if (imageUrl) {
+            embed.thumbnail = { url: imageUrl }
         }
 
         return this.sendWebhook(webhookUrl, { embeds: [embed] })
