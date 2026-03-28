@@ -124,10 +124,9 @@
   font-family: var(--font-inter), sans-serif !important;
 }
 .blog-content * {
-  /* Strict rule: only break at spaces, never in the middle of a word */
-  word-break: keep-all !important;
-  overflow-wrap: normal !important;
-  word-wrap: normal !important;
+  /* Natural wrapping at word boundaries */
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
   font-family: 'LalSabuj', var(--font-bangla), sans-serif !important;
 }
 
