@@ -25,8 +25,8 @@ export default function SocialShare({ url, title, variant = 'default' }: SocialS
     const encodedTitle = encodeURIComponent(title)
 
     const isNewsroom = variant === 'newsroom'
-    const btnSize = isNewsroom ? "w-[67px] h-[45px]" : "h-9 w-9"
-    const iconSize = isNewsroom ? "h-5 w-5" : "h-4 w-4"
+    const btnSize = isNewsroom ? "w-[48px] sm:w-[67px] h-[40px] sm:h-[45px]" : "h-9 w-9"
+    const iconSize = isNewsroom ? "h-4 w-4 sm:h-5 sm:w-5" : "h-4 w-4"
     const borderRadius = "rounded-[4px]"
 
     const shareLinks = [
@@ -64,7 +64,7 @@ export default function SocialShare({ url, title, variant = 'default' }: SocialS
     }
 
     return (
-        <div className="flex flex-wrap gap-1">
+        <div className={`flex ${isNewsroom ? 'flex-nowrap' : 'flex-wrap'} gap-1`}>
             {shareLinks.map((link) => (
                 <button
                     key={link.name}
@@ -76,15 +76,24 @@ export default function SocialShare({ url, title, variant = 'default' }: SocialS
                 </button>
             ))}
             {isNewsroom && (
-                <button
-                    className={`${btnSize} flex items-center justify-center ${borderRadius} bg-slate-500 text-white hover:opacity-90 transition-opacity`}
-                    onClick={() => window.print()}
-                    title="Print"
-                >
-                    <svg className={iconSize} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 00-2 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 012-2H5a2 2 0 012 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                    </svg>
-                </button>
+                <>
+                    <button
+                        className={`${btnSize} flex items-center justify-center ${borderRadius} bg-slate-500 text-white hover:opacity-90 transition-opacity`}
+                        onClick={() => window.print()}
+                        title="Print"
+                    >
+                        <svg className={iconSize} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 00-2 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 012-2H5a2 2 0 012 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                        </svg>
+                    </button>
+                    <button
+                        className={`${btnSize} flex items-center justify-center ${borderRadius} bg-slate-200 text-slate-600 hover:bg-slate-300 transition-colors`}
+                        onClick={copyToClipboard}
+                        title="Copy Link"
+                    >
+                        {copied ? <Check className={iconSize} /> : <Copy className={iconSize} />}
+                    </button>
+                </>
             )}
             {!isNewsroom && (
                 <button

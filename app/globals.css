@@ -126,10 +126,10 @@
    BENGALI TYPOGRAPHY SYSTEM (REBUILT)
    ========================================================================== */
 .bn-content {
-  /* Biggannishi-Inspired Newsroom Specs */
-  line-height: 1.9 !important;
+  /* Biggannishi Exact Match */
+  line-height: 1.5 !important;
   color: #444444 !important;
-  font-size: 1.25rem !important; /* 20px */
+  font-size: 1.125rem !important; /* 18px */
   text-rendering: optimizeLegibility;
   font-variant-ligatures: common-ligatures;
   font-kerning: normal;
@@ -223,7 +223,7 @@
 .blog-content div,
 .blog-content li {
   margin-bottom: 1.5rem !important; /* Balanced gap (24px) */
-  line-height: 1.8 !important;   /* Professional flow */
+  line-height: 1.5 !important;   /* Professional flow */
 }
 
 /* Ensure images don't get too much margin-bottom if they are inside divs */

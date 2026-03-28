@@ -186,17 +186,7 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                                     </div>
 
                                     {/* Rainbow Social Share Bar */}
-                                    <div className="flex flex-wrap items-center gap-1 border-t border-slate-100 pt-6">
-                                        <SocialShare url={shareUrl} title={post.title} variant="newsroom" />
-                                        {isAdmin && (
-                                            <Link href={`/${locale}/admin/blog/${post.slug}`}>
-                                                <Button variant="ghost" size="sm" className="h-[45px] w-[45px] p-0 rounded-[4px] bg-slate-100 text-slate-600 hover:bg-slate-200">
-                                                    <span className="sr-only">Edit</span>
-                                                    <User className="h-5 w-5" />
-                                                </Button>
-                                            </Link>
-                                        )}
-                                    </div>
+                                    <SocialShare url={shareUrl} title={post.title} variant="newsroom" />
                                 </header>
 
                                 {/* Featured Image */}
