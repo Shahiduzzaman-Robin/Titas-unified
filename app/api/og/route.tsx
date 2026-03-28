@@ -16,7 +16,8 @@ export async function GET(req: NextRequest) {
 
         // Base domain (for fetching the logo if needed, or simply text)
         const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-        const logoUrl = `${appUrl}/logo.png`;
+        // Use specific production URL to guarantee Satori can fetch the logo even during local development
+        const logoUrl = 'https://titaas.vercel.app/logo.png';
 
         return new ImageResponse(
             (
@@ -31,17 +32,12 @@ export async function GET(req: NextRequest) {
                     }}
                 >
                     {/* Main Image Area (Top 85%) */}
-                    <div
-                        style={{
-                            display: 'flex',
-                            height: '85%',
-                            width: '100%',
-                            backgroundImage: `url(${targetImage})`,
-                            backgroundSize: '100% 100%',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        }}
-                    />
+                    <div style={{ display: 'flex', height: '85%', width: '100%', overflow: 'hidden' }}>
+                        <img 
+                            src={targetImage} 
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                        />
+                    </div>
 
                     {/* Branding Bar / Bottom Strip (Bottom 15%) */}
                     <div
@@ -73,10 +69,10 @@ export async function GET(req: NextRequest) {
                                 }}
                             >
                                 <span style={{ fontSize: '28px', fontWeight: '800', color: '#222', letterSpacing: '-0.5px' }}>
-                                    তিতাস
+                                    TITAS
                                 </span>
                                 <span style={{ fontSize: '18px', color: '#666', fontWeight: '500' }}>
-                                    ঢাকা বিশ্ববিদ্যালয়স্থ ব্রাহ্মণবাড়িয়া জেলা ছাত্রকল্যাণ পরিষদ
+                                    Dhaka University Brahmanbaria Students Association
                                 </span>
                             </div>
                         </div>
