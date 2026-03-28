@@ -1,7 +1,7 @@
 'use client'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useTranslations } from "next-intl"
-import { Clock, CheckCircle2, XCircle, AlertCircle, Eye, ChevronLeft, ChevronRight, History, Calendar, UserCheck, ShieldAlert } from "lucide-react"
+import { Clock, CheckCircle2, XCircle, AlertCircle, Eye, ChevronLeft, ChevronRight, History, Calendar, UserCheck, ShieldAlert, ArrowRight } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -19,9 +19,11 @@ import { cn } from "@/lib/utils"
 interface ActivityTimelineProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     edits: any[]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    student: any
 }
 
-export default function ActivityTimeline({ edits }: ActivityTimelineProps) {
+export default function ActivityTimeline({ edits, student }: ActivityTimelineProps) {
     const t = useTranslations('student.profile.timeline')
     const [selectedEdit, setSelectedEdit] = useState<any>(null)
     const [currentPage, setCurrentPage] = useState(0)
@@ -182,11 +184,23 @@ export default function ActivityTimeline({ edits }: ActivityTimelineProps) {
                                                             <h2 className="text-2xl font-black mb-1">{t('changesRequested')}</h2>
                                                             <p className="text-slate-400 text-sm font-medium">Submitted on {formatDate(edit.createdAt)}</p>
                                                         </div>
-                                                        <div className="p-8 space-y-4 max-h-[60vh] overflow-y-auto bg-slate-50">
-                                                            {getChangedFields(edit).map((field: any) => (
+                                                        <div className="p-6 md:p-8 space-y-4 max-h-[60vh] overflow-y-auto bg-slate-50">
+                                                            {getChangedFields(edit, student).map((field: any) => (
                                                                 <div key={field.key} className="bg-white border border-slate-100 p-4 rounded-2xl shadow-sm">
-                                                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{field.label}</p>
-                                                                    <p className="font-bold text-slate-800">{field.newValue}</p>
+                                                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">{field.label}</p>
+                                                                    <div className="grid grid-cols-[1fr,auto,1fr] gap-3 items-center">
+                                                                        <div className="text-right">
+                                                                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Current</p>
+                                                                            <p className="text-sm font-medium text-slate-500 line-through opacity-70">{field.oldValue ?? 'N/A'}</p>
+                                                                        </div>
+                                                                        <div className="flex justify-center text-blue-500">
+                                                                            <ArrowRight className="w-4 h-4" />
+                                                                        </div>
+                                                                        <div>
+                                                                            <p className="text-[9px] font-black text-blue-600 uppercase tracking-widest mb-1">New Value</p>
+                                                                            <p className="text-sm font-bold text-slate-900 bg-green-50 px-2.5 py-1.5 rounded-lg border border-green-200 inline-block">{field.newValue}</p>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             ))}
                                                             
@@ -243,7 +257,7 @@ export default function ActivityTimeline({ edits }: ActivityTimelineProps) {
     )
 }
 
-function getChangedFields(edit: any) {
+function getChangedFields(edit: any, student: any) {
     const fields = []
     const fieldLabels: Record<string, string> = {
         name_en: 'Name (English)',
@@ -267,7 +281,8 @@ function getChangedFields(edit: any) {
     if (changes && typeof changes === 'object') {
         for (const [key, label] of Object.entries(fieldLabels)) {
             if (changes[key] !== null && changes[key] !== undefined) {
-                fields.push({ key, label, newValue: changes[key] })
+                const oldValue = student ? student[key] : null
+                fields.push({ key, label, newValue: changes[key], oldValue: oldValue ?? 'N/A' })
             }
         }
     }

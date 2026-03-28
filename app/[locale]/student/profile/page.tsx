@@ -242,7 +242,7 @@ export default async function StudentProfilePage() {
                             <ProfileCompletionMeter student={student} />
                         </div>
                         
-                        <ActivityTimeline edits={allActivities} />
+                        <ActivityTimeline edits={allActivities} student={student} />
                     </div>
                 </div>
             </div>
