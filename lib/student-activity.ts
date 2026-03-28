@@ -32,9 +32,10 @@ export async function logStudentActivity(
         )
         const logId = lastId?.[0]?.id
 
-        // Background: Resolve location + send Discord notification
-        resolveLocationAndNotify(logId, studentId, action, description, ip, ua)
-            .catch(err => console.error("Background location/discord failed:", err))
+        // AWAIT the location resolve and discord notification to prevent
+        // Vercel serverless container from exiting before completion!
+        await resolveLocationAndNotify(logId, studentId, action, description, ip, ua)
+            .catch(err => console.error("Location/discord failed:", err))
 
         return { id: logId }
     } catch (error) {

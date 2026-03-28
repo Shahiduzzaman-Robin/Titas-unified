@@ -27,8 +27,8 @@ export async function POST(req: NextRequest) {
             }).catch(e => console.error('Admin logout log failed:', e))
         } else if (session.user.role === 'student') {
             const { logStudentActivity } = await import('@/lib/student-activity')
-            // Fire and forget so we don't delay the actual logout redirect
-            logStudentActivity(
+            // Awaiting to ensure Vercel serverless doesn't kill the task
+            await logStudentActivity(
                 parseInt(session.user.id),
                 'logout',
                 `Student logged out: ${session.user.name || session.user.email}`,

@@ -166,7 +166,7 @@ export const authOptions: NextAuthOptions = {
 
                 try {
                     const { logStudentActivity } = await import('@/lib/student-activity')
-                    logStudentActivity(
+                    await logStudentActivity(
                         parseInt(user.id),
                         'login',
                         `Student logged in: ${user.name || user.email}`,
