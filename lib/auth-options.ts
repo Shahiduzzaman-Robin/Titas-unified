@@ -187,22 +187,42 @@ export const authOptions: NextAuthOptions = {
             if (token?.role === 'admin') {
                 try {
                     const { logAdminActivity } = await import('@/lib/admin-activity')
+                    let ip = undefined
+                    let ua = undefined
+                    try {
+                        const { headers } = await import('next/headers')
+                        const headerList = await headers()
+                        ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || undefined
+                        ua = headerList.get('user-agent') || undefined
+                    } catch {}
                     await logAdminActivity({
                         adminId: parseInt(token.id as string),
                         action: 'admin_logout',
                         description: `Admin logged out: ${token.name || token.email}`,
                         metadata: { email: token.email },
+                        ipAddress: ip,
+                        userAgent: ua,
                     })
                 } catch (e) {
                     console.error('Failed to log admin logout:', e)
                 }
             } else if (token?.role === 'student') {
+                let ip = 'Unknown'
+                let ua = 'Unknown'
+                try {
+                    const { headers } = await import('next/headers')
+                    const headerList = await headers()
+                    ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || 'Unknown'
+                    ua = headerList.get('user-agent') || 'Unknown'
+                } catch {}
                 try {
                     const { logStudentActivity } = await import('@/lib/student-activity')
                     await logStudentActivity(
                         parseInt(token.id as string),
                         'logout',
-                        `Student logged out: ${token.name || token.email}`
+                        `Student logged out: ${token.name || token.email}`,
+                        ip,
+                        ua
                     )
                     console.log('✅ Student logout logged successfully')
                 } catch (e) {
