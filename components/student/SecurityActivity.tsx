@@ -65,9 +65,27 @@ const SecurityActivity = () => {
 
     const getDeviceType = (ua: string) => {
         if (!ua) return 'Unknown Device';
-        if (ua.includes('Mobi')) return 'Mobile Device';
-        if (ua.includes('Tablet')) return 'Tablet';
-        return 'Desktop Computer';
+        
+        let os = 'Unknown OS';
+        if (ua.includes('Windows') || ua.includes('Win')) os = 'Windows';
+        if (ua.includes('Mac')) os = 'macOS';
+        if (ua.includes('Android')) os = 'Android';
+        if (ua.includes('iPhone') || ua.includes('iPad')) os = 'iOS';
+        if (ua.includes('Linux') && !ua.includes('Android')) os = 'Linux';
+
+        let browser = '';
+        if (ua.includes('Edg')) browser = 'Edge';
+        else if (ua.includes('Chrome')) browser = 'Chrome';
+        else if (ua.includes('Firefox')) browser = 'Firefox';
+        else if (ua.includes('Safari')) browser = 'Safari';
+
+        const formFactor = ua.includes('Mobi') ? 'Mobile' : ua.includes('Tablet') ? 'Tablet' : 'Desktop';
+        
+        if (os !== 'Unknown OS' || browser) {
+            return `${browser || 'Browser'} on ${os} (${formFactor})`;
+        }
+        
+        return `${formFactor} Device`;
     };
 
     if (loading) {
@@ -163,7 +181,12 @@ const SecurityActivity = () => {
                                                     </div>
                                                     <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500">
                                                         <Globe className="w-3.5 h-3.5" />
-                                                        {activity.location || activity.ipAddress || 'Unknown Location'}
+                                                        {activity.location && activity.location !== 'Unknown' 
+                                                            ? activity.location 
+                                                            : 'Unknown Location'}
+                                                    </div>
+                                                    <div className="flex items-center gap-1.5 text-[10px] font-black tracking-wider text-slate-400 bg-slate-100/80 px-2 py-0.5 rounded-md border border-slate-200">
+                                                        IP: {activity.ipAddress || 'Unknown'}
                                                     </div>
                                                 </div>
                                             </div>
