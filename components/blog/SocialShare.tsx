@@ -16,31 +16,43 @@ import { toast } from "sonner"
 interface SocialShareProps {
     url: string
     title: string
+    variant?: 'default' | 'newsroom'
 }
 
-export default function SocialShare({ url, title }: SocialShareProps) {
+export default function SocialShare({ url, title, variant = 'default' }: SocialShareProps) {
     const [copied, setCopied] = useState(false)
     const encodedUrl = encodeURIComponent(url)
     const encodedTitle = encodeURIComponent(title)
 
+    const isNewsroom = variant === 'newsroom'
+    const btnSize = isNewsroom ? "w-[67px] h-[45px]" : "h-9 w-9"
+    const iconSize = isNewsroom ? "h-5 w-5" : "h-4 w-4"
+    const borderRadius = "rounded-[4px]"
+
     const shareLinks = [
         {
             name: 'Facebook',
-            icon: <Facebook className="h-4 w-4" />,
+            icon: <Facebook className={iconSize} />,
             href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-            color: 'bg-[#1877F2] text-white'
+            color: 'bg-[#3b5998] text-white'
         },
         {
-            name: 'WhatsApp',
-            icon: <MessageCircle className="h-4 w-4" />,
-            href: `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`,
-            color: 'bg-[#25D366] text-white'
+            name: 'Twitter', // X
+            icon: <div className="font-bold text-lg select-none">𝕏</div>,
+            href: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+            color: 'bg-black text-white'
         },
         {
             name: 'LinkedIn',
-            icon: <Linkedin className="h-4 w-4" />,
+            icon: <Linkedin className={iconSize} />,
             href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
-            color: 'bg-[#0A66C2] text-white'
+            color: 'bg-[#0077b5] text-white'
+        },
+        {
+            name: 'WhatsApp',
+            icon: <MessageCircle className={iconSize} />,
+            href: `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`,
+            color: 'bg-[#25d366] text-white'
         }
     ]
 
@@ -52,31 +64,37 @@ export default function SocialShare({ url, title }: SocialShareProps) {
     }
 
     return (
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-1">
             {shareLinks.map((link) => (
                 <button
                     key={link.name}
-                    className={`h-9 w-9 flex items-center justify-center rounded-sm ${link.color} hover:opacity-90 transition-opacity`}
+                    className={`${btnSize} flex items-center justify-center ${borderRadius} ${link.color} hover:opacity-90 transition-opacity`}
                     onClick={() => window.open(link.href, '_blank')}
                     title={`Share on ${link.name}`}
                 >
                     {link.icon}
                 </button>
             ))}
-            <button
-                className="h-9 w-9 flex items-center justify-center rounded-sm bg-[#4267B2] text-white hover:opacity-90 transition-opacity"
-                onClick={() => window.open(`https://www.facebook.com/dialog/send?app_id=123456789&link=${encodedUrl}&redirect_uri=${encodedUrl}`, '_blank')}
-                title="Messenger"
-            >
-                <MessageCircle className="h-4 w-4" />
-            </button>
-            <button
-                className="h-9 w-9 flex items-center justify-center rounded-sm bg-slate-100 border border-slate-200 text-slate-600 hover:bg-slate-200 transition-colors"
-                onClick={copyToClipboard}
-                title="Copy Link"
-            >
-                {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
-            </button>
+            {isNewsroom && (
+                <button
+                    className={`${btnSize} flex items-center justify-center ${borderRadius} bg-slate-500 text-white hover:opacity-90 transition-opacity`}
+                    onClick={() => window.print()}
+                    title="Print"
+                >
+                    <svg className={iconSize} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 00-2 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 012-2H5a2 2 0 012 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                    </svg>
+                </button>
+            )}
+            {!isNewsroom && (
+                <button
+                    className={`${btnSize} flex items-center justify-center ${borderRadius} bg-slate-100 border border-slate-200 text-slate-600 hover:bg-slate-200 transition-colors`}
+                    onClick={copyToClipboard}
+                    title="Copy Link"
+                >
+                    {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
+                </button>
+            )}
         </div>
     )
 }
