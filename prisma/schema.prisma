@@ -272,6 +272,8 @@ model blog_posts {
   @@index([categoryId])
   @@index([authorId])
   @@index([status])
+  @@index([publishedAt])
+  @@index([createdAt])
   @@map("blog_posts")
 }
 
@@ -333,6 +335,7 @@ model events {
   updatedAt   DateTime      @updatedAt
   rsvps       event_rsvps[]
 
+  @@index([date])
   @@map("events")
 }
 
