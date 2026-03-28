@@ -110,26 +110,6 @@ export async function POST(req: Request) {
             console.error('Discord webhook error:', webhookError)
         }
 
-        // Log activity
-        try {
-            const { logStudentActivity } = await import('@/lib/student-activity')
-            const { headers } = await import('next/headers')
-            const headerList = headers()
-            const ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || undefined
-            const ua = headerList.get('user-agent') || undefined
-
-            await logStudentActivity({
-                studentId: studentId,
-                action: 'profile_update',
-                description: 'User submitted a profile update request for approval',
-                metadata: { fields: Object.keys(actualChanges) },
-                ipAddress: ip,
-                userAgent: ua
-            })
-        } catch (logError) {
-            console.error('Failed to log student profile update activity:', logError)
-        }
-
         return NextResponse.json({ message: "Changes submitted for approval" })
 
     } catch (error) {
