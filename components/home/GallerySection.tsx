@@ -51,17 +51,16 @@ const GallerySection = () => {
                     </div>
                 ) : images.length > 0 ? (
                     <>
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-                            {/* First image larger - spans 2 cols and 2 rows */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                            {/* First image larger - spans 2 cols only on sm screens and up */}
                             {images.map((img, idx) => (
                                 <div
                                     key={img.id}
                                     className={`relative group overflow-hidden rounded-2xl bg-slate-100 ${
                                         idx === 0
-                                            ? 'col-span-2 row-span-2 aspect-square'
-                                            : 'aspect-[4/3]'
+                                            ? 'sm:col-span-2 sm:row-span-2 aspect-square md:aspect-auto'
+                                            : 'aspect-square sm:aspect-[4/3]'
                                     }`}
-                                    style={{ minHeight: idx === 0 ? '360px' : '180px' }}
                                 >
                                     <Image
                                         src={img.url}
