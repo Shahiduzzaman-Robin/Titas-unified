@@ -105,6 +105,32 @@ export const authOptions: NextAuthOptions = {
                                     }
                                 })
 
+                                // Log security activity directly here to ensure it fires
+                                try {
+                                    const { logStudentActivity } = await import('@/lib/student-activity')
+                                    // Run in background
+                                    logStudentActivity(
+                                        student.id,
+                                        'login',
+                                        `Student logged in: ${student.name_en || student.name_bn || student.email || student.mobile}`
+                                    ).catch(e => console.error('Failed to log student login (authorize):', e))
+                                } catch (e) {
+                                    console.error('Failed to import student-activity in authorize:', e)
+                                }
+
+                                // Log security activity directly here to ensure it fires
+                                try {
+                                    const { logStudentActivity } = await import('@/lib/student-activity')
+                                    // Run in background
+                                    logStudentActivity(
+                                        student.id,
+                                        'login',
+                                        `Student logged in: ${student.name_en || student.name_bn || student.email || student.mobile}`
+                                    ).catch(e => console.error('Failed to log student login (authorize-std):', e))
+                                } catch (e) {
+                                    console.error('Failed to import student-activity in authorize:', e)
+                                }
+
                                 return {
                                     id: student.id.toString(),
                                     email: student.email || student.mobile,
