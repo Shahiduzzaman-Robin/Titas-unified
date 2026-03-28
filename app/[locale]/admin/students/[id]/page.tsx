@@ -24,7 +24,7 @@ export default async function StudentDetailsPage({
             hall_rel: true,
             session_rel: true,
             upazila_rel: true,
-            activity_logs: {
+            admin_activity_logs: {
                 include: {
                     admin: true
                 },
@@ -243,12 +243,12 @@ export default async function StudentDetailsPage({
                         </CardHeader>
                         <CardContent>
                             <div className="relative space-y-8 before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 before:to-transparent">
-                                {student.activity_logs.length === 0 ? (
+                                {student.admin_activity_logs.length === 0 ? (
                                     <div className="text-center py-10 text-gray-400">
                                         {t('timeline.noActivity')}
                                     </div>
                                 ) : (
-                                    student.activity_logs.map((log: any, index: number) => (
+                                    student.admin_activity_logs.map((log: any, index: number) => (
                                         <div key={log.id} className="relative flex items-start gap-6 group">
                                             {/* Circle Marker */}
                                             <div className="absolute left-5 -translate-x-1/2 mt-1.5 h-3 w-3 rounded-full border-2 border-white bg-indigo-500 ring-4 ring-indigo-50 shadow-sm transition-all group-hover:scale-110" />
@@ -290,7 +290,7 @@ export default async function StudentDetailsPage({
                                 )}
                                 
                                 {/* Initial Registration Event (Fallback if not in logs) */}
-                                {student.activity_logs.every((l: any) => l.action !== 'registration') && (
+                                {student.admin_activity_logs.every((l: any) => l.action !== 'registration') && (
                                     <div className="relative flex items-start gap-6 group">
                                         <div className="absolute left-5 -translate-x-1/2 mt-1.5 h-3 w-3 rounded-full border-2 border-white bg-slate-300 ring-4 ring-slate-50 shadow-sm" />
                                         <div className="flex-1 ml-10">
