@@ -42,9 +42,17 @@ export async function generateMetadata(
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://titaas.vercel.app'
     const canonicalUrl = `${baseUrl}/${locale}/blog/${post.slug}`
     
-    // Ensure OG image is an absolute URL
+    // Ensure OG image is an absolute URL and optimized for 1.91:1 ratio
     let ogImage = post.featuredImage || `${baseUrl}/og-default.png`
-    if (ogImage && !ogImage.startsWith('http')) {
+    
+    // If it's a Cloudinary image, let's force the social share dimensions (1200x630)
+    // This ensures Facebook Web always shows it as a Large Card.
+    if (ogImage && ogImage.includes('cloudinary.com')) {
+        // Find the 'upload/' part and insert transformations
+        if (ogImage.includes('/upload/')) {
+            ogImage = ogImage.replace('/upload/', '/upload/c_fill,ar_1.91,w_1200,h_630,g_auto,f_auto,q_auto/')
+        }
+    } else if (ogImage && !ogImage.startsWith('http')) {
         ogImage = `${baseUrl}${ogImage.startsWith('/') ? '' : '/'}${ogImage}`
     }
     
@@ -60,7 +68,6 @@ export async function generateMetadata(
             description: post.excerpt || `তিতাসে ${post.title} সম্পর্কে বিস্তারিত পড়ুন।`,
             url: canonicalUrl,
             siteName: 'Titas - Dhaka University Students\' Association of Brahmanbaria',
-
             type: 'article',
             publishedTime: post.publishedAt?.toISOString(),
             authors: post.authorName ? [post.authorName] : ['তিতাস মিডিয়া সেল'],
@@ -78,7 +85,8 @@ export async function generateMetadata(
             card: 'summary_large_image',
             title: post.title,
             description: post.excerpt || `তিতাসে ${post.title} সম্পর্কে বিস্তারিত পড়ুন।`,
-            images: [ogImage]
+            images: [ogImage],
+            creator: '@titas_du'
         }
     }
 }
