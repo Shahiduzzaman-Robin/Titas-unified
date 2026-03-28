@@ -103,73 +103,72 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
         notFound()
     }
 
-    const related = await prisma.blog_posts.findMany({
-        where: {
-            id: { not: post.id },
-            status: 'published',
-            categoryId: post.categoryId
-        },
-        take: 3,
-        orderBy: { publishedAt: 'desc' },
-        select: {
-            id: true,
-            title: true,
-            slug: true,
-            featuredImage: true,
-            publishedAt: true,
-            readingTime: true
-        }
-    })
-
-    const trending = await prisma.blog_posts.findMany({
-        where: {
-            status: 'published'
-        },
-        take: 5,
-        orderBy: { views: 'desc' },
-        select: {
-            id: true,
-            title: true,
-            slug: true,
-            featuredImage: true,
-            publishedAt: true,
-            views: true,
-            category: { select: { name: true } }
-        }
-    })
-
-    const latest = await prisma.blog_posts.findMany({
-        where: {
-            status: 'published'
-        },
-        take: 5,
-        orderBy: { publishedAt: 'desc' },
-        select: {
-            id: true,
-            title: true,
-            slug: true,
-            featuredImage: true,
-            publishedAt: true,
-            category: { select: { name: true } }
-        }
-    })
-
-    const initialComments = await prisma.blog_comments.findMany({
-        where: { 
-            postId: post.id,
-            approved: true 
-        },
-        orderBy: { createdAt: 'desc' },
-        select: {
-            id: true,
-            name: true,
-            text: true,
-            createdAt: true,
-            likes: true,
-            approved: true,
-            likedBy: true
-        }
-    })
+    const [related, trending, latest, initialComments] = await Promise.all([
+        prisma.blog_posts.findMany({
+            where: {
+                id: { not: post.id },
+                status: 'published',
+                categoryId: post.categoryId
+            },
+            take: 3,
+            orderBy: { publishedAt: 'desc' },
+            select: {
+                id: true,
+                title: true,
+                slug: true,
+                featuredImage: true,
+                publishedAt: true,
+                readingTime: true
+            }
+        }),
+        prisma.blog_posts.findMany({
+            where: {
+                status: 'published'
+            },
+            take: 5,
+            orderBy: { views: 'desc' },
+            select: {
+                id: true,
+                title: true,
+                slug: true,
+                featuredImage: true,
+                publishedAt: true,
+                views: true,
+                category: { select: { name: true } }
+            }
+        }),
+        prisma.blog_posts.findMany({
+            where: {
+                status: 'published'
+            },
+            take: 5,
+            orderBy: { publishedAt: 'desc' },
+            select: {
+                id: true,
+                title: true,
+                slug: true,
+                featuredImage: true,
+                publishedAt: true,
+                category: { select: { name: true } }
+            }
+        }),
+        prisma.blog_comments.findMany({
+            where: { 
+                postId: post.id,
+                approved: true 
+            },
+            orderBy: { createdAt: 'desc' },
+            select: {
+                id: true,
+                name: true,
+                text: true,
+                createdAt: true,
+                likes: true,
+                approved: true,
+                likedBy: true
+            }
+        })
+    ]);
 
     const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://titaas.vercel.app'}/${locale}/blog/${post.slug}`
 

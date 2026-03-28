@@ -66,11 +66,9 @@ export function optimizeImage(url: string | null | undefined, width: number = 12
     
     // Only optimize Cloudinary URLs
     if (url.includes('res.cloudinary.com') && url.includes('/image/upload/')) {
-        // If it already has transformations, don't double up
-        if (url.includes('f_auto') || url.includes('w_')) return url;
-        
-        // Return a basic optimized URL for non-Next.js components
-        return url.replace('/image/upload/', `/image/upload/f_auto,q_auto,w_${width},c_limit/`);
+        // Just return the clean URL and let the Next.js custom loader (cloudinary-loader.ts) 
+        // handle all transformations dynamically based on modern responsiveness rules.
+        return url;
     }
     
     return url
