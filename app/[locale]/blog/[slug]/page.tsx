@@ -25,6 +25,8 @@ import { optimizeImage } from "@/lib/utils"
 import ViewCounter from "./ViewCounter"
 import CommentSection from "@/components/blog/CommentSection"
 import SidebarTabs from "@/components/blog/SidebarTabs"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth-options"
 
 
 export async function generateMetadata(
@@ -95,6 +97,9 @@ export async function generateMetadata(
 export default async function BlogPostDetailsPage({ params }: { params: { slug: string, locale: string } }) {
     const { slug: rawSlug, locale } = params
     const slug = decodeURIComponent(rawSlug)
+
+    const session = await getServerSession(authOptions)
+    const isAdmin = !!session
 
     const post = await prisma.blog_posts.findUnique({
         where: { slug },
@@ -238,7 +243,18 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                                     </div>
 
                                     <div className="flex items-center justify-between gap-2 border-y border-slate-100 py-3">
-                                        <SocialShare url={shareUrl} title={post.title} />
+                                        <div className="flex items-center gap-4">
+                                            <SocialShare url={shareUrl} title={post.title} />
+                                            {/* Admin Quick Edit Button */}
+                                            {isAdmin && (
+                                                <Link href={`/${locale}/admin/blog/${post.slug}`}>
+                                                    <Button variant="outline" size="sm" className="h-8 gap-2 border-[#00827f] text-[#00827f] hover:bg-teal-50">
+                                                        <Share2 className="h-3.5 w-3.5" />
+                                                        সম্পাদনা করুন
+                                                    </Button>
+                                                </Link>
+                                            )}
+                                        </div>
                                         <div className="text-[11px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
                                             <ViewCounter slug={post.slug} initialViews={post.views} />
                                         </div>

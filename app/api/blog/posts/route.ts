@@ -16,12 +16,21 @@ export async function GET(request: NextRequest) {
         const search = searchParams.get('search') || ''
         const categorySlug = searchParams.get('category') ? decodeURIComponent(searchParams.get('category')!) : null
         const tagSlug = searchParams.get('tag') ? decodeURIComponent(searchParams.get('tag')!) : null
-        const status = searchParams.get('status') || 'published'
+        const isAdmin = searchParams.get('admin') === 'true'
+        const status = searchParams.get('status')
         const isFeatured = searchParams.get('featured') === 'true'
 
         const where: any = {}
-        if (status && status !== 'all') where.status = status
-        if (isFeatured) where.status = 'published' // Only featured published posts
+        
+        // Handle status filter
+        if (status && status !== 'all') {
+            where.status = status
+        } else if (!status && !isAdmin) {
+            // Default to published for non-admins if no status specified
+            where.status = 'published'
+        }
+        
+        if (isFeatured) where.status = 'published'
 
         if (search) {
             where.OR = [
@@ -53,6 +62,7 @@ export async function GET(request: NextRequest) {
                     status: true,
                     publishedAt: true,
                     createdAt: true,
+                    updatedAt: true,
                     category: true,
                     tags: true,
                     author: {
