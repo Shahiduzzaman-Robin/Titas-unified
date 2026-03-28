@@ -32,10 +32,25 @@ import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import ImageCropper from "@/components/registration/ImageCropper"
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog"
 
-// Dynamically import ReactQuill to avoid SSR issues
+// Dynamically import ReactQuill and BlotFormatter
 const ReactQuill = dynamic(async () => {
-    const { default: RQ } = await import("react-quill-new")
+    const QuillModule = await import("react-quill-new")
+    const RQ = QuillModule.default
+    const Quill = QuillModule.Quill
+    
+    if (typeof window !== 'undefined') {
+        const { default: BlotFormatter } = await import("quill-blot-formatter")
+        Quill.register('modules/blotFormatter', BlotFormatter)
+    }
+
     return ({ forwardedRef, ...props }: any) => <RQ ref={forwardedRef} {...props} />
 }, {
     ssr: false,
@@ -48,15 +63,12 @@ import { useRef } from "react"
 // Add custom styles for blog content images
 const editorStyles = `
   .blog-content img {
-    width: 30% !important;
-    height: auto !important;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     margin: 1rem 0;
   }
   .ql-editor img {
-    max-width: 30%;
-    height: auto;
-    cursor: default;
+    border-radius: 0.5rem;
+    cursor: pointer;
   }
 `
 
@@ -87,6 +99,11 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
     const [featuredImage, setFeaturedImage] = useState<File | null>(null)
     const [previewUrl, setPreviewUrl] = useState<string | null>(initialData?.featuredImage || null)
     const [cropImageStr, setCropImageStr] = useState<string | null>(null)
+    const [imageModalOpen, setImageModalOpen] = useState(false)
+    const [uploadingImage, setUploadingImage] = useState(false)
+    const [imageCaption, setImageCaption] = useState("")
+    const [imageFile, setImageFile] = useState<File | null>(null)
+    const [savedRange, setSavedRange] = useState<any>(null)
     const quillRef = useRef<any>(null)
 
     const imageHandler = useCallback(() => {
@@ -98,33 +115,56 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
         input.onchange = async () => {
             const file = input.files?.[0]
             if (file) {
-                const formData = new FormData()
-                formData.append('file', file)
-
-                const loadingToast = toast.loading("Uploading image...")
-                try {
-                    const res = await fetch('/api/upload', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    const data = await res.json()
-
-                    if (res.ok) {
-                        const quill = quillRef.current.getEditor()
-                        const range = quill.getSelection()
-                        quill.insertEmbed(range.index, 'image', data.imagePath)
-                        toast.success("Image uploaded", { id: loadingToast })
-                    } else {
-                        toast.error(data.error || "Upload failed", { id: loadingToast })
-                    }
-                } catch (error) {
-                    toast.error("Upload failed", { id: loadingToast })
-                }
+                const quill = quillRef.current?.getEditor()
+                if (quill) setSavedRange(quill.getSelection())
+                
+                setImageFile(file)
+                setImageCaption("")
+                setImageModalOpen(true)
             }
         }
     }, [])
 
+    const handleImageInsert = async () => {
+        if (!imageFile) return;
+        setUploadingImage(true);
+        const loadingToast = toast.loading("Uploading image...");
+        
+        try {
+            const formData = new FormData()
+            formData.append('file', imageFile)
+            
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            })
+            const data = await res.json()
+
+            if (res.ok) {
+                const quill = quillRef.current?.getEditor()
+                let insertIndex = savedRange ? savedRange.index : (quill?.getLength() || 0)
+                
+                quill?.insertEmbed(insertIndex, 'image', data.imagePath)
+                
+                if (imageCaption) {
+                    quill?.insertText(insertIndex + 1, '\n' + imageCaption + '\n', { italic: true })
+                }
+                
+                toast.success("Image uploaded", { id: loadingToast })
+                setImageModalOpen(false)
+            } else {
+                toast.error(data.error || "Upload failed", { id: loadingToast })
+            }
+        } catch (error) {
+            toast.error("Upload failed", { id: loadingToast })
+        } finally {
+            setUploadingImage(false)
+            setImageFile(null)
+        }
+    }
+
     const modules = useMemo(() => ({
+        blotFormatter: {},
         toolbar: {
             container: [
                 [{ 'header': [1, 2, 3, false] }],
@@ -210,6 +250,34 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
 
     return (
         <>
+            <Dialog open={imageModalOpen} onOpenChange={setImageModalOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Image Details</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Caption (Optional)</label>
+                            <Input 
+                                value={imageCaption} 
+                                onChange={(e) => setImageCaption(e.target.value)} 
+                                placeholder="E.g., Students attending the seminar..."
+                            />
+                            <p className="text-xs text-slate-500 mt-2">
+                                You can resize and wrap text around the image by clicking on the image after insertion.
+                            </p>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setImageModalOpen(false)}>Cancel</Button>
+                        <Button onClick={handleImageInsert} disabled={uploadingImage}>
+                            {uploadingImage ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                            Insert Image
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
             {cropImageStr && (
                 <ImageCropper
                     image={cropImageStr}
