@@ -38,7 +38,7 @@ export async function generateMetadata(
     if (!post) return {}
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://titaas.vercel.app'
-    const canonicalUrl = `${baseUrl}/${locale}/blog/${post.slug}`
+    const canonicalUrl = `${baseUrl}/${locale}/blog/${encodeURIComponent(post.slug)}`
     
     // Determine the ideal social image
     let sourceImage = post.featuredImage || `${baseUrl}/og-default.png`
