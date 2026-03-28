@@ -132,8 +132,8 @@
 .blog-content p, 
 .blog-content div,
 .blog-content li {
-  margin-bottom: 2.5rem !important; /* Forces 40px gap */
-  line-height: 2 !important;     /* Airier lines */
+  margin-bottom: 1.5rem !important; /* Balanced gap (24px) */
+  line-height: 1.8 !important;   /* Professional flow */
 }
 
 /* Ensure images don't get too much margin-bottom if they are inside divs */
