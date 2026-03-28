@@ -6,10 +6,10 @@ export const runtime = 'edge';
 export async function GET(req: NextRequest) {
     try {
         const { searchParams } = new URL(req.url);
-        
+
         // Dynamic params
         const imageUrl = searchParams.get('image');
-        
+
         // Fallback images
         const defaultImage = 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=1200&auto=format&fit=crop';
         const targetImage = imageUrl || defaultImage;
@@ -33,9 +33,9 @@ export async function GET(req: NextRequest) {
                 >
                     {/* Main Image Area (Top 85%) */}
                     <div style={{ display: 'flex', height: '85%', width: '100%', overflow: 'hidden' }}>
-                        <img 
-                            src={targetImage} 
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                        <img
+                            src={targetImage}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />
                     </div>
 
@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
                             width: '100%',
                             backgroundColor: '#ffffff',
                             padding: '0 40px',
-                            borderTop: '6px solid #e21b22', // Signature Titas Red
+                            borderTop: '6px solid #027B6D', // Titas Green border
                             boxShadow: '0 -4px 10px rgba(0,0,0,0.1)',
                         }}
                     >
@@ -79,7 +79,7 @@ export async function GET(req: NextRequest) {
 
                         {/* Right Side: Website URL / Tagline */}
                         <div style={{ display: 'flex' }}>
-                            <span style={{ fontSize: '24px', fontWeight: '800', color: '#e21b22' }}>
+                            <span style={{ fontSize: '32px', fontWeight: '900', color: '#175264', letterSpacing: '-0.5px' }}>
                                 titasdu.com
                             </span>
                         </div>
