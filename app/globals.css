@@ -125,11 +125,13 @@
 }
 .blog-content,
 .blog-content * {
-  /* Balanced Rule: Prefer whole words, but break if it hits the wall to prevent clipping */
-  word-break: normal !important;
+  /* Absolute Global Rules: No width limits, no word slicing, no ghost breaks */
+  word-break: keep-all !important;
   overflow-wrap: break-word !important;
   white-space: normal !important;
   max-width: none !important;
+  width: 100% !important;
+  display: block;
   font-family: 'LalSabuj', var(--font-bangla), sans-serif !important;
 }
 

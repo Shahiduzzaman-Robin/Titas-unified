@@ -275,13 +275,13 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                                 {/* Body Content */}
                                 <div className="blog-content bn-text prose prose-slate max-w-none md:prose-lg 
                                     !whitespace-normal [&_*]:!whitespace-normal
-                                    [&_p]:mb-6 [&_p]:leading-[1.8] [&_p]:text-[18px] md:[&_p]:text-[20px] [&_p]:text-slate-800 [&_p]:max-w-none
-                                    [&_div]:mb-6 [&_div]:leading-[1.8] [&_div]:text-[18px] md:[&_div]:text-[20px] [&_div]:text-slate-800 [&_div]:max-w-none
+                                    [&_p]:mb-6 [&_p]:leading-[1.8] [&_p]:text-[18px] md:[&_p]:text-[20px] [&_p]:text-slate-800 [&_p]:max-w-none [&_p]:w-full
+                                    [&_div]:mb-6 [&_div]:leading-[1.8] [&_div]:text-[18px] md:[&_div]:text-[20px] [&_div]:text-slate-800 [&_div]:max-w-none [&_div]:w-full
                                     prose-headings:text-[#1a1a1a] prose-headings:font-bold prose-headings:mt-12 prose-headings:mb-8
                                     prose-img:rounded-md prose-img:shadow-lg prose-img:my-8
                                     prose-strong:text-slate-900 prose-strong:font-bold
-                                    text-left break-normal overflow-visible"
-                                    style={{ whiteSpace: 'normal', wordBreak: 'normal', overflowWrap: 'break-word' }}
+                                    text-left break-normal overflow-visible w-full [word-break:keep-all]"
+                                    style={{ whiteSpace: 'normal', wordBreak: 'keep-all', overflowWrap: 'break-word', width: '100%', maxWidth: 'none' }}
                                     dangerouslySetInnerHTML={{ __html: post.content }}
                                 />
 
