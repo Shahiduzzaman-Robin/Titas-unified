@@ -9,8 +9,12 @@ interface SignOutButtonProps extends ButtonProps {
     redirectUrl?: string
 }
 
+let isLoggingOut = false;
+
 export function SignOutButton({ className, variant, children, redirectUrl = "/login", ...props }: SignOutButtonProps) {
     const handleSignOut = async () => {
+        if (isLoggingOut) return
+        isLoggingOut = true
         try {
             await fetch('/api/auth/logout', { method: 'POST' })
         } catch (e) {

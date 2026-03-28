@@ -71,20 +71,6 @@ export const authOptions: NextAuthOptions = {
                         if (student.password) {
                             const isValid = await verifyPassword(password, student.password)
                             if (isValid) {
-                                // Log login activity (non-blocking)
-                                try {
-                                    const { logStudentActivity } = await import('@/lib/student-activity')
-                                    logStudentActivity(
-                                        student.id,
-                                        'login',
-                                        `Student logged in: ${student.name_en || student.name_bn || student.email || student.mobile}`,
-                                        ip,
-                                        ua
-                                    ).catch(e => console.error('Login log error:', e))
-                                } catch (e) {
-                                    console.error('Import student-activity error:', e)
-                                }
-
                                 return {
                                     id: student.id.toString(),
                                     email: student.email || student.mobile,
@@ -111,20 +97,6 @@ export const authOptions: NextAuthOptions = {
                                     newHash,
                                     student.id
                                 )
-
-                                // Log login activity (non-blocking)
-                                try {
-                                    const { logStudentActivity } = await import('@/lib/student-activity')
-                                    logStudentActivity(
-                                        student.id,
-                                        'login',
-                                        `Student logged in (legacy upgrade): ${student.name_en || student.name_bn || student.email || student.mobile}`,
-                                        ip,
-                                        ua
-                                    ).catch(e => console.error('Login log error:', e))
-                                } catch (e) {
-                                    console.error('Import student-activity error:', e)
-                                }
 
                                 return {
                                     id: student.id.toString(),
@@ -181,8 +153,32 @@ export const authOptions: NextAuthOptions = {
         },
     },
     events: {
-        // SignOut event removed. Logout logging is now explicitly handled by
-        // /api/auth/logout before the session is actually destroyed.
+        async signIn({ user }) {
+            if (user.role === 'student') {
+                let ip = 'Unknown'
+                let ua = 'Unknown'
+                try {
+                    const { headers } = await import('next/headers')
+                    const headerList = await headers()
+                    ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || 'Unknown'
+                    ua = headerList.get('user-agent') || 'Unknown'
+                } catch (e) { }
+
+                try {
+                    const { logStudentActivity } = await import('@/lib/student-activity')
+                    logStudentActivity(
+                        parseInt(user.id),
+                        'login',
+                        `Student logged in: ${user.name || user.email}`,
+                        ip,
+                        ua
+                    ).catch(e => console.error('Login log delivery error:', e))
+                } catch (e) {
+                    console.error('Import student-activity error in events.signIn:', e)
+                }
+            }
+        }
+        // SignOut event removed. Logout logging is explicitly handled by /api/auth/logout
     },
     secret: process.env.NEXTAUTH_SECRET,
 }

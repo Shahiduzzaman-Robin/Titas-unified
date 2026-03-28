@@ -54,6 +54,8 @@ export function AdminNav({ userEmail, userName, userImage }: { userEmail: string
     }, [])
 
     const handleLogout = async () => {
+        if ((window as any).isAdminLoggingOut) return
+        ;(window as any).isAdminLoggingOut = true
         try {
             await fetch('/api/auth/logout', { method: 'POST' })
         } catch (e) {

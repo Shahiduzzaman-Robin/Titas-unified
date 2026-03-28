@@ -60,6 +60,8 @@ export function PublicNav({ session: serverSession }: PublicNavProps) {
     }
 
     const handleSignOut = async () => {
+        if ((window as any).isLoggingOut) return
+        ;(window as any).isLoggingOut = true
         try {
             await fetch('/api/auth/logout', { method: 'POST' })
         } catch (e) {
