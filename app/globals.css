@@ -124,8 +124,9 @@
   font-family: var(--font-inter), sans-serif !important;
 }
 .blog-content * {
-  word-break: break-word;
-  max-width: 100%;
+  /* Prevent word-splitting while maintaining flow */
+  word-break: normal !important;
+  overflow-wrap: break-word !important; 
   font-family: 'LalSabuj', var(--font-bangla), sans-serif !important;
 }
 
