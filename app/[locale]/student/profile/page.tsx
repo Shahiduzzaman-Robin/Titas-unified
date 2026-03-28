@@ -220,20 +220,23 @@ export default async function StudentProfilePage() {
 
                         <ProfileClient student={student} locale={locale} />
                         
-                        <div className="bg-white rounded-[2rem] border-0 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] p-6 md:p-8 flex items-center justify-between hover:shadow-[0_10px_40px_-5px_rgba(0,0,0,0.08)] transition-all duration-300 group">
+                        <Link 
+                            href={`/${locale}/student/security`}
+                            className="bg-white w-full rounded-[2rem] border-0 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] p-6 md:p-8 flex items-center justify-between hover:shadow-[0_10px_40px_-5px_rgba(0,0,0,0.08)] transition-all duration-300 group cursor-pointer"
+                        >
                             <div className="flex items-center gap-5">
                                 <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center shrink-0">
-                                    <ShieldCheck className="w-7 h-7" />
+                                    <ShieldCheck className="w-7 h-7 group-hover:scale-110 transition-transform" />
                                 </div>
                                 <div>
                                     <h3 className="text-xl font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">Account Security & Activity</h3>
                                     <p className="text-slate-500 font-medium mt-1 text-sm">View up to 100 recent login, logout, and password change events.</p>
                                 </div>
                             </div>
-                            <Link href={`/${locale}/student/security`} className="shrink-0 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 p-4 rounded-xl transition-colors hidden sm:flex">
-                                <ChevronRight className="w-6 h-6" />
-                            </Link>
-                        </div>
+                            <div className="shrink-0 bg-slate-50 group-hover:bg-emerald-50 text-slate-400 group-hover:text-emerald-600 p-3 sm:p-4 rounded-xl transition-colors flex ml-4">
+                                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+                            </div>
+                        </Link>
                         
                         <div className="lg:hidden">
                             <ProfileCompletionMeter student={student} />
