@@ -1571,6 +1571,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1.5rem;
     padding: 1.25rem 1.5rem;
     font-weight: 700;
     font-size: 1.05rem;
@@ -1654,13 +1655,12 @@
 
     .faq-item summary,
     .faq-question {
-        padding: 1rem 3.5rem 1rem 1rem;
+        padding: 1.1rem;
         font-size: 0.97rem;
     }
 
     .faq-item summary::after,
     .faq-icon {
-        right: 0.85rem;
         width: 28px;
         height: 28px;
     }
