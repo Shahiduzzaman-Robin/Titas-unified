@@ -1,5 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/lib/auth-options"
+
+// Helper to check if user is admin
+async function isAdmin() {
+    const session = await getServerSession(authOptions)
+    return session?.user?.role === 'admin' || session?.user?.email === process.env.ADMIN_EMAIL
+}
 
 export async function GET(
     request: NextRequest,
@@ -32,6 +40,9 @@ export async function PATCH(
     { params }: { params: { id: string } }
 ) {
     try {
+        if (!await isAdmin()) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+        }
         const body = await request.json()
 
         const student = await prisma.students.update({
@@ -54,6 +65,9 @@ export async function DELETE(
     { params }: { params: { id: string } }
 ) {
     try {
+        if (!await isAdmin()) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+        }
         await prisma.students.delete({
             where: { id: parseInt(params.id) },
         })

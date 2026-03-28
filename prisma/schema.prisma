@@ -51,6 +51,10 @@ model students {
   @@index([hall])
   @@index([upazila])
   @@index([approvedBy])
+  @@index([approval])
+  @@index([gender])
+  @@index([blood_group])
+  @@index([createdAt])
   @@map("students")
 }
 
