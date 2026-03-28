@@ -72,15 +72,15 @@ export async function GET(req: NextRequest) {
                                     TITAS
                                 </span>
                                 <span style={{ fontSize: '18px', color: '#666', fontWeight: '500' }}>
-                                    Dhaka University Brahmanbaria Students Association
+                                    Dhaka University Student's Welfare Association of Brahmanbaria
                                 </span>
                             </div>
                         </div>
 
                         {/* Right Side: Website URL / Tagline */}
                         <div style={{ display: 'flex' }}>
-                            <span style={{ fontSize: '24px', fontWeight: '700', color: '#e21b22' }}>
-                                titas-du.org
+                            <span style={{ fontSize: '24px', fontWeight: '800', color: '#e21b22' }}>
+                                titasdu.com
                             </span>
                         </div>
                     </div>
