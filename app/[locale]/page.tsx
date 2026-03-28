@@ -39,7 +39,7 @@ export default function Home() {
                     />
 
                     <div className="container relative z-20 mx-auto px-4 hero-modern-content text-white">
-                        <div className="flex flex-col items-start gap-4 mb-8">
+                        <div className="flex flex-col items-center md:items-start gap-4 mb-8">
                             <div className="hero-modern-badge glass-panel-dark inline-flex items-center gap-2 px-4 py-2 rounded-full">
                                 <MapPin size={16} />
                                 <span>Brahmanbaria to Dhaka University</span>
