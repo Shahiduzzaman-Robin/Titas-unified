@@ -14,9 +14,12 @@ export async function GET(req: NextRequest) {
         const defaultImage = 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=1200&auto=format&fit=crop';
         const targetImage = imageUrl || defaultImage;
 
-        // Overlay PNG hosted on our own server (transparent top, Bengali branded bottom strip)
+        // Fetch the overlay image as a buffer for more reliable embedding
         const origin = req.nextUrl.origin;
-        const overlayUrl = `${origin}/OG_image.png`;
+        const overlayRes = await fetch(`${origin}/OG_image.png`);
+        const overlayBuffer = await overlayRes.arrayBuffer();
+        const overlayBase64 = Buffer.from(overlayBuffer).toString('base64');
+        const overlayDataUrl = `data:image/png;base64,${overlayBase64}`;
 
         return new ImageResponse(
             (
@@ -26,6 +29,7 @@ export async function GET(req: NextRequest) {
                         width: '100%',
                         display: 'flex',
                         position: 'relative',
+                        backgroundColor: '#f1f5f9' // Fallback bg
                     }}
                 >
                     {/* Background: Article Featured Photo */}
@@ -41,9 +45,9 @@ export async function GET(req: NextRequest) {
                         }}
                     />
 
-                    {/* Foreground: Branded PNG Overlay (transparent top, Bengali branding at bottom) */}
+                    {/* Foreground: Branded PNG Overlay (Base64) */}
                     <img
-                        src={overlayUrl}
+                        src={overlayDataUrl}
                         style={{
                             position: 'absolute',
                             top: 0,
