@@ -120,17 +120,10 @@ const EventsSection = () => {
                             </div>
                         ))
                     ) : (
-                        <div className="event-modern-card glass-panel highlight col-span-2">
-                            <div className="event-icon bg-slate-900 text-white p-6 rounded-2xl">
-                                <Users size={24} />
-                            </div>
-                            <div className="event-content p-6">
-                                <div className="badge-new bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold uppercase mb-2 inline-block">New</div>
-                                <h3 className="bn-text text-xl font-bold">সদস্য সংগ্রহ চলছে</h3>
-                                <p className="event-meta flex items-center gap-1 text-slate-500"><Calendar size={14} /> আমাদের সাথেই থাকুন</p>
-                                <p className="event-desc text-slate-600 mt-2">২০২৩-২৪ সেশনের নবীন শিক্ষার্থীদের তিতাস ডেটাবেজে তথ্য যুক্ত করার আহ্বান করা হচ্ছে।</p>
-                                <Link href="/register" className="btn-text-link mt-4 text-blue-600 flex items-center gap-1 font-bold">Register Now <ArrowRight size={16} /></Link>
-                            </div>
+                        <div className="col-span-2 py-12 text-center bg-slate-50/50 rounded-3xl border-2 border-dashed border-slate-200">
+                           <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                           <h3 className="text-xl font-bold text-slate-400 bn-text">আপাতত কোনো ইভেন্ট নেই</h3>
+                           <p className="text-slate-400 mt-2">নতুন ইভেন্টের জন্য আমাদের সাথেই থাকুন।</p>
                         </div>
                     )}
                 </div>
