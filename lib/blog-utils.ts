@@ -16,7 +16,17 @@ export const slugify = (value: string = ''): string => {
  * Strip HTML tags from a string
  */
 export const stripHtml = (html: string = ''): string => {
-    return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    return html
+        .replace(/<[^>]*>/g, ' ')       // Remove HTML tags
+        .replace(/&nbsp;/gi, ' ')        // Decode non-breaking spaces
+        .replace(/&amp;/gi, '&')         // Decode &
+        .replace(/&lt;/gi, '<')          // Decode <
+        .replace(/&gt;/gi, '>')          // Decode >
+        .replace(/&quot;/gi, '"')        // Decode "
+        .replace(/&#39;/gi, "'")         // Decode '
+        .replace(/&[a-z]+;/gi, ' ')      // Remove any other HTML entities
+        .replace(/\s+/g, ' ')            // Collapse multiple spaces
+        .trim();
 }
 
 /**
