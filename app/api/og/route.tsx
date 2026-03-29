@@ -14,10 +14,13 @@ export async function GET(req: NextRequest) {
         const defaultImage = 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=1200&auto=format&fit=crop';
         const targetImage = imageUrl || defaultImage;
 
-        // Base domain (for fetching the logo if needed, or simply text)
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-        // Use specific production URL to guarantee Satori can fetch the logo even during local development
-        const logoUrl = 'https://titaas.vercel.app/logo.png';
+        // Base domain
+        const baseUrl = 'https://titaas.vercel.app';
+        const logoUrl = `${baseUrl}/logo.png`;
+        const fontUrl = `${baseUrl}/fonts/li-ador-noirrit/Li-Ador-Noirrit-SemiBold.ttf`;
+
+        // Fetch font data
+        const fontData = await fetch(fontUrl).then((res) => res.arrayBuffer());
 
         return new ImageResponse(
             (
@@ -28,7 +31,7 @@ export async function GET(req: NextRequest) {
                         display: 'flex',
                         flexDirection: 'column',
                         backgroundColor: '#fff',
-                        fontFamily: 'sans-serif',
+                        fontFamily: 'BanglaFont',
                     }}
                 >
                     {/* Main Image Area (Top 85%) */}
@@ -67,11 +70,11 @@ export async function GET(req: NextRequest) {
                                     marginLeft: '16px',
                                 }}
                             >
-                                <span style={{ fontSize: '28px', fontWeight: '800', color: '#ffffff', letterSpacing: '-0.5px' }}>
-                                    TITAS
+                                <span style={{ fontSize: '32px', fontWeight: '800', color: '#ffffff', letterSpacing: '-0.5px' }}>
+                                    তিতাস
                                 </span>
                                 <span style={{ fontSize: '18px', color: '#94a3b8', fontWeight: '500' }}>
-                                    Dhaka University Students' Welfare Association of Brahmanbaria
+                                    ঢাকা বিশ্ববিদ্যালয়স্থ ব্রাহ্মণবাড়িয়া জেলা ছাত্রকল্যাণ পরিষদ
                                 </span>
                             </div>
                         </div>
@@ -88,6 +91,13 @@ export async function GET(req: NextRequest) {
             {
                 width: 1200,
                 height: 630,
+                fonts: [
+                    {
+                        name: 'BanglaFont',
+                        data: fontData,
+                        style: 'normal',
+                    },
+                ],
             }
         );
     } catch (e: any) {
