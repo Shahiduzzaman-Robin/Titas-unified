@@ -1,5 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
+import { titasBrandingB64 } from './branding-asset';
 
 export const runtime = 'edge';
 
@@ -14,9 +15,7 @@ export async function GET(req: NextRequest) {
         const defaultImage = 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=1200&auto=format&fit=crop';
         const targetImage = imageUrl || defaultImage;
 
-        // Force a fresh fetch of the branding asset with a timestamp
-        const baseUrl = 'https://titaas.vercel.app';
-        const overlayUrl = `${baseUrl}/titas-branding.png?v=${Date.now()}`;
+        // Branding overlay is embedded as base64 — no network request needed
 
         return new ImageResponse(
             (
@@ -42,9 +41,9 @@ export async function GET(req: NextRequest) {
                         }}
                     />
 
-                    {/* Branding Layer */}
+                    {/* Branding Layer — embedded base64, never fails */}
                     <img
-                        src={overlayUrl}
+                        src={titasBrandingB64}
                         style={{
                             position: 'absolute',
                             top: 0,
