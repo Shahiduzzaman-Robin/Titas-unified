@@ -18,9 +18,9 @@ export async function GET(req: NextRequest) {
         const baseUrl = 'https://titaas.vercel.app';
         const logoUrl = `${baseUrl}/logo.png`;
 
-        // Fetch Noto Sans Bengali from Google Fonts - full Unicode Bengali coverage
+        // Fetch Noto Sans Bengali TTF — Satori only supports TTF/OTF (not woff2)
         const fontData = await fetch(
-            'https://fonts.gstatic.com/s/notosansbengali/v21/Cn-SJsCGWQxOjaGwMQ6fIiMywrNJIky6nvd8BjzVMvJx2mcSPVFpVEqE-6KmsolLudU.woff2'
+            `${baseUrl}/fonts/NotoSansBengali-Regular.ttf`
         ).then((res) => res.arrayBuffer());
 
         return new ImageResponse(
