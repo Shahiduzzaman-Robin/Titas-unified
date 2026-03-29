@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
                             width: '100%',
                             backgroundImage: 'linear-gradient(to right, #052e35, #0a4f5d)',
                             padding: '0 40px',
-                            borderTop: '6px solid #0B61F1', // Royal Blue accent
+                            borderTop: '6px solid #38bdf8', // Sky Blue accent
                             boxShadow: '0 -4px 10px rgba(0,0,0,0.3)',
                         }}
                     >
