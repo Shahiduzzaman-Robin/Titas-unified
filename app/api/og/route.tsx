@@ -14,12 +14,8 @@ export async function GET(req: NextRequest) {
         const defaultImage = 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=1200&auto=format&fit=crop';
         const targetImage = imageUrl || defaultImage;
 
-        // Dynamic overlay from the same origin
-        const origin = req.nextUrl.origin;
-        // Use the encoded space if the user believes that was the magic, but list_dir says underscore
-        // I will try both or just stick to the most stable one. 
-        // Based on the user's comment, I'll try encoding the filename specifically.
-        const overlayUrl = `${origin}/OG_image.png`;
+        // Stable overlay URL from the primary domain
+        const overlayUrl = 'https://titaas.vercel.app/OG_image.png';
 
         return new ImageResponse(
             (
@@ -29,7 +25,7 @@ export async function GET(req: NextRequest) {
                         width: '100%',
                         display: 'flex',
                         position: 'relative',
-                        backgroundColor: '#fff'
+                        backgroundColor: '#fff',
                     }}
                 >
                     {/* Background: Article Featured Photo */}
@@ -42,7 +38,6 @@ export async function GET(req: NextRequest) {
                             width: '100%',
                             height: '100%',
                             objectFit: 'cover',
-                            zIndex: 1,
                         }}
                     />
 
@@ -55,8 +50,6 @@ export async function GET(req: NextRequest) {
                             left: 0,
                             width: '100%',
                             height: '100%',
-                            display: 'flex',
-                            zIndex: 10,
                         }}
                     />
                 </div>
