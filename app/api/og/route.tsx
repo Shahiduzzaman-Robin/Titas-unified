@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
                             width: '100%',
                             backgroundImage: 'linear-gradient(to right, #052e35, #0a4f5d)',
                             padding: '0 40px',
-                            borderTop: '6px solid #38bdf8', // Sky Blue accent
+                            borderTop: '6px solid #ffffff', // Clean white accent
                             boxShadow: '0 -4px 10px rgba(0,0,0,0.3)',
                         }}
                     >
@@ -72,7 +72,7 @@ export async function GET(req: NextRequest) {
                                     TITAS
                                 </span>
                                 <span style={{ fontSize: '18px', color: '#94a3b8', fontWeight: '500' }}>
-                                    Dhaka University Student's Welfare Association of Brahmanbaria
+                                    Dhaka University Students' Welfare Association of Brahmanbaria
                                 </span>
                             </div>
                         </div>
