@@ -89,7 +89,7 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
 
     const session = await getServerSession(authOptions)
     const isAdmin = !!session
-    const t = await getTranslations(locale)
+    const t = await getTranslations({ locale, namespace: 'nav' })
 
     const post = await prisma.blog_posts.findUnique({
         where: { slug },
@@ -150,11 +150,11 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                     {/* Minimalist Breadcrumbs */}
                     <nav className="flex items-center gap-2 text-[14px] text-slate-500 mb-10 overflow-x-auto whitespace-nowrap px-1">
                         <Link href={`/${locale}`} className="hover:text-black transition-colors">
-                            {t('nav.home')}
+                            {t('home')}
                         </Link>
                         <span className="opacity-30">/</span>
                         <Link href={`/${locale}/blog`} className="hover:text-black transition-colors">
-                            {t('nav.blog')}
+                            {t('blog')}
                         </Link>
                         <span className="opacity-30">/</span>
                         <Link 
