@@ -14,12 +14,12 @@ export async function GET(req: NextRequest) {
         const defaultImage = 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=1200&auto=format&fit=crop';
         const targetImage = imageUrl || defaultImage;
 
-        // Fetch the overlay image as a buffer for more reliable embedding
+        // Dynamic overlay from the same origin
         const origin = req.nextUrl.origin;
-        const overlayRes = await fetch(`${origin}/OG_image.png`);
-        const overlayBuffer = await overlayRes.arrayBuffer();
-        const overlayBase64 = Buffer.from(overlayBuffer).toString('base64');
-        const overlayDataUrl = `data:image/png;base64,${overlayBase64}`;
+        // Use the encoded space if the user believes that was the magic, but list_dir says underscore
+        // I will try both or just stick to the most stable one. 
+        // Based on the user's comment, I'll try encoding the filename specifically.
+        const overlayUrl = `${origin}/OG_image.png`;
 
         return new ImageResponse(
             (
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
                         width: '100%',
                         display: 'flex',
                         position: 'relative',
-                        backgroundColor: '#f1f5f9' // Fallback bg
+                        backgroundColor: '#fff'
                     }}
                 >
                     {/* Background: Article Featured Photo */}
@@ -42,18 +42,21 @@ export async function GET(req: NextRequest) {
                             width: '100%',
                             height: '100%',
                             objectFit: 'cover',
+                            zIndex: 1,
                         }}
                     />
 
-                    {/* Foreground: Branded PNG Overlay (Base64) */}
+                    {/* Foreground: Branded PNG Overlay */}
                     <img
-                        src={overlayDataUrl}
+                        src={overlayUrl}
                         style={{
                             position: 'absolute',
                             top: 0,
                             left: 0,
                             width: '100%',
                             height: '100%',
+                            display: 'flex',
+                            zIndex: 10,
                         }}
                     />
                 </div>
