@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
 
         // Overlay PNG hosted on our own Vercel server (transparent top, Bengali branded bottom strip)
         const baseUrl = 'https://titaas.vercel.app';
-        const overlayUrl = `${baseUrl}/OG_image_for%20Website.png`;
+        const overlayUrl = `${baseUrl}/OG%20image.png`;
 
         return new ImageResponse(
             (
