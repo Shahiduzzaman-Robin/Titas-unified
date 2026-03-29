@@ -47,10 +47,10 @@ export async function GET(req: NextRequest) {
                             justifyContent: 'space-between',
                             height: '15%',
                             width: '100%',
-                            backgroundColor: '#ffffff',
+                            backgroundImage: 'linear-gradient(to right, #052e35, #0a4f5d)',
                             padding: '0 40px',
-                            borderTop: '6px solid #027B6D', // Titas Green border
-                            boxShadow: '0 -4px 10px rgba(0,0,0,0.1)',
+                            borderTop: '6px solid #e21b22', // Bright red pop accent on dark background
+                            boxShadow: '0 -4px 10px rgba(0,0,0,0.3)',
                         }}
                     >
                         {/* Left Side: Logo & Text */}
@@ -68,10 +68,10 @@ export async function GET(req: NextRequest) {
                                     marginLeft: '16px',
                                 }}
                             >
-                                <span style={{ fontSize: '28px', fontWeight: '800', color: '#222', letterSpacing: '-0.5px' }}>
+                                <span style={{ fontSize: '28px', fontWeight: '800', color: '#ffffff', letterSpacing: '-0.5px' }}>
                                     TITAS
                                 </span>
-                                <span style={{ fontSize: '18px', color: '#666', fontWeight: '500' }}>
+                                <span style={{ fontSize: '18px', color: '#94a3b8', fontWeight: '500' }}>
                                     Dhaka University Student's Welfare Association of Brahmanbaria
                                 </span>
                             </div>
@@ -79,7 +79,7 @@ export async function GET(req: NextRequest) {
 
                         {/* Right Side: Website URL / Tagline */}
                         <div style={{ display: 'flex' }}>
-                            <span style={{ fontSize: '32px', fontWeight: '900', color: '#175264', letterSpacing: '-0.5px' }}>
+                            <span style={{ fontSize: '32px', fontWeight: '900', color: '#38bdf8', letterSpacing: '-0.5px' }}>
                                 titasdu.com
                             </span>
                         </div>
