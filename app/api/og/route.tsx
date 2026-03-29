@@ -14,8 +14,9 @@ export async function GET(req: NextRequest) {
         const defaultImage = 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=1200&auto=format&fit=crop';
         const targetImage = imageUrl || defaultImage;
 
-        // TEST: Use logo.png to see if overlay works at all
-        const overlayUrl = 'https://titaas.vercel.app/logo.png';
+        // Use the original working overlay filename
+        const baseUrl = 'https://titaas.vercel.app';
+        const overlayUrl = `${baseUrl}/OG_image_for%20Website.png`;
 
         return new ImageResponse(
             (
@@ -24,31 +25,32 @@ export async function GET(req: NextRequest) {
                         height: '100%',
                         width: '100%',
                         display: 'flex',
-                        flexDirection: 'column',
                         position: 'relative',
                         backgroundColor: '#fff',
                     }}
                 >
-                    {/* Background */}
+                    {/* Background: Article Featured Photo */}
                     <img
                         src={targetImage}
                         style={{
                             position: 'absolute',
+                            top: 0,
+                            left: 0,
                             width: '100%',
                             height: '100%',
                             objectFit: 'cover',
                         }}
                     />
 
-                    {/* Overlay Test */}
+                    {/* Foreground: Branded PNG Overlay (The one that worked!) */}
                     <img
                         src={overlayUrl}
                         style={{
                             position: 'absolute',
-                            bottom: 20,
-                            right: 20,
-                            width: '100px',
-                            height: '100px',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
                         }}
                     />
                 </div>
