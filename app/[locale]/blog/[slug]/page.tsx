@@ -24,6 +24,7 @@ import CommentSection from "@/components/blog/CommentSection"
 import SidebarTabs from "@/components/blog/SidebarTabs"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth-options"
+import { getTranslations } from "next-intl/server"
 
 export async function generateMetadata(
     { params }: { params: { slug: string; locale: string } }
@@ -88,6 +89,7 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
 
     const session = await getServerSession(authOptions)
     const isAdmin = !!session
+    const t = await getTranslations(locale)
 
     const post = await prisma.blog_posts.findUnique({
         where: { slug },
@@ -147,11 +149,24 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
                     
                     {/* Minimalist Breadcrumbs */}
                     <nav className="flex items-center gap-2 text-[14px] text-slate-500 mb-10 overflow-x-auto whitespace-nowrap px-1">
-                        <Link href={`/${locale}`} className="hover:text-black">Home</Link>
-                        <span className="opacity-50">»</span>
-                        <Link href={`/${locale}/blog?category=${post.category?.slug}`} className="hover:text-black">{post.category?.name}</Link>
-                        <span className="opacity-50">»</span>
-                        <span className="text-slate-400 truncate max-w-[300px]">{post.title}</span>
+                        <Link href={`/${locale}`} className="hover:text-black transition-colors">
+                            {t('nav.home')}
+                        </Link>
+                        <span className="opacity-30">/</span>
+                        <Link href={`/${locale}/blog`} className="hover:text-black transition-colors">
+                            {t('nav.blog')}
+                        </Link>
+                        <span className="opacity-30">/</span>
+                        <Link 
+                            href={`/${locale}/blog?category=${post.category?.slug}`} 
+                            className="hover:text-black transition-colors font-medium text-slate-600"
+                        >
+                            {post.category?.name}
+                        </Link>
+                        <span className="opacity-30">/</span>
+                        <span className="text-slate-400 truncate max-w-[200px] md:max-w-[400px]">
+                            {post.title}
+                        </span>
                     </nav>
 
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
