@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
         const defaultImage = 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=1200&auto=format&fit=crop';
         const targetImage = imageUrl || defaultImage;
 
-        // Stable overlay URL from the primary domain
+        // Stable overlay URL
         const overlayUrl = 'https://titaas.vercel.app/OG_image.png';
 
         return new ImageResponse(
@@ -28,30 +28,29 @@ export async function GET(req: NextRequest) {
                         backgroundColor: '#fff',
                     }}
                 >
-                    {/* Background: Article Featured Photo */}
-                    <img
-                        src={targetImage}
-                        style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
-                        }}
-                    />
+                    {/* Layer 1: The Featured Photo */}
+                    <div style={{ display: 'flex', position: 'absolute', inset: 0 }}>
+                        <img
+                            src={targetImage}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                            }}
+                        />
+                    </div>
 
-                    {/* Foreground: Branded PNG Overlay */}
-                    <img
-                        src={overlayUrl}
-                        style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '100%',
-                            height: '100%',
-                        }}
-                    />
+                    {/* Layer 2: The Branding Overlay (Bengali Strip) */}
+                    <div style={{ display: 'flex', position: 'absolute', inset: 0 }}>
+                        <img
+                            src={overlayUrl}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'contain',
+                            }}
+                        />
+                    </div>
                 </div>
             ),
             {
