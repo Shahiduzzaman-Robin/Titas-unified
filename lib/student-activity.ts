@@ -56,7 +56,9 @@ async function resolveLocationAndNotify(
         let resolvedLocation = 'Unknown'
 
         // Resolve IP to location
-        if (ipAddress !== 'Unknown' && ipAddress !== '::1' && ipAddress !== '127.0.0.1') {
+        if (ipAddress === '::1' || ipAddress === '127.0.0.1') {
+            resolvedLocation = 'Local System'
+        } else if (ipAddress !== 'Unknown') {
             try {
                 const res = await fetch(`http://ip-api.com/json/${ipAddress}?fields=status,city,country`, {
                     signal: AbortSignal.timeout(2000)
