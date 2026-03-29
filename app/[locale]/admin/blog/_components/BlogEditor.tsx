@@ -47,6 +47,7 @@ const ReactQuill = dynamic(async () => {
     const Quill = QuillModule.Quill
     
     if (typeof window !== 'undefined') {
+        ;(window as any).Quill = Quill
         const { default: BlotFormatter } = await import("quill-blot-formatter")
         Quill.register('modules/blotFormatter', BlotFormatter)
     }

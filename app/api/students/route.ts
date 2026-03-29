@@ -49,6 +49,33 @@ export async function POST(request: NextRequest) {
         // Validate input
         const validatedData = createStudentSchema.parse(body)
 
+        // Check for existing student (duplicates)
+        const duplicateCheck = await prisma.students.findFirst({
+            where: {
+                OR: [
+                    { du_reg_number: validatedData.du_reg_number },
+                    { mobile: validatedData.mobile },
+                    { email: validatedData.email || undefined }
+                ].filter(condition => {
+                    const value = Object.values(condition)[0];
+                    return value !== undefined && value !== '';
+                }),
+                approval: { not: 2 } // Ignore rejected users
+            }
+        })
+
+        if (duplicateCheck) {
+            let fieldLabel = 'তথ্য'
+            if (duplicateCheck.du_reg_number === validatedData.du_reg_number) fieldLabel = 'রেজিস্ট্রেশন নম্বর'
+            else if (duplicateCheck.mobile === validatedData.mobile) fieldLabel = 'মোবাইল নম্বর'
+            else if (duplicateCheck.email === validatedData.email) fieldLabel = 'ইমেইল'
+
+            return NextResponse.json(
+                { error: `আপনার ${fieldLabel} দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট বিদ্যমান।` },
+                { status: 400 }
+            )
+        }
+
         // Password logic: use provided password
         const passwordToHash = validatedData.password
         const hashedPassword = await bcrypt.hash(passwordToHash, 10)
