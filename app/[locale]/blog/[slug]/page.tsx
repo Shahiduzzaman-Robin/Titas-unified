@@ -128,7 +128,7 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
         })
     ]);
 
-    const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://titaas.vercel.app'}/${locale}/blog/${post.slug}`
+    const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://titaas.vercel.app'}/${locale}/blog/${encodeURIComponent(post.slug)}`
 
     // DEEP CLEAN: Wash the content of any non-breaking spaces or invisible characters that sabotage wrapping
     const cleanedContent = post.content
