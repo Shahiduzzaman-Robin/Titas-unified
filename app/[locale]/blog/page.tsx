@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import { prisma } from "@/lib/prisma"
 import BlogClient from "./BlogClient"
 
@@ -71,15 +72,17 @@ export default async function PublicBlogPage({ params }: { params: { locale: str
     }
 
     return (
-        <BlogClient 
-            initialPosts={postsData as any}
-            initialPagination={initialPagination}
-            initialCategories={categories as any}
-            sidebarData={{
-                latest: latestPosts as any,
-                trending: trendingPosts as any
-            }}
-        />
+        <Suspense fallback={<div className="min-h-screen bg-white pt-32 px-4 max-w-7xl mx-auto">Loading...</div>}>
+            <BlogClient 
+                initialPosts={postsData as any}
+                initialPagination={initialPagination}
+                initialCategories={categories as any}
+                sidebarData={{
+                    latest: latestPosts as any,
+                    trending: trendingPosts as any
+                }}
+            />
+        </Suspense>
     )
 }
 

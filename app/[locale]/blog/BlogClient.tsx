@@ -19,6 +19,7 @@ import { cn, optimizeImage } from "@/lib/utils"
 import { PublicNav } from "@/components/PublicNav"
 import Footer from "@/components/home/Footer"
 import SidebarTabs from "@/components/blog/SidebarTabs"
+import { useSearchParams } from "next/navigation"
 
 const BlogSkeleton = ({ locale }: { locale: string }) => (
     <div className="space-y-16 animate-in fade-in duration-700">
@@ -48,19 +49,31 @@ export default function BlogClient({
     sidebarData: { latest: any[], trending: any[] }
 }) {
     const locale = useLocale()
+    const searchParams = useSearchParams()
+    const urlCategory = searchParams.get('category')
+
     const [posts, setPosts] = useState(initialPosts)
     const [loading, setLoading] = useState(false)
     const [search, setSearch] = useState("")
-    const [categoryFilter, setCategoryFilter] = useState("all")
+    const [categoryFilter, setCategoryFilter] = useState(urlCategory || "all")
     const [pagination, setPagination] = useState(initialPagination)
+
+    // Sync from URL when it changes
+    useEffect(() => {
+        if (urlCategory) {
+            setCategoryFilter(urlCategory)
+        } else {
+            setCategoryFilter("all")
+        }
+    }, [urlCategory])
 
     // Only fetch if filters or page changes after initial load
     useEffect(() => {
-        if (categoryFilter === 'all' && search === "" && pagination.page === initialPagination.page) {
-            return;
-        }
+        // If it's the initial load and filters match initial, don't fetch again
+        // Actually, if urlCategory was set, we might need to fetch if initialPosts weren't filtered
+        // But for simplicity, we let fetchPosts handle it.
         fetchPosts()
-    }, [categoryFilter, pagination.page])
+    }, [categoryFilter, search, pagination.page])
 
     const fetchPosts = async () => {
         setLoading(true)
