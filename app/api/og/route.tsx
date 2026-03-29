@@ -14,8 +14,8 @@ export async function GET(req: NextRequest) {
         const defaultImage = 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=1200&auto=format&fit=crop';
         const targetImage = imageUrl || defaultImage;
 
-        // Stable overlay URL
-        const overlayUrl = 'https://titaas.vercel.app/OG_image.png';
+        // TEST: Use logo.png to see if overlay works at all
+        const overlayUrl = 'https://titaas.vercel.app/logo.png';
 
         return new ImageResponse(
             (
@@ -24,33 +24,33 @@ export async function GET(req: NextRequest) {
                         height: '100%',
                         width: '100%',
                         display: 'flex',
+                        flexDirection: 'column',
                         position: 'relative',
                         backgroundColor: '#fff',
                     }}
                 >
-                    {/* Layer 1: The Featured Photo */}
-                    <div style={{ display: 'flex', position: 'absolute', inset: 0 }}>
-                        <img
-                            src={targetImage}
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                objectFit: 'cover',
-                            }}
-                        />
-                    </div>
+                    {/* Background */}
+                    <img
+                        src={targetImage}
+                        style={{
+                            position: 'absolute',
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                        }}
+                    />
 
-                    {/* Layer 2: The Branding Overlay (Bengali Strip) */}
-                    <div style={{ display: 'flex', position: 'absolute', inset: 0 }}>
-                        <img
-                            src={overlayUrl}
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                objectFit: 'contain',
-                            }}
-                        />
-                    </div>
+                    {/* Overlay Test */}
+                    <img
+                        src={overlayUrl}
+                        style={{
+                            position: 'absolute',
+                            bottom: 20,
+                            right: 20,
+                            width: '100px',
+                            height: '100px',
+                        }}
+                    />
                 </div>
             ),
             {
