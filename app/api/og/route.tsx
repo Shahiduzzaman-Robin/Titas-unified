@@ -14,9 +14,9 @@ export async function GET(req: NextRequest) {
         const defaultImage = 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=1200&auto=format&fit=crop';
         const targetImage = imageUrl || defaultImage;
 
-        // Use the new standardized branding filename
+        // Force a fresh fetch of the branding asset with a timestamp
         const baseUrl = 'https://titaas.vercel.app';
-        const overlayUrl = `${baseUrl}/titas-branding.png`;
+        const overlayUrl = `${baseUrl}/titas-branding.png?v=${Date.now()}`;
 
         return new ImageResponse(
             (
@@ -29,28 +29,28 @@ export async function GET(req: NextRequest) {
                         backgroundColor: '#fff',
                     }}
                 >
-                    {/* Background: Article Featured Photo */}
+                    {/* Background Layer */}
                     <img
                         src={targetImage}
                         style={{
                             position: 'absolute',
                             top: 0,
                             left: 0,
-                            width: '100%',
-                            height: '100%',
+                            width: '1200px',
+                            height: '630px',
                             objectFit: 'cover',
                         }}
                     />
 
-                    {/* Foreground: Branded PNG Overlay (The one that worked!) */}
+                    {/* Branding Layer */}
                     <img
                         src={overlayUrl}
                         style={{
                             position: 'absolute',
                             top: 0,
                             left: 0,
-                            width: '100%',
-                            height: '100%',
+                            width: '1200px',
+                            height: '630px',
                         }}
                     />
                 </div>
