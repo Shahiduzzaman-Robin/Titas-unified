@@ -14,9 +14,9 @@ export async function GET(req: NextRequest) {
         const defaultImage = 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=1200&auto=format&fit=crop';
         const targetImage = imageUrl || defaultImage;
 
-        // Use the original working overlay filename
+        // Use the requested new overlay photo
         const baseUrl = 'https://titaas.vercel.app';
-        const overlayUrl = `${baseUrl}/OG_image_for%20Website.png`;
+        const overlayUrl = `${baseUrl}/OG_image.png`;
 
         return new ImageResponse(
             (
