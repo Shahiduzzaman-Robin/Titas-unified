@@ -154,16 +154,16 @@ export const authOptions: NextAuthOptions = {
     },
     events: {
         async signIn({ user }) {
-            if (user.role === 'student') {
-                let ip = 'Unknown'
-                let ua = 'Unknown'
-                try {
-                    const { headers } = await import('next/headers')
-                    const headerList = await headers()
-                    ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || 'Unknown'
-                    ua = headerList.get('user-agent') || 'Unknown'
-                } catch (e) { }
+            let ip = 'Unknown'
+            let ua = 'Unknown'
+            try {
+                const { headers } = await import('next/headers')
+                const headerList = await headers()
+                ip = headerList.get('x-forwarded-for')?.split(',')[0] || headerList.get('x-real-ip') || 'Unknown'
+                ua = headerList.get('user-agent') || 'Unknown'
+            } catch (e) { }
 
+            if (user.role === 'student') {
                 try {
                     const { logStudentActivity } = await import('@/lib/student-activity')
                     await logStudentActivity(
@@ -175,6 +175,20 @@ export const authOptions: NextAuthOptions = {
                     ).catch(e => console.error('Login log delivery error:', e))
                 } catch (e) {
                     console.error('Import student-activity error in events.signIn:', e)
+                }
+            } else if (user.role === 'admin') {
+                try {
+                    const { logAdminActivity } = await import('@/lib/admin-activity')
+                    await logAdminActivity({
+                        adminId: parseInt(user.id),
+                        action: 'admin_login',
+                        description: `Admin logged in: ${user.name || user.email}`,
+                        ipAddress: ip,
+                        userAgent: ua,
+                        metadata: { email: user.email }
+                    }).catch(e => console.error('Admin login log delivery error:', e))
+                } catch (e) {
+                    console.error('Import admin-activity error in events.signIn:', e)
                 }
             }
         }
