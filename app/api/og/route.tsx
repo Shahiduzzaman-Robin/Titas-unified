@@ -14,9 +14,9 @@ export async function GET(req: NextRequest) {
         const defaultImage = 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=1200&auto=format&fit=crop';
         const targetImage = imageUrl || defaultImage;
 
-        // Overlay PNG hosted on our own Vercel server (transparent top, Bengali branded bottom strip)
-        const baseUrl = 'https://titaas.vercel.app';
-        const overlayUrl = `${baseUrl}/OG_image.png`;
+        // Overlay PNG hosted on our own server (transparent top, Bengali branded bottom strip)
+        const origin = req.nextUrl.origin;
+        const overlayUrl = `${origin}/OG_image.png`;
 
         return new ImageResponse(
             (
