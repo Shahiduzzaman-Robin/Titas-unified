@@ -10,18 +10,13 @@ export async function GET(req: NextRequest) {
         // Dynamic params
         const imageUrl = searchParams.get('image');
 
-        // Fallback images
+        // Fallback image
         const defaultImage = 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=1200&auto=format&fit=crop';
         const targetImage = imageUrl || defaultImage;
 
-        // Base domain
+        // Overlay PNG hosted on our own Vercel server (transparent top, Bengali branded bottom strip)
         const baseUrl = 'https://titaas.vercel.app';
-        const logoUrl = `${baseUrl}/logo.png`;
-
-        // Fetch Noto Sans Bengali TTF — Satori only supports TTF/OTF (not woff2)
-        const fontData = await fetch(
-            `${baseUrl}/fonts/NotoSansBengali-Regular.ttf`
-        ).then((res) => res.arrayBuffer());
+        const overlayUrl = `${baseUrl}/OG_image_for%20Website.png`;
 
         return new ImageResponse(
             (
@@ -30,75 +25,38 @@ export async function GET(req: NextRequest) {
                         height: '100%',
                         width: '100%',
                         display: 'flex',
-                        flexDirection: 'column',
-                        backgroundColor: '#fff',
-                        fontFamily: 'BanglaFont',
+                        position: 'relative',
                     }}
                 >
-                    {/* Main Image Area (Top 85%) */}
-                    <div style={{ display: 'flex', height: '85%', width: '100%', overflow: 'hidden' }}>
-                        <img
-                            src={targetImage}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        />
-                    </div>
-
-                    {/* Branding Bar / Bottom Strip (Bottom 15%) */}
-                    <div
+                    {/* Background: Article Featured Photo */}
+                    <img
+                        src={targetImage}
                         style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            height: '15%',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
                             width: '100%',
-                            backgroundImage: 'linear-gradient(to right, #052e35, #0a4f5d)',
-                            padding: '0 40px',
-                            boxShadow: '0 -4px 10px rgba(0,0,0,0.3)',
+                            height: '100%',
+                            objectFit: 'cover',
                         }}
-                    >
-                        {/* Left Side: Logo & Text */}
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <img
-                                src={logoUrl}
-                                height="60"
-                                width="60"
-                                style={{ borderRadius: '50%', objectFit: 'contain' }}
-                            />
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    marginLeft: '16px',
-                                }}
-                            >
-                                <span style={{ fontSize: '32px', fontWeight: '800', color: '#ffffff', letterSpacing: '-0.5px' }}>
-                                    তিতাস
-                                </span>
-                                <span style={{ fontSize: '18px', color: '#94a3b8', fontWeight: '500' }}>
-                                    ঢাকা বিশ্ববিদ্যালয়স্থ ব্রাহ্মণবাড়িয়া জেলা ছাত্রকল্যাণ পরিষদ
-                                </span>
-                            </div>
-                        </div>
+                    />
 
-                        {/* Right Side: Website URL / Tagline */}
-                        <div style={{ display: 'flex' }}>
-                            <span style={{ fontSize: '32px', fontWeight: '900', color: '#38bdf8', letterSpacing: '-0.5px' }}>
-                                titasdu.com
-                            </span>
-                        </div>
-                    </div>
+                    {/* Foreground: Branded PNG Overlay (transparent top, Bengali branding at bottom) */}
+                    <img
+                        src={overlayUrl}
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                        }}
+                    />
                 </div>
             ),
             {
                 width: 1200,
                 height: 630,
-                fonts: [
-                    {
-                        name: 'BanglaFont',
-                        data: fontData,
-                        style: 'normal',
-                    },
-                ],
             }
         );
     } catch (e: any) {
