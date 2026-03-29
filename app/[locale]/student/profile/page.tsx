@@ -135,17 +135,21 @@ export default async function StudentProfilePage() {
                     <div className="lg:col-span-4 space-y-8">
                         <Card className="dashboard-card pt-8">
                             <CardContent className="flex flex-col items-center text-center">
-                                <div className="profile-avatar-container mb-6 group cursor-pointer relative">
+                                <div className="profile-avatar-container mb-6 relative">
                                     <div className="profile-avatar-inner relative w-40 h-40">
                                         <Image
                                             src={getStudentImageUrl(student.image_path)}
                                             alt={student.name_en || "Profile"}
                                             fill
-                                            className="object-cover rounded-full"
+                                            className="object-cover rounded-full border-4 border-white shadow-xl"
                                         />
-                                    </div>
-                                    <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                                        <Edit className="w-6 h-6 text-white" />
+                                        
+                                        {/* Status Badge at the bottom right corner */}
+                                        {student.approval === 1 && (
+                                            <div className="absolute -bottom-1 -right-1 w-10 h-10 bg-emerald-500 rounded-full border-4 border-white flex items-center justify-center text-white shadow-lg animate-in zoom-in duration-300">
+                                                <ShieldCheck className="w-5 h-5" />
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="space-y-1">
