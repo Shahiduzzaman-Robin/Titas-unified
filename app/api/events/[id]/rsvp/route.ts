@@ -68,6 +68,13 @@ export async function POST(
         );
 
         if (existingRsvp) {
+            if (existingRsvp.response === response) {
+                return NextResponse.json({ 
+                    success: false, 
+                    message: response === 'going' ? 'আপনি ইতিমধ্যে এই ইভেন্টের জন্য রেজিস্টার করেছেন।' : 'আপনি ইতিমধ্যে এই ইভেন্ট বাতিল করেছেন।'
+                }, { status: 409 });
+            }
+
             const updatedRsvp = await prisma.event_rsvps.update({
                 where: { id: existingRsvp.id },
                 data: {
