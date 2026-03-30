@@ -13,6 +13,8 @@ interface Event {
     location: string;
     description: string;
     rsvpEnabled: boolean;
+    capacity?: number;
+    _count?: { rsvps: number };
     rsvpSummary?: {
         going: number;
         capacity: number;
@@ -34,7 +36,15 @@ const EventsSection = () => {
             try {
                 const res = await axios.get('/api/events');
                 if (res.data.success) {
-                    setEvents(res.data.data);
+                    const mappedEvents = res.data.data.map((e: any) => ({
+                        ...e,
+                        rsvpSummary: {
+                            going: e._count?.rsvps || 0,
+                            capacity: e.capacity || 0,
+                            seatsLeft: e.capacity > 0 ? e.capacity - (e._count?.rsvps || 0) : null
+                        }
+                    }));
+                    setEvents(mappedEvents);
                 }
             } catch (err) {
                 console.error('Failed to fetch events', err);
@@ -64,8 +74,24 @@ const EventsSection = () => {
             const res = await axios.post(`/api/events/${selectedEvent.id}/rsvp`, { response: 'going' });
             if (res.data.success) {
                 setRsvpMessage({ type: 'success', text: res.data.message });
-                // Update local event summary
-                setEvents(prev => prev.map(e => e.id === selectedEvent.id ? { ...e, rsvpSummary: res.data.data.summary } : e));
+                // Manually update local event summary
+                setEvents(prev => prev.map(e => {
+                    if (e.id === selectedEvent.id) {
+                        // For updates, we should theoretically not increment if they were already going,
+                        // but the endpoint returns 201 for new, 200 for update. 
+                        const isUpdate = res.status === 200;
+                        const newGoing = isUpdate ? (e.rsvpSummary?.going || 0) : (e.rsvpSummary?.going || 0) + 1;
+                        return { 
+                            ...e, 
+                            rsvpSummary: { 
+                                going: newGoing,
+                                capacity: e.capacity || 0,
+                                seatsLeft: (e.capacity || 0) > 0 ? (e.capacity || 0) - newGoing : null
+                            } 
+                        };
+                    }
+                    return e;
+                }));
             }
         } catch (err: any) {
             setRsvpMessage({ type: 'error', text: err.response?.data?.message || 'Unable to submit registration.' });
