@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
         prisma.events.count()
     ])
 
-    return NextResponse.json({ events, total })
+    return NextResponse.json({ success: true, data: events, total })
 }
 
 export async function POST(request: NextRequest) {

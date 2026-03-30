@@ -30,7 +30,7 @@ export default function AdminEventsPage() {
         setLoading(true)
         const res = await fetch('/api/events?admin=1')
         const data = await res.json()
-        setEvents(Array.isArray(data) ? data : data.events || [])
+        setEvents(data.success ? data.data : (Array.isArray(data) ? data : data.events || []))
         setLoading(false)
     }, [])
 
