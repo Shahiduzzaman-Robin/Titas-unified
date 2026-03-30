@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from 'react'
-import { Calendar, Plus, Trash2, Edit, Users, MapPin, Clock, CheckCircle } from 'lucide-react'
+import { Calendar, Plus, Trash2, Edit, Users, MapPin, Clock, CheckCircle, Download, X } from 'lucide-react'
 
 interface Event {
     id: number
@@ -14,6 +14,17 @@ interface Event {
     capacity: number
     createdAt: string
     _count?: { rsvps: number }
+}
+
+interface Rsvp {
+    id: number
+    fullName: string
+    email: string | null
+    phone: string | null
+    department: string | null
+    session: string | null
+    response: string
+    createdAt: string
 }
 
 export default function AdminEventsPage() {
@@ -33,6 +44,11 @@ export default function AdminEventsPage() {
         setEvents(data.success ? data.data : (Array.isArray(data) ? data : data.events || []))
         setLoading(false)
     }, [])
+
+    const [showRsvps, setShowRsvps] = useState(false)
+    const [currentEvent, setCurrentEvent] = useState<Event | null>(null)
+    const [rsvps, setRsvps] = useState<Rsvp[]>([])
+    const [loadingRsvps, setLoadingRsvps] = useState(false)
 
     useEffect(() => { fetchEvents() }, [fetchEvents])
 
@@ -74,6 +90,43 @@ export default function AdminEventsPage() {
         if (!confirm('এই ইভেন্টটি মুছে ফেলবেন?')) return
         await fetch(`/api/events/${id}`, { method: 'DELETE' })
         fetchEvents()
+    }
+
+    const openRsvps = async (ev: Event) => {
+        setCurrentEvent(ev)
+        setShowRsvps(true)
+        setLoadingRsvps(true)
+        
+        try {
+            const res = await fetch(`/api/events/${ev.id}/rsvps`)
+            const data = await res.json()
+            if (data.success) {
+                setRsvps(data.data)
+            }
+        } catch (error) {
+            console.error('Failed to load RSVPs', error)
+        } finally {
+            setLoadingRsvps(false)
+        }
+    }
+
+    const downloadCSV = () => {
+        if (!rsvps.length) return
+        
+        const headers = ['Name,Email,Phone,Department,Session,Response,Date']
+        const rows = rsvps.map(r => {
+            const escape = (str: string | null) => str ? `"${str.replace(/"/g, '""')}"` : '""'
+            return `${escape(r.fullName)},${escape(r.email)},${escape(r.phone)},${escape(r.department)},${escape(r.session)},${escape(r.response)},${escape(new Date(r.createdAt).toLocaleString())}`
+        })
+        
+        const csvContent = "data:text/csv;charset=utf-8," + headers.concat(rows).join("\n")
+        const encodedUri = encodeURI(csvContent)
+        const link = document.createElement("a")
+        link.setAttribute("href", encodedUri)
+        link.setAttribute("download", `RSVPs_${currentEvent?.title.replace(/\s+/g, '_')}.csv`)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
     }
 
     const isUpcoming = (date: string) => new Date(date) >= new Date()
@@ -195,6 +248,7 @@ export default function AdminEventsPage() {
                                         </td>
                                         <td>
                                             <div style={{ display: 'flex', gap: '0.25rem' }}>
+                                                <button className="action-btn" onClick={() => openRsvps(ev)} title="RSVP তালিকা"><Users size={14} /></button>
                                                 <button className="action-btn" onClick={() => openEdit(ev)} title="সম্পাদনা"><Edit size={14} /></button>
                                                 <button className="action-btn reject" onClick={() => remove(ev.id)} title="মুছুন"><Trash2 size={14} /></button>
                                             </div>
@@ -206,6 +260,67 @@ export default function AdminEventsPage() {
                     </div>
                 )}
             </div>
+
+            {/* RSVP Viewer Modal */}
+            {showRsvps && (
+                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden">
+                        <div className="flex items-center justify-between p-6 border-b">
+                            <div>
+                                <h3 className="text-lg font-bold bn-text">RSVP তালিকা - {currentEvent?.title}</h3>
+                                <p className="text-sm text-slate-500">মোট রেজিস্ট্রেশন: {rsvps.length}</p>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <button onClick={downloadCSV} className="btn-outline flex items-center gap-2" disabled={rsvps.length === 0}>
+                                    <Download size={16} /> CSV ডাউনলোড
+                                </button>
+                                <button onClick={() => setShowRsvps(false)} className="text-slate-400 hover:text-slate-700">
+                                    <X size={24} />
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div className="p-6 overflow-y-auto">
+                            {loadingRsvps ? (
+                                <div className="text-center py-8 text-slate-500">লোড হচ্ছে...</div>
+                            ) : rsvps.length === 0 ? (
+                                <div className="text-center py-8 text-slate-500 bn-text">কোনো RSVP পাওয়া যায়নি</div>
+                            ) : (
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-left border-collapse min-w-[700px]">
+                                        <thead>
+                                            <tr className="bg-slate-50 border-b">
+                                                <th className="p-3 font-semibold text-sm bn-text">নাম</th>
+                                                <th className="p-3 font-semibold text-sm bn-text">যোগাযোগ</th>
+                                                <th className="p-3 font-semibold text-sm bn-text">সেশন ও বিভাগ</th>
+                                                <th className="p-3 font-semibold text-sm bn-text">সময়</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {rsvps.map(r => (
+                                                <tr key={r.id} className="border-b hover:bg-slate-50">
+                                                    <td className="p-3 font-medium">{r.fullName}</td>
+                                                    <td className="p-3 text-sm text-slate-600">
+                                                        <div>{r.email || '-'}</div>
+                                                        <div>{r.phone || '-'}</div>
+                                                    </td>
+                                                    <td className="p-3 text-sm text-slate-600">
+                                                        <div>{r.session || '-'}</div>
+                                                        <div>{r.department || '-'}</div>
+                                                    </td>
+                                                    <td className="p-3 text-sm text-slate-500">
+                                                        {new Date(r.createdAt).toLocaleString('bn-BD')}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
