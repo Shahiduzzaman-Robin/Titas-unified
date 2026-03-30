@@ -51,3 +51,38 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Failed to send message' }, { status: 500 })
     }
 }
+
+export async function DELETE(request: NextRequest) {
+    const session = await getServerSession(authOptions)
+    if (!session || session.user?.role !== 'admin') {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    try {
+        const { messageIds } = await request.json()
+        if (!messageIds || !Array.isArray(messageIds) || messageIds.length === 0) {
+            return NextResponse.json({ error: 'No message IDs provided' }, { status: 400 })
+        }
+
+        await prisma.contact_messages.deleteMany({
+            where: {
+                id: { in: messageIds }
+            }
+        })
+
+        // Log the bulk delete action
+        await prisma.admin_activity_logs.create({
+            data: {
+                adminId: (session.user as any).id,
+                action: 'bulk_delete_messages',
+                description: `Bulk deleted ${messageIds.length} contact messages`,
+                ipAddress: request.headers.get('x-forwarded-for') || '127.0.0.1',
+                userAgent: request.headers.get('user-agent') || 'unknown'
+            }
+        })
+
+        return NextResponse.json({ success: true, count: messageIds.length })
+    } catch (error: any) {
+        return NextResponse.json({ error: error.message || 'Failed to delete messages' }, { status: 500 })
+    }
+}

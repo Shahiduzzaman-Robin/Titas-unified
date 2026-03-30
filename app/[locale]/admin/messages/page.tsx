@@ -22,6 +22,7 @@ export default function AdminMessagesPage() {
     const [loading, setLoading] = useState(true)
     const [filter, setFilter] = useState('')
     const [selected, setSelected] = useState<ContactMessage | null>(null)
+    const [selectedIds, setSelectedIds] = useState<number[]>([])
     const [page, setPage] = useState(1)
 
     const fetchMessages = useCallback(async () => {
@@ -54,7 +55,40 @@ export default function AdminMessagesPage() {
         if (!confirm('এই বার্তাটি মুছে ফেলবেন?')) return
         await fetch(`/api/contact/${id}`, { method: 'DELETE' })
         if (selected?.id === id) setSelected(null)
+        setSelectedIds(prev => prev.filter(sid => sid !== id))
         fetchMessages()
+    }
+
+    const deleteBulkMsg = async () => {
+        if (!selectedIds.length) return
+        if (!confirm(`${selectedIds.length}টি বার্তা মুছে ফেলতে চান?`)) return
+        
+        try {
+            const res = await fetch('/api/contact', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ messageIds: selectedIds })
+            })
+            if (res.ok) {
+                setSelectedIds([])
+                fetchMessages()
+                if (selected && selectedIds.includes(selected.id)) setSelected(null)
+            }
+        } catch (error) {
+            console.error('Failed to delete messages', error)
+        }
+    }
+
+    const toggleSelect = (id: number) => {
+        setSelectedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id])
+    }
+
+    const toggleSelectAll = () => {
+        if (selectedIds.length === messages.length) {
+            setSelectedIds([])
+        } else {
+            setSelectedIds(messages.map(m => m.id))
+        }
     }
 
     const statusBadge = (status: string) => {
@@ -87,9 +121,16 @@ export default function AdminMessagesPage() {
                             </button>
                         ))}
                     </div>
-                    <button className="btn-outline" onClick={fetchMessages} style={{ marginLeft: 'auto' }}>
-                        <RefreshCw size={14} /> রিফ্রেশ
-                    </button>
+                    <div style={{ display: 'flex', gap: '0.5rem', marginLeft: 'auto' }}>
+                        {selectedIds.length > 0 && (
+                            <button className="btn-outline reject" onClick={deleteBulkMsg} style={{ color: '#ef4444', borderColor: '#ef4444' }}>
+                                <Trash2 size={14} /> নির্বাচিত মুছুন ({selectedIds.length})
+                            </button>
+                        )}
+                        <button className="btn-outline" onClick={fetchMessages}>
+                            <RefreshCw size={14} /> রিফ্রেশ
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -104,9 +145,18 @@ export default function AdminMessagesPage() {
                             {/* Mobile View: Cards */}
                             <div className="md:hidden divider divide-y divide-slate-100">
                                 {messages.map(msg => (
-                                    <div key={msg.id} className={`p-4 transition-colors ${selected?.id === msg.id ? 'bg-slate-50' : 'bg-white'}`} onClick={() => { setSelected(msg); updateStatus(msg.id, msg.status === 'unread' ? 'read' : msg.status) }}>
+                                    <div key={msg.id} className={`p-4 transition-colors border-b border-slate-100 ${selected?.id === msg.id ? 'bg-slate-50' : 'bg-white'}`} onClick={() => { setSelected(msg); updateStatus(msg.id, msg.status === 'unread' ? 'read' : msg.status) }}>
                                         <div className="flex justify-between items-start mb-2">
-                                            <div className="font-bold text-slate-800">{msg.name}</div>
+                                            <div className="flex items-center gap-2">
+                                                <input 
+                                                    type="checkbox" 
+                                                    checked={selectedIds.includes(msg.id)}
+                                                    onClick={e => e.stopPropagation()}
+                                                    onChange={() => toggleSelect(msg.id)}
+                                                    className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
+                                                />
+                                                <div className="font-bold text-slate-800">{msg.name}</div>
+                                            </div>
                                             <div>{statusBadge(msg.status)}</div>
                                         </div>
                                         <div className="text-sm text-slate-600 mb-2 truncate">{msg.subject}</div>
@@ -130,6 +180,14 @@ export default function AdminMessagesPage() {
                                 <table className="admin-table">
                                     <thead>
                                         <tr>
+                                            <th style={{ width: '40px' }}>
+                                                <input 
+                                                    type="checkbox" 
+                                                    checked={messages.length > 0 && selectedIds.length === messages.length}
+                                                    onChange={toggleSelectAll}
+                                                    className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
+                                                />
+                                            </th>
                                             <th>প্রেরক</th>
                                             <th>বিষয়</th>
                                             <th>তারিখ</th>
@@ -140,6 +198,15 @@ export default function AdminMessagesPage() {
                                     <tbody>
                                         {messages.map(msg => (
                                             <tr key={msg.id} style={{ cursor: 'pointer', background: selected?.id === msg.id ? '#f8fafc' : '' }}>
+                                                <td>
+                                                    <input 
+                                                        type="checkbox" 
+                                                        checked={selectedIds.includes(msg.id)}
+                                                        onChange={() => toggleSelect(msg.id)}
+                                                        onClick={e => e.stopPropagation()}
+                                                        className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
+                                                    />
+                                                </td>
                                                 <td onClick={() => { setSelected(msg); updateStatus(msg.id, msg.status === 'unread' ? 'read' : msg.status) }}>
                                                     <div style={{ fontWeight: 600, color: '#1e293b' }}>{msg.name}</div>
                                                     <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{msg.email}</div>
