@@ -73,7 +73,7 @@ export async function DELETE(request: NextRequest) {
         // Log the bulk delete action
         await prisma.admin_activity_logs.create({
             data: {
-                adminId: (session.user as any).id,
+                adminId: parseInt((session.user as any).id),
                 action: 'bulk_delete_messages',
                 description: `Bulk deleted ${messageIds.length} contact messages`,
                 ipAddress: request.headers.get('x-forwarded-for') || '127.0.0.1',

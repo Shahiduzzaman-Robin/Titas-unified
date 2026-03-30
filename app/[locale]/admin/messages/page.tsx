@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { useLocale } from 'next-intl'
 import { Mail, Trash2, Eye, CheckCircle, RefreshCw, Search } from 'lucide-react'
+import { toast } from 'sonner'
 
 interface ContactMessage {
     id: number
@@ -70,12 +71,17 @@ export default function AdminMessagesPage() {
                 body: JSON.stringify({ messageIds: selectedIds })
             })
             if (res.ok) {
+                toast.success(`${selectedIds.length}টি বার্তা মুছে ফেলা হয়েছে`)
                 setSelectedIds([])
                 fetchMessages()
                 if (selected && selectedIds.includes(selected.id)) setSelected(null)
+            } else {
+                const data = await res.json()
+                toast.error(data.error || 'মুছে ফেলতে ব্যর্থ হয়েছে')
             }
         } catch (error) {
             console.error('Failed to delete messages', error)
+            toast.error('একটি ত্রুটি ঘটেছে')
         }
     }
 
