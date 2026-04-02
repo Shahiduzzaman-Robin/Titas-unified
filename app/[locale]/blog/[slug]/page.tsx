@@ -130,7 +130,9 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
         })
     ]);
 
-    const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://titaas.vercel.app'}/${locale}/blog/${encodeURIComponent(post.slug)}`
+    // Fix: We provide the raw unicode slug to shareUrl so SocialShare encodes it EXACTLY once. 
+    // Double-encoding (%25) causes Facebook's composer to reject the path and default to the root domain.
+    const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://titaas.vercel.app'}/${locale}/blog/${post.slug}`
 
     // DEEP CLEAN: Wash the content of any non-breaking spaces or invisible characters that sabotage wrapping
     const cleanedContent = post.content
