@@ -35,6 +35,22 @@ export const metadata: Metadata = {
     description: "Student Registration and Management System",
     icons: {
         icon: '/favicon.ico',
+    },
+    openGraph: {
+        title: "Titas - Community Hub",
+        description: "ঢাকা বিশ্ববিদ্যালয়স্থ ব্রাহ্মণবাড়িয়া জেলার শিক্ষার্থীদের মেধা, মনন ও ঐক্যের প্রতীক।",
+        url: "https://titaas.vercel.app",
+        siteName: "Titas (তিতাস)",
+        images: [
+            {
+                url: "https://res.cloudinary.com/dwybib7hh/image/upload/v1774170410/titas/hero/Fruit_Fest.jpg",
+                width: 1200,
+                height: 630,
+                alt: "Titas Community",
+            }
+        ],
+        locale: "bn_BD",
+        type: "website",
     }
 };
 
