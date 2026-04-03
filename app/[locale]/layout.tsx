@@ -8,7 +8,7 @@ import { SessionProviderWrapper } from '@/components/SessionProviderWrapper';
 
 import localFont from 'next/font/local';
 
-const inter = Inter({ 
+const inter = Inter({
     subsets: ["latin"],
     variable: '--font-inter',
 });
@@ -78,5 +78,5 @@ export default async function LocaleLayout({
             </body>
         </html>
     );
-} 
+}
 // redeploy

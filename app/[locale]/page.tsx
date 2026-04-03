@@ -16,6 +16,7 @@ import LeadershipSection from "@/components/home/LeadershipSection";
 import LatestNews from "@/components/home/LatestNews";
 import HomeStatistics from "@/components/home/HomeStatistics";
 import Footer from "@/components/home/Footer";
+import BrahmanbariaLogo from "@/components/home/BrahmanbariaLogo";
 
 // Import Main CSS
 import "@/styles/Home.css";
@@ -163,6 +164,8 @@ export default function Home() {
                         </div>
                     </div>
                 </section>
+
+                <BrahmanbariaLogo />
             </main>
 
             {/* Footer */}
