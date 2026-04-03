@@ -34,7 +34,8 @@ export default function middleware(request: NextRequest) {
     // --- INAUGURATION LOCKDOWN ---
     // Allowed routes: Auth, Admin, Students, API, Static
     // Only applies if the path has a locale (protecting localized public front-end)
-    if (pathnameHasLocale) {
+    // ONLY run in production to allow local testing
+    if (pathnameHasLocale && process.env.NODE_ENV !== 'development') {
         const isAllowedRoute = /^\/(en|bn)\/(login|register|admin|student|students|coming-soon)(\/|$)/.test(pathname);
         if (!isAllowedRoute) {
             const locale = pathname.split('/')[1];
