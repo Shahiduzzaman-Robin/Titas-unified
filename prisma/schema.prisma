@@ -8,43 +8,43 @@ datasource db {
 }
 
 model students {
-  id                Int                   @id @default(autoincrement())
-  student_session   String?               @db.VarChar(50)
-  du_reg_number     String?               @db.VarChar(50)
-  name_en           String?               @db.VarChar(100)
-  name_bn           String?               @db.VarChar(100)
-  address_en        String?               @db.VarChar(255)
-  address_bn        String?               @db.VarChar(255)
-  upazila           String?               @db.VarChar(100)
-  department        String?               @db.VarChar(100)
-  mobile            String?               @db.VarChar(15)
-  email             String?               @db.VarChar(100)
-  blood_group       String?               @db.VarChar(20)
-  hall              String?               @db.VarChar(100)
-  gender            String                @db.VarChar(30)
-  image_path        String?               @db.VarChar(1000)
-  image_show        Int?                  @default(0)
-  approval          Int?                  @default(0)
-  approvedBy        Int?
-  deny_reason       String?               @db.VarChar(255)
-  job_position      String?               @db.VarChar(255)
-  job_designation   String?               @db.VarChar(255)
-  show_job_position String?               @db.VarChar(10)
-  prefix            String                @default("TITAS") @db.VarChar(255)
-  password          String?               @db.VarChar(255)
-  legacy_password   String?               @db.VarChar(255)
-  district          String?               @db.VarChar(100)
-  createdAt         DateTime              @default(now())
-  updatedAt         DateTime              @default(now()) @updatedAt
-  admin_activity_logs admin_activity_logs[] @relation("AdminToStudent")
+  id                  Int                     @id @default(autoincrement())
+  student_session     String?                 @db.VarChar(50)
+  du_reg_number       String?                 @db.VarChar(50)
+  name_en             String?                 @db.VarChar(100)
+  name_bn             String?                 @db.VarChar(100)
+  address_en          String?                 @db.VarChar(255)
+  address_bn          String?                 @db.VarChar(255)
+  upazila             String?                 @db.VarChar(100)
+  department          String?                 @db.VarChar(100)
+  mobile              String?                 @db.VarChar(15)
+  email               String?                 @db.VarChar(100)
+  blood_group         String?                 @db.VarChar(20)
+  hall                String?                 @db.VarChar(100)
+  gender              String                  @db.VarChar(30)
+  image_path          String?                 @db.VarChar(1000)
+  image_show          Int?                    @default(0)
+  approval            Int?                    @default(0)
+  approvedBy          Int?
+  deny_reason         String?                 @db.VarChar(255)
+  job_position        String?                 @db.VarChar(255)
+  job_designation     String?                 @db.VarChar(255)
+  show_job_position   String?                 @db.VarChar(10)
+  prefix              String                  @default("TITAS") @db.VarChar(255)
+  password            String?                 @db.VarChar(255)
+  district            String?                 @db.VarChar(100)
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @default(now()) @updatedAt
+  legacy_password     String?                 @db.VarChar(255)
+  admin_activity_logs admin_activity_logs[]   @relation("AdminToStudent")
   sms_logs            sms_logs[]
-  edits               student_edits[]
   student_logs        student_activity_logs[]
-  approver          admins?               @relation("StudentApprover", fields: [approvedBy], references: [id])
-  department_rel    departments?          @relation(fields: [department], references: [name])
-  hall_rel          halls?                @relation(fields: [hall], references: [name])
-  session_rel       sessions?             @relation(fields: [student_session], references: [name])
-  upazila_rel       upazilas?             @relation(fields: [upazila], references: [name])
+  edits               student_edits[]
+  approver            admins?                 @relation("StudentApprover", fields: [approvedBy], references: [id])
+  department_rel      departments?            @relation(fields: [department], references: [name])
+  hall_rel            halls?                  @relation(fields: [hall], references: [name])
+  session_rel         sessions?               @relation(fields: [student_session], references: [name])
+  upazila_rel         upazilas?               @relation(fields: [upazila], references: [name])
 
   @@index([student_session])
   @@index([department])
@@ -155,12 +155,12 @@ model student_edits {
   id          Int       @id @default(autoincrement())
   studentId   Int
   changes     String    @db.LongText
-  old_changes String?   @db.LongText
   status      String    @default("pending")
   adminId     Int?
   reviewNote  String?   @db.Text
   createdAt   DateTime  @default(now())
   reviewedAt  DateTime?
+  old_changes String?   @db.LongText
   admin       admins?   @relation(fields: [adminId], references: [id])
   student     students  @relation(fields: [studentId], references: [id])
 
@@ -185,10 +185,10 @@ model password_resets {
 model otp_verifications {
   id        Int      @id @default(autoincrement())
   mobile    String?
-  email     String?
   otp       String
   expiresAt DateTime
   createdAt DateTime @default(now())
+  email     String?
 
   @@index([mobile])
   @@index([email])
@@ -287,12 +287,12 @@ model blog_comments {
   email      String?    @db.VarChar(100)
   text       String     @db.Text
   likes      Int        @default(0)
-  likedBy    Json?
   approved   Boolean    @default(true)
   flagged    Boolean    @default(false)
   flagReason String?    @db.Text
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
+  likedBy    Json?
   post       blog_posts @relation(fields: [postId], references: [id])
 
   @@index([postId])
@@ -395,16 +395,16 @@ model email_logs {
 }
 
 model notification_settings {
-  id                  Int      @id @default(autoincrement())
-  registrationStatus  Boolean  @default(true)
-  profileEdit         Boolean  @default(true)
-  noticePublished     Boolean  @default(true)
-  eventReminders      Boolean  @default(true)
-  passwordReset       Boolean  @default(true)
-  loginAlerts         Boolean  @default(true)
-  updatedBy           String?  @db.VarChar(255)
-  updatedAt           DateTime @updatedAt
-  createdAt           DateTime @default(now())
+  id                 Int      @id @default(autoincrement())
+  registrationStatus Boolean  @default(true)
+  profileEdit        Boolean  @default(true)
+  noticePublished    Boolean  @default(true)
+  eventReminders     Boolean  @default(true)
+  passwordReset      Boolean  @default(true)
+  loginAlerts        Boolean  @default(true)
+  updatedBy          String?  @db.VarChar(255)
+  updatedAt          DateTime @updatedAt
+  createdAt          DateTime @default(now())
 
   @@map("notification_settings")
 }
@@ -416,9 +416,9 @@ model student_activity_logs {
   description String?  @db.Text
   metadata    String?  @db.LongText
   ipAddress   String?  @db.VarChar(45)
-  location    String?  @db.VarChar(255)
   userAgent   String?  @db.Text
   createdAt   DateTime @default(now())
+  location    String?  @db.VarChar(255)
   student     students @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@index([studentId])
