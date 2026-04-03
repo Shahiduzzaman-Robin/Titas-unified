@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import TrainAnimation from '@/components/home/TrainAnimation';
 import Link from 'next/link';
-import { Mail, UserCircle, LogIn } from 'lucide-react';
+import { Mail, UserCircle, LogIn, Users, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default async function ComingSoonPage({ params: { locale } }: { params: { locale: string } }) {
@@ -52,17 +52,29 @@ export default async function ComingSoonPage({ params: { locale } }: { params: {
                         {locale === 'bn' ? 'শিক্ষার্থী অ্যাক্সেস' : 'Student Access'}
                     </h3>
                     
-                    <div className="flex flex-col sm:flex-row items-center gap-4 justify-center">
-                        <Link href={`/${locale}/student/profile`} className="w-full sm:w-auto">
-                            <Button className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white border-0 shadow-[0_0_15px_rgba(5,150,105,0.3)] gap-2 h-12 px-6 rounded-lg text-base transition-all font-semibold uppercase tracking-wide">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                        <Link href={`/${locale}/student/profile`} className="w-full">
+                            <Button className="w-full bg-emerald-600 hover:bg-emerald-500 text-white border-0 shadow-[0_0_15px_rgba(5,150,105,0.3)] gap-2 h-12 px-6 rounded-lg text-[15px] transition-all font-semibold uppercase tracking-wide">
                                 <UserCircle className="w-5 h-5" />
                                 {locale === 'bn' ? 'আমার প্রোফাইল' : 'My Profile'}
                             </Button>
                         </Link>
-                        <Link href={`/${locale}/login`} className="w-full sm:w-auto">
-                            <Button variant="outline" className="w-full sm:w-auto bg-transparent border-white/20 text-white hover:bg-white/10 hover:text-white h-12 px-6 rounded-lg text-base transition-all font-semibold uppercase tracking-wide gap-2">
+                        <Link href={`/${locale}/students`} className="w-full">
+                            <Button variant="outline" className="w-full bg-white/5 border-white/10 text-white hover:bg-white/10 hover:text-white h-12 px-6 rounded-lg text-[15px] transition-all font-semibold uppercase tracking-wide gap-2">
+                                <Users className="w-5 h-5" />
+                                {locale === 'bn' ? 'শিক্ষার্থী তালিকা' : 'Students'}
+                            </Button>
+                        </Link>
+                        <Link href={`/${locale}/login`} className="w-full">
+                            <Button variant="outline" className="w-full bg-transparent border-white/20 text-white hover:bg-white/10 hover:text-white h-12 px-6 rounded-lg text-[15px] transition-all font-semibold uppercase tracking-wide gap-2">
                                 <LogIn className="w-5 h-5" />
                                 {locale === 'bn' ? 'লগইন করুন' : 'Login'}
+                            </Button>
+                        </Link>
+                        <Link href={`/${locale}/register`} className="w-full">
+                            <Button variant="outline" className="w-full bg-transparent border-white/20 text-white hover:bg-white/10 hover:text-white h-12 px-6 rounded-lg text-[15px] transition-all font-semibold uppercase tracking-wide gap-2">
+                                <UserPlus className="w-5 h-5" />
+                                {locale === 'bn' ? 'রেজিস্ট্রেশন' : 'Register'}
                             </Button>
                         </Link>
                     </div>
