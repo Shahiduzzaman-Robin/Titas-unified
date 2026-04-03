@@ -84,8 +84,12 @@ export default function LoginPage() {
 
     if (status === "authenticated") return null
 
+    const isDev = process.env.NODE_ENV === 'development';
+
     return (
         <div className="bg-slate-50 min-h-screen flex flex-col pt-12 md:pt-0">
+            {isDev && <PublicNav />}
+            
             <main className="flex-1 auth-page-container flex items-center justify-center">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -201,6 +205,7 @@ export default function LoginPage() {
                     {/* Copyright text removed as requested */}
                 </motion.div>
             </main>
+            {isDev && <Footer />}
         </div>
     )
 }

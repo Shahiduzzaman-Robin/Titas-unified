@@ -66,8 +66,11 @@ export default function Register() {
         }
     }
 
+    const isDev = process.env.NODE_ENV === 'development';
+
     return (
         <main className="min-h-screen bg-slate-50 bn-text">
+            {isDev && <PublicNav />}
             <div className="py-10 px-4">
                 <div className="max-w-4xl mx-auto space-y-6">
                     <div className="mb-4">
@@ -89,6 +92,7 @@ export default function Register() {
                     />
                 </div>
             </div>
+            {isDev && <Footer />}
         </main>
     )
 }
