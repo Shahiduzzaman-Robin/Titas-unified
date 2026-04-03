@@ -68,7 +68,6 @@ export default function Register() {
 
     return (
         <main className="min-h-screen bg-slate-50 bn-text">
-            <PublicNav />
             <div className="py-10 px-4">
                 <div className="max-w-4xl mx-auto space-y-6">
                     <div className="mb-4">
@@ -90,7 +89,6 @@ export default function Register() {
                     />
                 </div>
             </div>
-            <Footer />
         </main>
     )
 }

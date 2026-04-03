@@ -142,7 +142,6 @@ export default function StudentDirectoryClient({
 
     return (
         <div className="students-directory-modern min-h-screen bg-white">
-            <PublicNav />
 
             {/* Premium Header/Controls */}
             <div className="relative lg:sticky top-0 lg:top-16 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-none lg:shadow-sm py-4 lg:py-6">
@@ -438,8 +437,6 @@ export default function StudentDirectoryClient({
                     </div>
                 </div>
             )}
-
-            <Footer />
         </div>
     )
 }
