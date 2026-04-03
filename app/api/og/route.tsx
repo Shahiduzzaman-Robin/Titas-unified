@@ -49,7 +49,13 @@ export async function GET(req: NextRequest) {
                     />
                 </div>
             ),
-            { width: 1200, height: 630 }
+            { 
+                width: 1200, 
+                height: 630,
+                headers: {
+                    'Cache-Control': 'public, immutable, no-transform, s-maxage=31536000, max-age=31536000',
+                }
+            }
         );
     } catch (e: any) {
         console.error(e.message);

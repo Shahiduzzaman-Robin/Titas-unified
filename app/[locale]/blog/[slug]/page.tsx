@@ -38,18 +38,21 @@ export async function generateMetadata(
 
     if (!post) return {}
 
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://titaas.vercel.app'
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://titasdu.com'
     const canonicalUrl = `${baseUrl}/${locale}/blog/${encodeURIComponent(post.slug)}`
     
     // Determine the ideal social image
     let sourceImage = post.featuredImage || `${baseUrl}/og-default.png`
     
-    // Ensure image is absolute URL before passing to our OG Generator
+    // Ensure image is absolute URL with proper domain before passing to our OG Generator
     if (sourceImage && !sourceImage.startsWith('http')) {
         sourceImage = `${baseUrl}${sourceImage.startsWith('/') ? '' : '/'}${sourceImage}`
     }
     
-    // The Magical Branded URL Overlay
+    // Remove any accidental double slashes in URL construction
+    sourceImage = sourceImage.replace(/([^:]\/)\/+/g, "$1")
+    
+    // The Branded OG URL with absolute domain
     const ogImage = `${baseUrl}/api/og?image=${encodeURIComponent(sourceImage)}`
     
     // Sharpening the title for social
@@ -70,7 +73,16 @@ export async function generateMetadata(
             publishedTime: post.publishedAt?.toISOString(),
             authors: post.authorName ? [post.authorName] : ['তিতাস মিডিয়া সেল'],
             locale: locale === 'bn' ? 'bn_BD' : 'en_US',
-            images: [{ url: ogImage, width: 1200, height: 630, alt: post.title }]
+            images: [
+                { 
+                    url: ogImage, 
+                    secureUrl: ogImage,
+                    width: 1200, 
+                    height: 630, 
+                    alt: post.title,
+                    type: 'image/png'
+                }
+            ]
         },
         twitter: {
             card: 'summary_large_image',
