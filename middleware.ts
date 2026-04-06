@@ -31,23 +31,6 @@ export default function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL(`/${localeCookie}${pathname}${request.nextUrl.search}`, request.url));
     }
 
-    // --- INAUGURATION LOCKDOWN ---
-    // Allowed routes: Auth, Admin, Students, API, Static
-    // Only applies if the path has a locale (protecting localized public front-end)
-    // ONLY run in production to allow local testing
-    if (pathnameHasLocale && process.env.NODE_ENV !== 'development') {
-        const isAllowedRoute = /^\/(en|bn)\/(login|register|admin|student|students|coming-soon)(\/|$)/.test(pathname);
-        if (!isAllowedRoute) {
-            const locale = pathname.split('/')[1];
-            const rewriteUrl = new URL(`/${locale}/coming-soon`, request.url);
-            
-            // Rewrite the request but manually attach the Next-Intl header so the page knows its locale
-            const response = NextResponse.rewrite(rewriteUrl);
-            response.headers.set('X-NEXT-INTL-LOCALE', locale);
-            return response;
-        }
-    }
-    // -----------------------------
 
     // Let next-intl handle the routing
     const response = handleI18nRouting(request);
