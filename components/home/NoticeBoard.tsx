@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { AlertCircle, Calendar } from 'lucide-react';
+import { Bell, Calendar, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 
 interface Notice {
@@ -36,8 +36,8 @@ const NoticeBoard = () => {
     return (
         <div className="notice-board-modern">
             <div className="notice-label bn-text">
-                <AlertCircle size={18} />
-                জরুরী নোটিশ
+                <Bell size={18} />
+                নোটিশ বোর্ড
             </div>
             <div className="notice-ticker">
                 {notices.length > 0 ? notices.map((notice) => (
