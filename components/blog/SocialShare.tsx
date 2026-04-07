@@ -57,7 +57,15 @@ export default function SocialShare({ url, title, variant = 'default' }: SocialS
     ]
 
     const copyToClipboard = () => {
-        navigator.clipboard.writeText(url)
+        try {
+            // Use URL constructor to get a properly percent-encoded absolute URL
+            // This ensures non-ASCII characters (like Bengali) are correctly encoded for social scrapers
+            const encodedLink = new URL(url).toString();
+            navigator.clipboard.writeText(encodedLink)
+        } catch (e) {
+            // Fallback to original url if URL constructor fails (e.g. relative path)
+            navigator.clipboard.writeText(url)
+        }
         setCopied(true)
         toast.success("Link copied to clipboard")
         setTimeout(() => setCopied(false), 2000)
