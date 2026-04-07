@@ -56,7 +56,7 @@ const GallerySection = () => {
                             {images.length > 0 && (
                                 <div className="relative group overflow-hidden rounded-2xl bg-slate-100 aspect-square md:aspect-auto">
                                     <Image
-                                        src={images[0].url}
+                                        src={optimizeImage(images[0].url)}
                                         alt={images[0].title || 'Gallery Image'}
                                         fill
                                         sizes="(max-width: 768px) 100vw, 50vw"
@@ -85,7 +85,7 @@ const GallerySection = () => {
                                         className="relative group overflow-hidden rounded-2xl bg-slate-100 aspect-square"
                                     >
                                         <Image
-                                            src={img.url}
+                                            src={optimizeImage(img.url)}
                                             alt={img.title || 'Gallery Image'}
                                             fill
                                             sizes="(max-width: 768px) 50vw, 25vw"

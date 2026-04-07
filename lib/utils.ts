@@ -36,32 +36,28 @@ export function toBengaliNumber(num: number | string): string {
     }).join('')
 }
 
-export function getStudentImageUrl(path: string | null | undefined): string {
-    if (!path) return "/assets/avatar-placeholder.png"
+export function resolveStorageUrl(path: string | null | undefined, fallback = "/assets/placeholder.jpg"): string {
+    if (!path) return fallback;
+    if (path.startsWith("http")) return path;
 
-    // If it's a full URL, return as is
-    if (path.startsWith("http")) return path
+    const provider = process.env.NEXT_PUBLIC_STORAGE_PROVIDER || 'local';
+    const cfUrl = process.env.NEXT_PUBLIC_CLOUDFLARE_PUBLIC_URL;
 
-    const provider = process.env.NEXT_PUBLIC_STORAGE_PROVIDER || 'local'
-    const cfUrl = process.env.NEXT_PUBLIC_CLOUDFLARE_PUBLIC_URL
-
-    // Paths with leading slash (/assets/uploads/...)
-    // These are stored in current storage provider (Cloudflare R2 or Local)
-    if (path.startsWith("/assets/uploads/")) {
+    if (path.startsWith("/assets/")) {
         if (provider === 'cloudflare' && cfUrl) {
-            // Remove double slashes if any
-            const baseUrl = cfUrl.endsWith('/') ? cfUrl.slice(0, -1) : cfUrl
-            return `${baseUrl}${path}`
+            const baseUrl = cfUrl.endsWith('/') ? cfUrl.slice(0, -1) : cfUrl;
+            return `${baseUrl}${path}`;
         }
-        // Local provider: return relative path
-        return path
+        return path;
     }
+    
+    return path.startsWith("/") ? path : `/${path}`;
+}
 
-    // Default fallback: ensure leading slash
-    return path.startsWith("/") ? path : `/${path}`
+export function getStudentImageUrl(path: string | null | undefined): string {
+    return resolveStorageUrl(path, "/assets/avatar-placeholder.png");
 }
 
 export function optimizeImage(url: string | null | undefined, width: number = 1200): string {
-    if (!url) return "/assets/placeholder.jpg"
-    return url
+    return resolveStorageUrl(url);
 }

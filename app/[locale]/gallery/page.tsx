@@ -17,7 +17,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { toast } from "sonner"
-import { cn } from "@/lib/utils"
+import { cn, optimizeImage } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
 import { PublicNav } from "@/components/PublicNav"
 import Footer from "@/components/home/Footer"
@@ -152,7 +152,7 @@ export default function PublicGalleryPage() {
                                 <Card className="overflow-hidden border-none shadow-sm hover:shadow-xl transition-all duration-500 rounded-2xl bg-white aspect-[4/3]">
                                     <div className="relative h-full w-full overflow-hidden">
                                         <img 
-                                            src={img.url} 
+                                            src={optimizeImage(img.url)} 
                                             alt={img.title || ''} 
                                             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" 
                                         />
@@ -215,7 +215,7 @@ export default function PublicGalleryPage() {
                             className="relative max-w-5xl w-full flex flex-col items-center"
                         >
                             <img 
-                                src={images[selectedImageIndex].url} 
+                                src={optimizeImage(images[selectedImageIndex].url)} 
                                 alt="" 
                                 className="max-h-[70vh] w-auto object-contain rounded-lg shadow-2xl"
                             />

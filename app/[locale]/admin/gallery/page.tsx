@@ -27,7 +27,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { toast } from "sonner"
-import { cn } from "@/lib/utils"
+import { cn, optimizeImage } from "@/lib/utils"
 
 const CATEGORIES = ["General", "Events", "Campus", "Activities"]
 
@@ -208,7 +208,7 @@ export default function AdminGalleryPage() {
                         <Card key={img.id} className="group overflow-hidden border-slate-200 shadow-sm hover:shadow-md transition-all duration-300">
                             <div className="relative aspect-[4/3] bg-slate-100 overflow-hidden">
                                 <img 
-                                    src={img.url} 
+                                    src={optimizeImage(img.url)} 
                                     alt={img.title || ''} 
                                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" 
                                 />
