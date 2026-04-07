@@ -136,16 +136,10 @@ export default function LoginPage() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <div className="flex items-center justify-between ml-1">
+                                    <div className="ml-1">
                                         <Label htmlFor="password" className="text-slate-700 font-semibold">
                                             {t('password')}
                                         </Label>
-                                        <Link
-                                            href="/student/forgot-password"
-                                            className="auth-footer-link"
-                                        >
-                                            {t('forgotPassword')}
-                                        </Link>
                                     </div>
                                     <div className="auth-input-group">
                                         <Input
@@ -167,20 +161,30 @@ export default function LoginPage() {
                                     </div>
                                 )}
 
-                                <Button
-                                    type="submit"
-                                    className="w-full auth-button group"
-                                    disabled={loading}
-                                >
-                                    {loading ? (
-                                        <Loader2 className="h-5 w-5 animate-spin mr-2" />
-                                    ) : (
-                                        <>
-                                            {t('login')}
-                                            <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                                        </>
-                                    )}
-                                </Button>
+                                <div>
+                                    <Button
+                                        type="submit"
+                                        className="w-full auth-button group border-0"
+                                        disabled={loading}
+                                    >
+                                        {loading ? (
+                                            <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                                        ) : (
+                                            <>
+                                                {t('login')}
+                                                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                                            </>
+                                        )}
+                                    </Button>
+                                    <div className="flex justify-center mt-5">
+                                        <Link
+                                            href="/student/forgot-password"
+                                            className="text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors"
+                                        >
+                                            {t('forgotPassword')}
+                                        </Link>
+                                    </div>
+                                </div>
 
                                 <div className="relative py-4">
                                     <div className="absolute inset-0 flex items-center">
