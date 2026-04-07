@@ -18,37 +18,37 @@ export default function Slider() {
             id: 1,
             title: t('slide1.title'),
             description: t('slide1.description'),
-            image: 'https://res.cloudinary.com/dwybib7hh/image/upload/v1774169441/titas/slider/slider-1.jpg',
+            image: 'https://pub-91170e9e74d646aeb556b9262e82bbbf.r2.dev/assets/slider/slider-1.jpg',
         },
         {
             id: 2,
             title: t('slide2.title'),
             description: t('slide2.description'),
-            image: 'https://res.cloudinary.com/dwybib7hh/image/upload/v1774169448/titas/slider/slider-2.jpg',
+            image: 'https://pub-91170e9e74d646aeb556b9262e82bbbf.r2.dev/assets/slider/slider-2.jpg',
         },
         {
             id: 3,
             title: t('slide3.title'),
             description: t('slide3.description'),
-            image: 'https://res.cloudinary.com/dwybib7hh/image/upload/v1774169449/titas/slider/slider-3.jpg',
+            image: 'https://pub-91170e9e74d646aeb556b9262e82bbbf.r2.dev/assets/slider/slider-3.jpg',
         },
         {
             id: 4,
             title: t('slide4.title'),
             description: t('slide4.description'),
-            image: 'https://res.cloudinary.com/dwybib7hh/image/upload/v1774169451/titas/slider/slider-4.jpg',
+            image: 'https://pub-91170e9e74d646aeb556b9262e82bbbf.r2.dev/assets/slider/slider-4.jpg',
         },
         {
             id: 5,
             title: t('slide5.title'),
             description: t('slide5.description'),
-            image: 'https://res.cloudinary.com/dwybib7hh/image/upload/v1774169453/titas/slider/slider-5.jpg',
+            image: 'https://pub-91170e9e74d646aeb556b9262e82bbbf.r2.dev/assets/slider/slider-5.jpg',
         },
         {
             id: 6,
             title: t('slide6.title'),
             description: t('slide6.description'),
-            image: 'https://res.cloudinary.com/dwybib7hh/image/upload/v1774169454/titas/slider/slider-6.jpg',
+            image: 'https://pub-91170e9e74d646aeb556b9262e82bbbf.r2.dev/assets/slider/slider-6.jpg',
         },
     ]
 

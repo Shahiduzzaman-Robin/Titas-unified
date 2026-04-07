@@ -12,8 +12,6 @@ const nextConfig = {
             },
         ],
         unoptimized: false,
-        loader: 'custom',
-        loaderFile: './lib/cloudinary-loader.ts',
     },
 };
 

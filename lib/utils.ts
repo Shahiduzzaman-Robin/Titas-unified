@@ -63,13 +63,5 @@ export function getStudentImageUrl(path: string | null | undefined): string {
 
 export function optimizeImage(url: string | null | undefined, width: number = 1200): string {
     if (!url) return "/assets/placeholder.jpg"
-    
-    // Only optimize Cloudinary URLs
-    if (url.includes('res.cloudinary.com') && url.includes('/image/upload/')) {
-        // Just return the clean URL and let the Next.js custom loader (cloudinary-loader.ts) 
-        // handle all transformations dynamically based on modern responsiveness rules.
-        return url;
-    }
-    
     return url
 }

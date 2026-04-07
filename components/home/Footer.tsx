@@ -17,7 +17,7 @@ const Footer = () => {
                         <div className="flex items-center gap-3 mb-6">
                             <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center p-0.5 shadow-md shrink-0">
                                 <Image
-                                    src="https://res.cloudinary.com/dwybib7hh/image/upload/v1774173529/titas/brand/logo.png"
+                                    src="https://pub-91170e9e74d646aeb556b9262e82bbbf.r2.dev/assets/brand/logo.png"
                                     alt="Titas Logo"
                                     width={44}
                                     height={44}

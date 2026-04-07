@@ -43,7 +43,7 @@ export const metadata: Metadata = {
         siteName: "Titas (তিতাস)",
         images: [
             {
-                url: "https://res.cloudinary.com/dwybib7hh/image/upload/v1774170410/titas/hero/Fruit_Fest.jpg",
+                url: "https://pub-91170e9e74d646aeb556b9262e82bbbf.r2.dev/assets/hero/Fruit_Fest.jpg",
                 width: 1200,
                 height: 630,
                 alt: "Titas Community",

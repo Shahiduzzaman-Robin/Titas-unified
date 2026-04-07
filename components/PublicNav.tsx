@@ -77,7 +77,7 @@ export function PublicNav({ session: serverSession }: PublicNavProps) {
                     {/* Logo & Title */}
                     <Link href="/" className="navbar-logo flex items-center gap-3 md:gap-4 hover:opacity-80 transition-opacity focus:outline-none">
                         <Image 
-                            src="https://res.cloudinary.com/dwybib7hh/image/upload/v1774173529/titas/brand/logo.png" 
+                            src="https://pub-91170e9e74d646aeb556b9262e82bbbf.r2.dev/assets/brand/logo.png" 
                             alt="Logo" 
                             width={56} 
                             height={56} 
