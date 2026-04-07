@@ -59,7 +59,7 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs"
 import { toast } from "sonner"
-import { cn } from "@/lib/utils"
+import { cn, optimizeImage } from "@/lib/utils"
 import Link from "next/link"
 import { CategoryManager, TagManager } from "./_components/TaxonomyManager"
 import { CommentManager } from "./_components/CommentManager"
@@ -260,7 +260,7 @@ export default function AdminBlogPage() {
                                             <div className="flex gap-4">
                                                 <div className="h-20 w-24 rounded-2xl bg-slate-50 overflow-hidden border border-slate-100 flex-shrink-0 shadow-sm">
                                                     {post.featuredImage ? (
-                                                        <img src={post.featuredImage} alt="" className="h-full w-full object-cover" />
+                                                        <img src={optimizeImage(post.featuredImage)} alt="" className="h-full w-full object-cover" />
                                                     ) : (
                                                         <div className="h-full w-full flex items-center justify-center">
                                                             <FileText className="h-6 w-6 text-slate-200" />
@@ -355,7 +355,7 @@ export default function AdminBlogPage() {
                                                         <div className="flex items-center gap-4">
                                                             <div className="h-12 w-16 rounded-xl bg-slate-50 overflow-hidden border border-slate-100 flex-shrink-0 shadow-sm">
                                                                 {post.featuredImage ? (
-                                                                    <img src={post.featuredImage} alt="" className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                                                    <img src={optimizeImage(post.featuredImage)} alt="" className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                                                 ) : (
                                                                     <div className="h-full w-full flex items-center justify-center">
                                                                         <FileText className="h-4 w-4 text-slate-300" />

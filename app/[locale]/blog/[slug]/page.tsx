@@ -18,7 +18,7 @@ import SocialShare from "@/components/blog/SocialShare"
 import { Metadata } from "next"
 import { PublicNav } from "@/components/PublicNav"
 import Footer from "@/components/home/Footer"
-import { optimizeImage } from "@/lib/utils"
+import { optimizeImage, resolveStorageUrl } from "@/lib/utils"
 import ViewCounter from "./ViewCounter"
 import CommentSection from "@/components/blog/CommentSection"
 import SidebarTabs from "@/components/blog/SidebarTabs"
@@ -42,7 +42,7 @@ export async function generateMetadata(
     const canonicalUrl = `${baseUrl}/${locale}/blog/${encodeURIComponent(post.slug)}`
     
     // Determine the ideal social image
-    let sourceImage = post.featuredImage || `${baseUrl}/og-default.png`
+    let sourceImage = post.featuredImage ? resolveStorageUrl(post.featuredImage) : `${baseUrl}/og-default.png`
     
     // Ensure image is absolute URL with proper domain before passing to our OG Generator
     if (sourceImage && !sourceImage.startsWith('http')) {
@@ -147,12 +147,19 @@ export default async function BlogPostDetailsPage({ params }: { params: { slug: 
     const shareUrl = `${baseUrl}/${locale}/blog/${post.slug}`
 
     // DEEP CLEAN: Wash the content of any non-breaking spaces or invisible characters that sabotage wrapping
-    const cleanedContent = post.content
+    let cleanedContent = post.content
         .replace(/&nbsp;/g, ' ')
         .replace(/\u00A0/g, ' ')
         .replace(/\u200B/g, '') // Zero-width spaces
         .replace(/\r\n/g, '\n')
         .replace(/\n\s*\n/g, '</p><p>');
+
+    const provider = process.env.NEXT_PUBLIC_STORAGE_PROVIDER || 'local'
+    const cfUrl = process.env.NEXT_PUBLIC_CLOUDFLARE_PUBLIC_URL
+    if (provider === 'cloudflare' && cfUrl) {
+        const cfBaseUrl = cfUrl.endsWith('/') ? cfUrl.slice(0, -1) : cfUrl
+        cleanedContent = cleanedContent.replace(/(src=")(\/assets\/[^"]+)(")/g, `$1${cfBaseUrl}$2$3`)
+    }
 
     return (
         <div className="min-h-screen bg-white">

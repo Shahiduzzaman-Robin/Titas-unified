@@ -30,7 +30,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
-import { cn } from "@/lib/utils"
+import { cn, optimizeImage } from "@/lib/utils"
 import ImageCropper from "@/components/registration/ImageCropper"
 import {
     Dialog,
@@ -98,7 +98,7 @@ export default function BlogEditor({ initialData, categories, tags, isEditing = 
     )
     
     const [featuredImage, setFeaturedImage] = useState<File | null>(null)
-    const [previewUrl, setPreviewUrl] = useState<string | null>(initialData?.featuredImage || null)
+    const [previewUrl, setPreviewUrl] = useState<string | null>(initialData?.featuredImage ? optimizeImage(initialData.featuredImage) : null)
     const [cropImageStr, setCropImageStr] = useState<string | null>(null)
     const [imageModalOpen, setImageModalOpen] = useState(false)
     const [uploadingImage, setUploadingImage] = useState(false)
