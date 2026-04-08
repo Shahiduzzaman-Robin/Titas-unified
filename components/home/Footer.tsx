@@ -108,9 +108,7 @@ const Footer = () => {
                     <p className="en-text text-slate-500 text-sm">
                         &copy; {new Date().getFullYear()} <span className="text-slate-300 font-bold">Titas (DU)</span>. All rights reserved.
                     </p>
-                    <p className="dev-credit en-text text-slate-600 text-[10px] tracking-wider opacity-80">
-                        Developed by <a href="https://joynalbokhsho.vercel.app" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-blue-400 transition-colors">Joynal Bokhsho</a>
-                    </p>
+
                 </div>
             </div>
         </footer>
