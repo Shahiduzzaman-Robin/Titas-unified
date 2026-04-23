@@ -108,7 +108,9 @@ const Footer = () => {
                     <p className="en-text text-slate-500 text-sm">
                         &copy; {new Date().getFullYear()} <span className="text-slate-300 font-bold">Titas (DU)</span>. All rights reserved.
                     </p>
-
+                    <p className="en-text text-slate-500 text-[11px] opacity-70 hover:opacity-100 transition-opacity">
+                        Developed by <a href="https://facebook.com/mds.zamanrobin/" target="_blank" rel="noopener noreferrer" className="text-slate-300 hover:text-blue-400 font-medium transition-colors">Shahiduzzaman Robin</a>
+                    </p>
                 </div>
             </div>
         </footer>
